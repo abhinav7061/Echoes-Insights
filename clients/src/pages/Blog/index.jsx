@@ -1,0 +1,32 @@
+import React from 'react'
+import BlogItem from './BlogItem';
+import BlogItemSkeletonloading from './BlogItemSkeletonloading';
+import useBlogSummaries from '../../hooks/useBlogSummaries';
+import ErrorMessage from '../../components/ErrorMessage';
+
+const apiUrl = import.meta.env.VITE_API_URL;
+
+const Blog = () => {
+  const { blogs, hasMore, loading, loaderDiv, perPage, resetBlogSummaries, errorMessage } = useBlogSummaries(`${apiUrl}/blog`);
+
+  if (errorMessage) {
+    return <ErrorMessage heading='Unable to fetch blog' message={errorMessage} action={resetBlogSummaries} />
+  }
+
+  return (
+    <div className='py-10'>
+      <div className='grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 w-full'>
+        {
+          blogs.map(post => <BlogItem data={post} key={post._id} />)
+        }
+        {
+          loading && Array.from({ length: perPage }).map((_, index) => <BlogItemSkeletonloading key={index} />)
+        }
+      </div>
+      {!hasMore && <div className='w-full text-center dark:text-white font-bold text-3xl my-5'>You have reached to end</div>}
+      <div ref={loaderDiv} />
+    </div>
+  )
+}
+
+export default Blog

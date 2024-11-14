@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" class="dark">
+
+<head>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/tokyo-night-dark.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mastery Path: A Learning Platform</title>
+</head>
+
+<body>
+  <div id="root" class="dark:bg-primary bg-slate-300"></div>
+  <script type="module" src="/src/main.jsx"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/go.min.js"></script>
+
+  <script>
+    hljs.configure({
+      languages: ['javascript', 'ruby', 'python', 'c', 'cpp']
+    });
+    hljs.highlightAll();
+  </script>
+</body>
+
+</html>
