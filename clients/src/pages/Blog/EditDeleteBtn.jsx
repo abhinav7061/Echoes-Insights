@@ -6,7 +6,7 @@ import { useUserAuthentication } from "../../context/userContext";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const EditDeleteBtn = ({ blogId }) => {
-    const { isAuthenticatedUser } = useUserAuthentication();
+    const { isAuthenticatedUser, jwtToken } = useUserAuthentication();
     const [isAuthor, setIsAuthor] = useState(false);
 
     const checkAuthor = async () => {
@@ -14,7 +14,8 @@ const EditDeleteBtn = ({ blogId }) => {
             const response = await fetch(`${apiUrl}/blog/isAuthor/${blogId}`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${jwtToken}`
                 },
                 credentials: 'include'
             })

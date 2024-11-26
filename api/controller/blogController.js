@@ -4,6 +4,7 @@ const Blog = require("../models/blogSchema");
 const { sendErrorResponse } = require("../lib/sendError");
 const { renameFileUploadedByMulter } = require("../lib/renameFileUploadedByMulter");
 const { deleteFile } = require("../lib/deleteFile");
+const { uploadProfileImageToCloudinary, generateOptimizedUrl } = require("../Config/cloudinary");
 
 exports.getAllBlogSummaries = async (req, res) => {
     try {
@@ -71,15 +72,20 @@ exports.isBlogWriter = async (req, res) => {
 
 exports.createBlog = async (req, res) => {
     try {
-        const { originalname, path } = req.file;
+        const cover = req.file;
         const authorId = req.user._id;
-        const ulr = await renameFileUploadedByMulter(originalname, path);
+        const result = await uploadProfileImageToCloudinary(cover, 'EchoesAndInsights/BlogCover');
+        public_id = result.public_id
+        url = generateOptimizedUrl(result.public_id, result.version);
         const { title, summary, content } = req.body;
         await Blog.create({
             title,
             summary,
             content,
-            cover: ulr,
+            cover: {
+                public_id,
+                url
+            },
             author: authorId,
         });
 
@@ -89,6 +95,7 @@ exports.createBlog = async (req, res) => {
         });
     } catch (error) {
         sendErrorResponse(res, 401, error)
+        console.log(error)
     }
 };
 
@@ -98,6 +105,7 @@ exports.editBlog = async (req, res) => {
         const { blogId } = req.params;
         const authorId = req.user._id;
         const postDoc = await Blog.findById(blogId);
+        const cover = req.file;
         if (!postDoc) {
             return sendErrorResponse(res, 404, 'Post not found');
         }
@@ -105,11 +113,11 @@ exports.editBlog = async (req, res) => {
             return sendErrorResponse(res, 400, 'You are not the author');
         }
         let newUrl = null;
-        if (req.file) {
-            const { originalname, path } = req.file;
-            const folderPath = path.substring(0, path.lastIndexOf('/'));
-            newUrl = await renameFileUploadedByMulter(originalname, path);
-            await deleteFile(folderPath, postDoc.cover);
+        if (cover) {
+            const result = await uploadProfileImageToCloudinary(cover, 'EchoesAndInsights/BlogCover', postDoc?.cover?.public_id);
+            const optimizedUrl = generateOptimizedUrl(result.public_id, result.version);
+            postDoc.cover.url = optimizedUrl;
+            postDoc.cover.public_id = result.public_id;
         }
         postDoc.title = title;
         postDoc.summary = summary;

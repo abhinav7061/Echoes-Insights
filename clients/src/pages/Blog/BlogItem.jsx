@@ -17,7 +17,7 @@ const BlogItem = ({ data }) => {
     return (
         <>
             <div className={`flex flex-col overflow-hidden rounded-xl border dark:border-slate-800`} key={id}>
-                <img src={`${apiUrl}/blog-cover/${cover}`} alt="star" className="object-cover w-full h-[100px] md:h-[150px] border-b dark:border-gray-700" />
+                <img src={cover?.url} alt="star" className="object-cover w-full aspect-[2/1] xs:aspect-[3/2] border-b dark:border-gray-700" />
                 <div className="flex flex-col flex-grow p-4 bg-white dark:bg-transparent feature-card dark:feature-card">
                     <h4 className="font-poppins  font-semibold text-black dark:text-white mb-1 text-sm sm:text-xl md:text-2xl line-clamp-1">
                         {title}

@@ -63,6 +63,9 @@ export default function EditBlog() {
         try {
             const response = await fetch(`${apiUrl}/blog/editBlog/${id}`, {
                 method: 'PUT',
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`
+                },
                 body: data,
                 credentials: 'include',
             });

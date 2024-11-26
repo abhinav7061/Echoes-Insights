@@ -5,7 +5,7 @@ import BlogContents from '../../components/BlogContents';
 import addIdsToHeadingsInContents from '../../lib/addIdsToHeadingsInContents';
 import preprocessContent from '../../lib/preprocessContent';
 
-const BlogEditor = ({ onSubmit, title, setTitle, summary, setSummary, setFiles, content, setContent, isUpdate = false }) => {
+const BlogEditor = ({ onSubmit, title, setTitle, summary, setSummary, setFiles, content, setContent, isUpdate = false, loading = false }) => {
 
     const [preview, setPreview] = useState(false);
 
@@ -60,7 +60,7 @@ const BlogEditor = ({ onSubmit, title, setTitle, summary, setSummary, setFiles, 
                             />
                         </div>
                         <Editor onChange={setContent} value={content} />
-                        <Button type={'submit'} className={'px-3 py-1 mt-3'} title={isUpdate ? 'Update Blog' : 'Create Blog'} />
+                        <Button type={'submit'} className={`px-3 py-1 mt-3 ${loading ? "opacity-80 pointer-events-none cursor-wait" : ""}`} title={isUpdate ? `${loading ? 'Updating..' : 'Update'} Blog` : `${loading ? 'Creating..' : 'Create'} Blog`} />
                         <Button type={'button'} className={'mx-4 px-3 py-1 mt-3'} title={`${preview ? 'Hide Preview' : 'Preview'}`} onclicks={() => { window.scrollTo(0, 0); setPreview(pre => !pre) }} />
                     </form>
                 )

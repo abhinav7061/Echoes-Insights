@@ -1,17 +1,55 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useReducer, useContext } from 'react';
+
+const initialState = {
+    isAuthenticatedUser: false,
+    user: null,
+    jwtToken: null,
+};
+
+const authReducer = (state, action) => {
+    switch (action.type) {
+        case 'LOGIN':
+            return {
+                ...state,
+                isAuthenticatedUser: true,
+                user: action.payload.user,
+                jwtToken: action.payload.jwtToken,
+            };
+        case 'LOGOUT':
+            return {
+                ...state,
+                isAuthenticatedUser: false,
+                user: null,
+                jwtToken: null,
+            };
+        default:
+            return state;
+    }
+};
 
 const userContext = createContext();
 
-export function useUserAuthentication() {
-    return useContext(userContext);
-}
+export const UserContext = ({ children }) => {
+    const [state, dispatch] = useReducer(authReducer, initialState);
 
-export function UserContext({ children }) {
-    const [isAuthenticatedUser, setIsAuthenticatedUser] = useState(false);
-    const [user, setUser] = useState(null);
+    const login = (user, jwtToken) => {
+        dispatch({
+            type: 'LOGIN',
+            payload: { user, jwtToken },
+        });
+        localStorage.setItem('jwtToken', jwtToken);
+    };
+
+    const logout = () => {
+        dispatch({ type: 'LOGOUT' });
+        localStorage.removeItem('jwtToken');
+    };
+
     return (
-        <userContext.Provider value={{ user, setUser, isAuthenticatedUser, setIsAuthenticatedUser }}>
+        <userContext.Provider value={{ ...state, login, logout }}>
             {children}
         </userContext.Provider>
     );
-}
+};
+
+export const useUserAuthentication = () => useContext(userContext);

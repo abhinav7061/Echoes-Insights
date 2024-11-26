@@ -10,24 +10,27 @@ import Spotlight from '../components/Spotlight'
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const Layout = () => {
-    const { setUser, setIsAuthenticatedUser } = useUserAuthentication();
+    const { jwtToken, login, logout } = useUserAuthentication();
     const [loading, setLoading] = useState(true)
     const checkUserAuthentication = async () => {
         try {
             const res = await fetch(`${apiUrl}/user/isAuthenticatedUser`, {
+                headers: {
+                    "Authorization": `Bearer ${jwtToken}`
+                },
                 credentials: "include",
             });
             const data = await res.json();
-            if (data.success) {
-                setUser(data.user);
-                setIsAuthenticatedUser(data.isUserAuthenticated);
-                return;
+            if (res.ok && data.success) {
+                login(data.user, jwtToken);
+
             } else {
-                throw new Error(data?.message || 'Internal Server Error');
+                logout();
             }
         } catch (error) {
-            console.log(error.message);
-            toast.error(error.message);
+            console.error('Failed to fetch user data', error);
+            toast.error('Server Error')
+            logout();
         } finally {
             setLoading(false);
         }

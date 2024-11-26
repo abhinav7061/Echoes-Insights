@@ -10,7 +10,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 const Login = () => {
     const navigate = useNavigate();
-    const { setIsAuthenticatedUser, setUser: setAuthenticatedUser } = useUserAuthentication();
+    const { login: loginUser, jwtToken } = useUserAuthentication();
     const [message, setMessage] = useState({
         error: true,
         msg: '',
@@ -27,26 +27,27 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(user);
-        const { email, password } = user;
+        const { email, password, remember_me } = user;
         try {
             const res = await fetch(`${apiUrl}/user/login`, {
                 method: "POST",
                 headers: {
                     "content-type": "application/json",
+                    "Authorization": `Bearer ${jwtToken}`
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email, password, remember_me }),
                 credentials: "include",
             })
             const data = await res.json();
+            console.log(data);
             if (res.ok && data.success) {
                 setMessage({
                     error: false,
                     msg: data.message,
                 });
-                setAuthenticatedUser(data.user);
+                console.log(data)
+                loginUser(data.user, data.jwtToken);
                 toast.success(data.message);
-                setIsAuthenticatedUser(true);
                 navigate("/");
                 setMessage("");
             } else {

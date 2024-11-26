@@ -2,14 +2,14 @@ const express = require("express");
 const { getAllBlogSummaries, getBlog, createBlog, editBlog, isBlogWriter, deleteBlog } = require("../controller/blogController")
 const { isAuthenticatedUser, isBlogAuthor } = require("../middlewares/auth")
 const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 const router = express.Router();
 
-const blogCoverUploadMiddleware = multer({ dest: 'uploads/blog_cover/' });
-
 router.route("/allBlogSummaries").get(getAllBlogSummaries);
-router.route("/createBlog").post(blogCoverUploadMiddleware.single('file'), isAuthenticatedUser, createBlog);
-router.route("/isAuthor/:blogId").post(blogCoverUploadMiddleware.single('file'), isAuthenticatedUser, isBlogAuthor, isBlogWriter);
-router.route("/editBlog/:blogId").put(blogCoverUploadMiddleware.single('file'), isAuthenticatedUser, isBlogAuthor, editBlog);
+router.route("/createBlog").post(isAuthenticatedUser, upload.single('cover'), createBlog);
+router.route("/isAuthor/:blogId").post(isAuthenticatedUser, isBlogAuthor, isBlogWriter);
+router.route("/editBlog/:blogId").put(isAuthenticatedUser, isBlogAuthor, upload.single('cover'), editBlog);
 router.route("/deleteBlog/:blogId").delete(isAuthenticatedUser, isBlogAuthor, deleteBlog);
 router.route("/getBlog/:id").get(getBlog);
 

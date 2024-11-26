@@ -6,16 +6,17 @@ import { toast } from 'sonner';
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const LogoutBtn = () => {
-    const { setIsAuthenticatedUser, setUser } = useUserAuthentication();
+    const { logout: logoutUser, jwtToken } = useUserAuthentication();
     const logout = async () => {
         try {
             const res = await fetch(`${apiUrl}/user/logout`, {
+                headers: {
+                    "Authorization": `Bearer ${jwtToken}`
+                },
                 credentials: 'include',
             });
             if (res.ok) {
-                setIsAuthenticatedUser(false);
-                setUser(null);
-                console.log({ res: res.ok, user: false });
+                logoutUser();
                 toast.success("Logged out successfully");
             } else {
                 toast.error("Logout failed");

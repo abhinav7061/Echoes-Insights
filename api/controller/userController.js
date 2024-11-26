@@ -26,6 +26,7 @@ exports.registerUser = async (req, res) => {
         };
         res.status(200).cookie("jwtToken", jwtToken, options).json({
             success: true,
+            jwtToken,
             user: { name: user.name, email: user.email, avatart: user?.avatar },
             message: "Registered Successfully",
         });
@@ -39,7 +40,7 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
     try {
         // Get user input for login
-        const { email, password } = req.body;
+        const { email, password, remember_me } = req.body;
 
         // If user not intered the email or password, return error message
         if (!email) return sendErrorResponse(res, 400, "Email is required");
@@ -54,11 +55,14 @@ exports.loginUser = async (req, res) => {
         if (jwtToken) return sendErrorResponse(res, 400, "you are already logged in");
         jwtToken = user.generateToken();
         const options = {
-            expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
             httpOnly: true,
         };
+        if (remember_me)
+            options.expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+
         res.status(200).cookie("jwtToken", jwtToken, options).json({
             success: true,
+            jwtToken,
             user: { name: user.name, email: user.email, avatart: user?.avatar },
             message: "Loggedin Successfully",
         });

@@ -30,6 +30,7 @@ const ResetPassword = () => {
                 method: "PUT",
                 headers: {
                     "content-type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`
                 },
                 body: JSON.stringify({ email, new_password }),
                 credentials: "include",

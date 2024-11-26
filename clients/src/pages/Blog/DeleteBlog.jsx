@@ -17,6 +17,7 @@ const DeleteBlog = ({ blogId }) => {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`
                 },
                 credentials: 'include'
             });

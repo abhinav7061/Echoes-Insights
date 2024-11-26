@@ -6,7 +6,7 @@ const { sendErrorResponse } = require("../lib/sendError")
 // Middleware to check if the user has a valid token
 exports.isAuthenticatedUser = async (req, res, next) => {
     try {
-        const { jwtToken } = req.cookies;
+        const jwtToken = req?.cookies?.jwtToken || req?.body?.jwtToken || req?.headers["authorization"].replace("Bearer ", "");
 
         if (!jwtToken) {
             return sendErrorResponse(res, 401, "Login first to access resources");

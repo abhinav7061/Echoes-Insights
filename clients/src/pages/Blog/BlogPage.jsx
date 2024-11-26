@@ -79,7 +79,7 @@ const BlogPage = () => {
                         </div>
                     </div>
                     {cover && <div className="mb-5">
-                        <img src={`${apiUrl}/blog-cover/${cover}`} alt="" className="object-fill w-full rounded-2xl h-52 xs:h-80" />
+                        <img src={cover?.url} alt="" className="object-fill w-full rounded-2xl h-52 xs:h-80" />
                     </div>}
                     <BlogContents content={content} />
                 </div>

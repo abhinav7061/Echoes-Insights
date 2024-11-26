@@ -3,10 +3,12 @@ import styles from '../../style';
 import Button from '../../components/Button';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { register } from '../../assets';
+import { useUserAuthentication } from '../../context/userContext';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const Signup = () => {
+    const { login, jwtToken } = useUserAuthentication();
     const navigate = useNavigate();
     const [user, setUser] = useState({
         name: "",
@@ -42,6 +44,7 @@ const Signup = () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${jwtToken}`
                 },
                 body: JSON.stringify({ name, email, password, cpassword, phone, gender }),
                 credentials: "include",
@@ -50,8 +53,7 @@ const Signup = () => {
             console.log(data);
             if (data.success) {
                 console.log("registered successfully");
-                setUser(data.user);
-                setIsUserAuthenticated(ture);
+                login(data.user, data.jwtToken);
                 navigate("/login");
             } else {
                 console.log("registeration Unsuccessfull");
