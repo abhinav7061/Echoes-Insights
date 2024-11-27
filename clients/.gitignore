@@ -9,7 +9,6 @@ lerna-debug.log*
 
 node_modules
 .env
-src/assets
 src/db
 dist
 dist-ssr
