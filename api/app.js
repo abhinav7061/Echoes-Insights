@@ -11,7 +11,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 const cors = require("cors");
 app.use('/uploads', express.static(__dirname + '/uploads'));
-app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+const allowedOrigins = process.env.FRONTEND_URLS.split(',');
+
+// Configure CORS to allow requests from the allowed origins
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    credentials: true
+}));
 
 //importing routes
 const user = require("./router/userRoutes");
@@ -21,6 +35,10 @@ const blog = require("./router/blogRoutes");
 app.use("/api/v1/user", user);
 app.use("/api/v1/blog", blog);
 app.use('/api/v1/blog-cover', express.static(__dirname + '/uploads/blog_cover')); // route to  serve the static file(profile image in this project)
+
+app.get('/', (req, res) => {
+    res.send('Welcome to the Echoes-Insights API!');
+});
 
 // Handle undefined routes
 app.use((req, res, next) => {
