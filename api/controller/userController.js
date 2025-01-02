@@ -1,105 +1,75 @@
 const User = require("../models/userSchema");
 const Blog = require("../models/blogSchema");
 const jwt = require("jsonwebtoken")
-const { sendErrorResponse } = require("../lib/sendError");
+const { sendErrorResponse, sendSuccessResponse } = require("../lib/responseHelper");
 
-// signup routes for the new user
 exports.registerUser = async (req, res) => {
     const { name, email, password, phone, gender } = req.body;
-    if (!(name && email && password && phone && gender)) {
-        return res.status(422).json({ message: 'pls fill the all required fields' });
-    }
+    if (!(name && email && password && phone && gender)) return sendErrorResponse(res, 422, 'Please fill all the required fields!');
+
     try {
         const userExist = await User.findOne({ email });
-
-        // if user already exists the throwing error 
-        if (userExist) {
-            return res.status(422).json({ message: 'User exists' });
-        }
+        if (userExist) return sendErrorResponse(res, 422, 'This email is already in use!');
         const user = new User({ name, email, password, phone, gender });
+        await user.save();
+        const jwtToken = user.generateToken();
 
-        await user.save();  // saving the data of new user
-        jwtToken = user.generateToken();
-        const options = {
-            expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-            httpOnly: true,
-        };
-        res.status(200).cookie("jwtToken", jwtToken, options).json({
-            success: true,
-            jwtToken,
-            user: { name: user.name, email: user.email, avatart: user?.avatar },
-            message: "Registered Successfully",
+        return sendSuccessResponse(res, 200, 'Registered Successfully', {
+            user: { id: user._id, name: user.name, email: user.email, avatar: user?.avatar },
+            cookies: [{ name: 'jwtToken', value: jwtToken, options: { expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), httpOnly: true } }]
         });
-    } catch (err) {
-        sendErrorResponse(res, 500, error.message);
-        console.log(err);
+    } catch (error) {
+        console.error(error);
+        return sendErrorResponse(res, 500, 'Internal Server Error', { error: error.message });
     }
 };
 
-//login route for the user
 exports.loginUser = async (req, res) => {
+    const { email, password, remember_me } = req.body;
+
+    if (!email) return sendErrorResponse(res, 400, 'Email is required');
+    if (!password) return sendErrorResponse(res, 400, 'Password is required');
+
     try {
-        // Get user input for login
-        const { email, password, remember_me } = req.body;
-
-        // If user not intered the email or password, return error message
-        if (!email) return sendErrorResponse(res, 400, "Email is required");
-        if (!password) return sendErrorResponse(res, 400, "Password is required");
-
-        // Find user by email
         const user = await User.findOne({ email });
+        if (!user) return sendErrorResponse(res, 404, 'Invalid Credentials');
         const isPasswordMatch = await user.matchPassword(password);
-        if (!user || !isPasswordMatch) return sendErrorResponse(res, 404, "Invalid Credential");
+        if (!isPasswordMatch) return sendErrorResponse(res, 404, 'Invalid Credentials');
 
-        let { jwtToken } = req.cookies;
-        if (jwtToken) return sendErrorResponse(res, 400, "you are already logged in");
         jwtToken = user.generateToken();
-        const options = {
-            httpOnly: true,
-        };
-        if (remember_me)
-            options.expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+        const cookieOptions = { httpOnly: true };
+        if (remember_me) cookieOptions.expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
-        res.status(200).cookie("jwtToken", jwtToken, options).json({
-            success: true,
-            jwtToken,
-            user: { name: user.name, email: user.email, avatart: user?.avatar },
-            message: "Loggedin Successfully",
+        return sendSuccessResponse(res, 200, 'Logged in Successfully', {
+            user: { id: user._id, name: user.name, email: user.email, avatar: user?.avatar },
+            cookies: [{ name: 'jwtToken', value: jwtToken, options: cookieOptions }]
         });
-
     } catch (error) {
-        console.log("error: " + error);
+        console.error('Error: ', error);
+        return sendErrorResponse(res, 500, 'Internal Server Error', { error: error.message });
     }
 };
 
 exports.isUserLoggedIn = async (req, res) => {
-
     try {
-        const user = await User.findOne(req.user._id);
-        res.status(200).json({
-            success: true,
-            message: "User is Authenticated",
-            user: { name: user.name, email: user.email, avatart: user?.avatar },
+        return sendSuccessResponse(res, 200, 'User is Authenticated', {
+            user: { id: req.user._id, name: req.user.name, email: req.user.email, avatar: req.user?.avatar },
             isUserAuthenticated: true,
         });
     } catch (error) {
-        sendErrorResponse(res, 500, 'Server Error');
+        console.error(error);
+        return sendErrorResponse(res, 500, 'Internal Server Error', { error: error.message });
     }
 }
 
 exports.logoutUser = async (req, res) => {
     try {
-        const jwtToken = req.cookies.jwtToken;
-        if (!jwtToken)
-            return sendErrorResponse(res, 401, "you are already logged out");
-        res.status(200)
-            .cookie("jwtToken", null, { expires: new Date(Date.now()) })
-            .json({
-                success: true,
-                message: "Logged Out successfully",
-            });
+        return sendSuccessResponse(res, 200, 'Logged Out Successfully', {
+            cookies: [{ name: 'jwtToken', value: null, options: { httpOnly: true, expires: new Date(Date.now()) } }]
+        });
     } catch (error) {
-        sendErrorResponse(res, 500, error.message);
+        console.error(error);
+        return sendErrorResponse(res, 500, 'Internal Server Error', { error: error.message });
     }
 };
 
@@ -115,13 +85,10 @@ exports.forgotPassword = async (req, res) => {
         user.password = req.body.new_password;
         await user.save();
 
-        res.status(200).json({
-            success: true,
-            message: "Password Changed",
-        });
-
+        return sendSuccessResponse(res, 200, "Password Changed");
     } catch (error) {
-        console.log("error: " + error);
+        console.error(error);
+        return sendErrorResponse(res, 500, 'Internal Server Error', { error: error.message });
     }
 };
 

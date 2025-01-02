@@ -30,10 +30,15 @@ app.use(cors({
 //importing routes
 const user = require("./router/userRoutes");
 const blog = require("./router/blogRoutes");
-
+const like = require("./router/likeRoutes");
+const saveBlog = require("./router/blogSaveRoutes");
+const follow = require("./router/followerRoutes");
 //using routes
 app.use("/api/v1/user", user);
 app.use("/api/v1/blog", blog);
+app.use("/api/v1/like", like);
+app.use("/api/v1/save-blog", saveBlog);
+app.use("/api/v1/follow", follow);
 app.use('/api/v1/blog-cover', express.static(__dirname + '/uploads/blog_cover')); // route to  serve the static file(profile image in this project)
 
 app.get('/', (req, res) => {

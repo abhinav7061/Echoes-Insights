@@ -1,7 +1,7 @@
 const User = require("../models/userSchema");
 const mongoose = require("mongoose");
 const Blog = require("../models/blogSchema");
-const { sendErrorResponse } = require("../lib/sendError");
+const { sendErrorResponse } = require("../lib/responseHelper");
 const { renameFileUploadedByMulter } = require("../lib/renameFileUploadedByMulter");
 const { deleteFile } = require("../lib/deleteFile");
 const { uploadProfileImageToCloudinary, generateOptimizedUrl } = require("../Config/cloudinary");
@@ -12,7 +12,7 @@ exports.getAllBlogSummaries = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const offset = (page - 1) * limit;
         const searchQuery = req.query.search;
-        console.log(req.query);
+        // console.log(req.query);
         const sort = req.query.sort;
         let query = {};
 

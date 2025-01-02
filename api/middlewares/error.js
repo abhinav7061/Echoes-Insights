@@ -1,4 +1,4 @@
-const { sendErrorResponse } = require("../lib/sendError");
+const { sendErrorResponse } = require("../lib/responseHelper");
 
 module.exports = (err, req, res, next) => {
     // Set default values for error
