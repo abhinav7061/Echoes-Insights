@@ -20,7 +20,7 @@ const CustomPopup = ({ visibility, onClose, children }) => {
                 <div className={'text-gray-800 bg-white/60 h-6 w-6 rounded-full shadow-2xl cursor-pointer hover:bg-red-100 hover:text-red-600 hidden group-hover:flex items-center justify-center absolute -right-0 translate-x-[40%] -translate-y-[40%] text-xl'} onClick={closeHandler}>
                     <ion-icon name="close-outline"></ion-icon>
                 </div>
-                <div className={'rounded-lg p-5 bg-slate-50 dark:bg-primary max-h-[80vh] max-w-[90vw] overflow-auto'}>{children}</div>
+                <div className={'rounded-lg p-5 bg-neutral-50 dark:bg-primary max-h-[80vh] max-w-[90vw] overflow-auto'}>{children}</div>
             </div>
         </div>
     );

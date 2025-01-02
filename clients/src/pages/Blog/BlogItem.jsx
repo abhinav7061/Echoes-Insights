@@ -16,19 +16,19 @@ const BlogItem = ({ data }) => {
     const cover = data.cover
     return (
         <>
-            <div className={`flex flex-col overflow-hidden rounded-xl border dark:border-slate-800`} key={id}>
+            <div className={`flex flex-col overflow-hidden rounded-xl border dark:border-neutral-800`} key={id}>
                 <img src={cover?.url} alt="star" className="object-cover w-full aspect-[2/1] xs:aspect-[3/2] border-b dark:border-gray-700" />
                 <div className="flex flex-col flex-grow p-4 bg-white dark:bg-transparent feature-card dark:feature-card">
                     <h4 className="font-poppins  font-semibold text-black dark:text-white mb-1 text-sm sm:text-xl md:text-2xl line-clamp-1">
                         {title}
                     </h4>
-                    <div className='flex justify-between text-slate-500 dark:text-slate-500 font-bold mb-0 md:mb-1'>
+                    <div className='flex justify-between text-neutral-500 dark:text-neutral-500 font-bold mb-0 md:mb-1'>
                         <div className={`${styles.smHeading} flex items-center`}><ion-icon name="calendar"></ion-icon><span className='ml-1 line-clamp-1'>{formattedDate}</span></div>
                         <div className={`${styles.smHeading} flex items-center`}><ion-icon name="folder-open"></ion-icon><span className='ml-1 line-clamp-1'>Category</span></div>
                         <div className={`${styles.smHeading} flex items-center`}><ion-icon name="person"></ion-icon><span className='ml-1 line-clamp-1'>{author}</span></div>
                     </div>
                     <div className='py-2'>
-                        <p className="font-poppins font-normal text-slate-900 dark:text-slate-100 text-[10px] md:text-[16px] line-clamp-2">
+                        <p className="font-poppins font-normal text-neutral-900 dark:text-neutral-100 text-[10px] md:text-[16px] line-clamp-2">
                             {summary}
                         </p>
                     </div>

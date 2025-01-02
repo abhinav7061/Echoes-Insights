@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import { darkBtn } from '../../constants';
 
 function DarkMode() {
     const element = document.documentElement;
-    const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const [theme, setTheme] = useState(
-        localStorage.getItem("theme") ? localStorage.getItem("theme") : "system"
-    );
-
+    const [theme, setTheme] = useState(localStorage.getItem("theme") || "system");
     const [icon, setIcon] = useState(() => {
         switch (theme) {
             case "dark": return "moon";
@@ -15,15 +11,6 @@ function DarkMode() {
             default: return "desktop-outline";
         }
     });
-
-    function onWindowMatch() {
-        if (localStorage.theme === 'dark' || (!("theme" in localStorage) && darkQuery.matches)) {
-            element.classList.add('dark');
-        } else {
-            element.classList.remove('dark');
-        }
-    }
-    onWindowMatch();
 
     useEffect(() => {
         switch (theme) {
@@ -37,53 +24,41 @@ function DarkMode() {
                 break;
             default:
                 localStorage.removeItem('theme');
-                onWindowMatch();
+                if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                    element.classList.add('dark');
+                } else {
+                    element.classList.remove('dark');
+                }
                 break;
         }
     }, [theme]);
 
-    darkQuery.addEventListener('change', (event) => {
-        if (!("theme" in localStorage)) {
-            if (event.matches) {
-                element.classList.add('dark');
-            } else {
-                element.classList.remove('dark');
-            }
-        }
-    });
     return (
-        <>
-            <div className="cursor-pointer group inline-block relative w-full px-4 py-2">
-                <div className="h-5 w-full gap-1 flex items-center justify-start">
-                    <ion-icon name={icon}></ion-icon> Appearances
-                </div>
-                <div className="absolute top-3 hidden z-50 group-hover:block translate-x-[-30%] left-12">
-                    <div className="py-3 translate-x-[30%]">
+        <div className="cursor-pointer group inline-block relative w-full px-4 py-2">
+            <div className="h-5 w-full gap-1 flex items-center justify-start">
+                <ion-icon name={icon}></ion-icon> Appearances
+            </div>
+            <div className="absolute items-center hidden z-50 group-hover:flex left-4 translate-y-[-58%] translate-x-[-100%]">
+                <div className="bg-neutral-100 dark:bg-neutral-800 border dark:border-neutral-700 backdrop-blur-sm py-3 rounded-md flex flex-col z-10">
+                    {darkBtn.map((elm, index) => (
                         <div
-                            className="w-4 h-4 left-3.5 absolute  -mt-1 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-gray-400 dark:border-b-gray-900"
-                        ></div>
-                    </div>
-                    <div className="bg-white/60 shadow-lime-100 shadow-sm dark:bg-gray-900/90 backdrop-blur-sm py-3 rounded-xl flex flex-col">
-                        {darkBtn.map((elm, index) => (
-                            <div
-                                onClick={() => {
-                                    setTheme(elm.text);
-                                    setIcon(elm.icon);
-                                }}
-                                className={`${theme === elm.text ? 'text-sky-600' : 'text-black dark:text-white hover:bg-gray-600'} px-3 sm:px-5 flex items-center gap-1 flex-row ${index !== darkBtn.length - 1 ? "mb-2" : "mb-0"}`}
-                                key={index}
-                            >
-                                <div className={`flex items-center justify-center rounded-full text-center`}>
-                                    <ion-icon name={elm.icon}></ion-icon>
-                                </div>
-                                <h1 className='text-base lg:text-lg'>{elm.text}</h1>
-                            </div>
-                        ))}
-                    </div>
+                            onClick={() => {
+                                setTheme(elm.text);
+                                setIcon(elm.icon);
+                            }}
+                            className={`${theme === elm.text ? 'text-sky-600' : 'text-black dark:text-white hover:bg-gray-100 dark:hover:bg-neutral-700'} text-sm py-1 px-5 flex items-center gap-1 flex-row ${index !== darkBtn.length - 1 ? "mb-2" : "mb-0"}`}
+                            key={index}
+                        >
+                            <ion-icon name={elm.icon}></ion-icon> {elm.text}
+                        </div>
+                    ))}
+                </div>
+                <div className="py-3 z-20 -translate-x-0.5">
+                    <div className="w-6 h-6 left-3.5 border-b-[12px] border-b-transparent border-t-[12px] border-t-transparent border-l-[8px] border-l-neutral-100 dark:border-l-neutral-800"></div>
                 </div>
             </div>
-        </>
-    )
+        </div>
+    );
 }
 
-export default DarkMode
+export default DarkMode;

@@ -6,10 +6,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#00040f",
+        primary: "rgb(23 23 23)",
+        golden: '#ffdb70',
+        blue: '#1075fa',
         secondary: "#00f6ff",
-        dimWhite: "rgba(255, 255, 255, 0.7)",
-        dimBlue: "rgba(9, 151, 124, 0.1)",
       },
       fontFamily: {
       },
@@ -30,10 +30,12 @@ module.exports = {
       },
       boxShadow: {
         'inner-lg': 'inset 0 0 20px 5px black',
+        'base': '0 0 5px 0 rgba(0,0,0,0.3)',
       },
       fontFamily: {
         logoFont: ['logo-font', 'sans-serif'],
       },
+      content: ['before', 'after'],
     },
     screens: {
       xs: "480px",

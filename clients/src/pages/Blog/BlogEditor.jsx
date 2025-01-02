@@ -32,9 +32,9 @@ const BlogEditor = ({ onSubmit, title, setTitle, summary, setSummary, setFiles, 
             {
                 preview ? (
                     <div>
-                        <Button type={'button'} className={'mx-4 px-3 py-1 mt-3'} title={`${preview ? 'Hide Preview' : 'Preview'}`} onclicks={() => { window.scrollTo(0, 0); setPreview(pre => !pre) }} />
+                        <Button type={'button'} className={'px-3 py-1 mt-3 rounded-md'} title={`${preview ? 'Hide Preview' : 'Preview'}`} onClick={() => { window.scrollTo(0, 0); setPreview(pre => !pre) }} />
                         {/* <div className="content mt-7 p-8 border border-sky-500 rounded-2xl" dangerouslySetInnerHTML={{ __html: content }} /> */}
-                        <BlogContents content={preprocessContent(addIdsToHeadingsInContents(content))} className="content mt-7 p-8 border border-sky-500 rounded-2xl" />
+                        <BlogContents content={preprocessContent(addIdsToHeadingsInContents(content))} className="content mt-7 p-8 border border-blue dark:border-golden rounded-2xl" />
                     </div>
                 ) : (
                     <form onSubmit={onSubmit}>
@@ -60,8 +60,10 @@ const BlogEditor = ({ onSubmit, title, setTitle, summary, setSummary, setFiles, 
                             />
                         </div>
                         <Editor onChange={setContent} value={content} />
-                        <Button type={'submit'} className={`px-3 py-1 mt-3 ${loading ? "opacity-80 pointer-events-none cursor-wait" : ""}`} title={isUpdate ? `${loading ? 'Updating..' : 'Update'} Blog` : `${loading ? 'Creating..' : 'Create'} Blog`} />
-                        <Button type={'button'} className={'mx-4 px-3 py-1 mt-3'} title={`${preview ? 'Hide Preview' : 'Preview'}`} onclicks={() => { window.scrollTo(0, 0); setPreview(pre => !pre) }} />
+                        <span className='flex gap-4 mt-4'>
+                            <Button type={'submit'} className={`px-3 py-1 rounded-md ${loading ? "opacity-80 pointer-events-none cursor-wait" : ""}`} title={isUpdate ? `${loading ? 'Updating..' : 'Update'} Blog` : `${loading ? 'Creating..' : 'Create'} Blog`} />
+                            <Button type={'button'} className={'px-3 py-1 rounded-md'} title={`${preview ? 'Hide Preview' : 'Preview'}`} onClick={() => { window.scrollTo(0, 0); setPreview(pre => !pre) }} />
+                        </span>
                     </form>
                 )
             }

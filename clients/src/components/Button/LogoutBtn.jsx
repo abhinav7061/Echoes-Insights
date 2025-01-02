@@ -27,7 +27,12 @@ const LogoutBtn = () => {
         }
     }
     return (
-        <Button className='px-5 py-1 text-sm rounded-md w-full' title={`Logout`} onclicks={logout} />
+        <Button
+            className='px-5 py-1 text-sm rounded-md w-full dark:before:bg-neutral-700/60 dark:hover:before:bg-gradient-to-tr dark:hover:before:from-neutral-800/20 dark:hover:before:to-neutral-800/90 before:inset-[1px]'
+            icon={<ion-icon name="log-out-outline"></ion-icon>}
+            title={`Logout`}
+            onClick={logout}
+        />
     )
 }
 

@@ -1,4 +1,12 @@
-import { facebook, instagram, linkedin, twitter } from "../assets";
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  LinkedinIcon,
+  TwitterIcon,
+  TwitterShareButton,
+  LinkedinShareButton,
+  WhatsappShareButton,
+} from 'react-share';
 
 export const darkBtn = [
   {
@@ -99,22 +107,24 @@ export const footerLinks = [
 export const socialMedia = [
   {
     id: "social-media-1",
-    icon: instagram,
-    link: "https://www.instagram.com/",
-  },
-  {
-    id: "social-media-2",
-    icon: facebook,
+    Icon: FacebookIcon,
     link: "https://www.facebook.com/",
   },
   {
-    id: "social-media-3",
-    icon: twitter,
+    id: "social-media-2",
+    Icon: TwitterIcon,
     link: "https://www.twitter.com/",
   },
   {
-    id: "social-media-4",
-    icon: linkedin,
+    id: "social-media-3",
+    Icon: LinkedinIcon,
     link: "https://www.linkedin.com/",
   },
+];
+
+export const shareSocialButtons = [
+  { Component: FacebookShareButton, key: 'facebook', logoColor: 'text-sky-600' },
+  { Component: TwitterShareButton, key: 'twitter', logoColor: 'text-sky-500' },
+  { Component: WhatsappShareButton, key: 'whatsapp', logoColor: 'text-green-500' },
+  { Component: LinkedinShareButton, key: 'linkedin', logoColor: 'text-sky-800' },
 ];

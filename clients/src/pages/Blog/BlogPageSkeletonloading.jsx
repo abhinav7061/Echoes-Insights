@@ -32,5 +32,5 @@ const BlogPageSkeletonloading = () => {
 export default BlogPageSkeletonloading;
 
 const SkeletonDiv = ({ className, children }) => {
-    return <div className={`bg-slate-50 dark:bg-slate-600 my-1 rounded-md ${className}`}>{children}</div>
+    return <div className={`bg-neutral-400 dark:bg-neutral-600 my-1 rounded-md ${className}`}>{children}</div>
 }

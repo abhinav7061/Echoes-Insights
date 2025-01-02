@@ -67,8 +67,8 @@ const ResetPassword = () => {
                     {/* Telling about ourself and Registration  */}
                     <div className='mb-5'>
                         <h2 className="text-black dark:text-white font-bold text-3xl md:text-4xl mb-1">Reset Password</h2>
-                        <p className="text-[12px] md:text-sm text-slate-600">Password remembered? <NavLink to='/login' className="text-sky-700">Login</NavLink></p>
-                        <p className="text-[12px] md:text-sm text-slate-600">Donot have account then click here <NavLink to='/register' className={`text-sky-600`}>Signup</NavLink> </p>
+                        <p className="text-[12px] md:text-sm text-neutral-600">Password remembered? <NavLink to='/login' className="text-sky-700">Login</NavLink></p>
+                        <p className="text-[12px] md:text-sm text-neutral-600">Donot have account then click here <NavLink to='/register' className={`text-sky-600`}>Signup</NavLink> </p>
                         {!(message.msg === "") && <div className={`${message.error ? 'text-red-600' : 'text-green-600'} text-lg`}>{message.msg} </div>}
                     </div>
                     {/* form div start here */}
