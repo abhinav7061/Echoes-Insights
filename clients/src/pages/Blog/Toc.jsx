@@ -64,11 +64,11 @@ const Toc = ({ content, showTOC, setShowTOC, className = '', needToShowTOC, setN
                 <div className={`dark:text-neutral-100 absolute ${showTOC ? 'flex justify-center w-[calc(100vw-50px)] md:w-64' : 'w-0'} transition-[width] duration-500 overflow-hidden md:relative md:w-full`}>
                     <div ref={tocRef} className={`border border-neutral-300 dark:border-neutral-700 backdrop-blur-xl md:backdrop-blur-0 md:bg-transparent dark:md:bg-transparent md:border-0 bg-neutral-200/80 dark:bg-neutral-800/80 max-w-xl w-[80vw] md:w-64 rounded-2xl px-5 py-3 md:p-0 md:pr-3 overflow-hidden h-full`}>
                         <span className='flex justify-end items-center px-2 h-12 md:h-4'><button
-                            className='p-2 md:hidden bg-neutral-500 dark:bg-neutral-800 text-neutral-100 rounded-md flex text-xl'
+                            className='p-1 md:hidden bg-neutral-400 dark:bg-neutral-800 text-neutral-100 rounded-md flex text-xl'
                             onClick={() => setShowTOC(false)}
                             title="Hide TOC"
                         >
-                            <ion-icon name="list"></ion-icon>
+                            <ion-icon name="close"></ion-icon>
                         </button></span>
                         <div className='max-h-[calc(100vh-130px)] p-5 pt-1 overflow-x-hidden overflow-y-auto'>
                             <h1 className='text-2xl underline mb-4'>Table of Contents</h1>

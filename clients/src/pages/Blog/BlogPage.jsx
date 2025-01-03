@@ -100,7 +100,7 @@ const BlogPage = () => {
                     authorId={author._id}
                     authorName={authorName}
                     shareBtnsClassName={`${needToShowTOC ? 'md:-left-0 md:translate-x-[-100%] translate-x-0' : 'md:left-10'} bottom-4 -left-5 xs:bottom-5 md:-bottom-2`}
-                    toc={needToShowTOC && <TemplateBtn icon='list' onClick={() => setShowTOC(true)} className={`md:hidden border-l dark:border-neutral-500 md:p-3 ps-4 pe-0 ${showTOC ? 'pointer-events-none' : ''}`} />}
+                    toc={needToShowTOC && <TemplateBtn icon='list' onClick={() => setShowTOC(true)} className={`md:hidden border-l border-neutral-300 dark:border-neutral-500 md:p-3 ps-4 pe-0 ${showTOC ? 'pointer-events-none' : ''}`} />}
                     className={needToShowTOC ? 'md:ps-12' : ''}
                 />
             </div>
