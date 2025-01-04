@@ -31,7 +31,6 @@ exports.getAllBlogSummaries = async (req, res) => {
         }
 
         const blogsSummary = await Blog.find(query)
-            .select('title summary cover author createdAt')
             .populate('author', 'name')
             .skip(offset)
             .sort({ createdAt: -1 })
@@ -53,6 +52,8 @@ exports.getBlog = async (req, res) => {
         if (!postDoc) {
             return sendErrorResponse(res, 404, `Your blog cann't be found`)
         }
+        postDoc.views += 1;
+        await postDoc.save();
         res.json({
             success: true,
             data: postDoc

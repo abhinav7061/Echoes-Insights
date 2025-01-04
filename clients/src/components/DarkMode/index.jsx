@@ -53,8 +53,8 @@ function DarkMode() {
                         </div>
                     ))}
                 </div>
-                <div className="py-3 z-20 -translate-x-0.5">
-                    <div className="w-6 h-6 left-3.5 border-b-[12px] border-b-transparent border-t-[12px] border-t-transparent border-l-[8px] border-l-neutral-100 dark:border-l-neutral-800"></div>
+                <div className="py-3 z-20 translate-x-[-1px]">
+                    <div className="w-6 h-6 border-b-[12px] border-b-transparent border-t-[12px] border-t-transparent border-l-[8px] border-l-neutral-100 dark:border-l-neutral-800"></div>
                 </div>
             </div>
         </div>

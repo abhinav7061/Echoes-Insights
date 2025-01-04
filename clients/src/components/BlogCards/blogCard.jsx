@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { cn } from "../../lib/utils";
 import { Link } from "react-router-dom";
 import { formatDistanceStrict } from "date-fns";
@@ -10,6 +10,7 @@ import BlogLikeDislike from "../BlogActions/blogLikeDislike";
 import BlogSaveUnsave from "../BlogActions/blogSaveUnsave";
 
 const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
+    const cardRef = useRef(null);
     const title = card.title;
     const inputDate = new Date(card.createdAt);
     const formattedDate = formatDistanceStrict(inputDate, new Date(), { addSuffix: false });
@@ -18,17 +19,61 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
     const summary = card.summary;
     const id = card._id
     const cover = card.cover
+    const views = card.views;
     const [liked, setLiked] = useState(false);
     const [saved, setSaved] = useState(false);
     const [followed, setFollowed] = useState(false);
     const [keepBlogMenuOpen, setKeepBlogMenuOpen] = useState(false);
+    const [enableScrollEffect, setEnableScrollEffect] = useState(window.innerWidth < 480);
+
+    useEffect(() => {
+        const updateScrollEffect = () => {
+            setEnableScrollEffect(window.innerWidth < 480);
+        };
+
+        window.addEventListener("resize", updateScrollEffect);
+        updateScrollEffect();
+
+        return () => {
+            window.removeEventListener("resize", updateScrollEffect);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!enableScrollEffect) return;
+        const handleScroll = () => {
+            if (cardRef.current) {
+                const rect = cardRef.current.getBoundingClientRect();
+                const topOffset = rect.top;
+
+                if (topOffset <= 200 && topOffset >= 0) {
+                    setHovered(index);
+                } else if (hovered === index) {
+                    setHovered(null);
+                }
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        handleScroll();
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, [enableScrollEffect]);
+    console.log({
+        isEqual: hovered == index,
+        hovered,
+        index
+    })
 
     return (<div
+        ref={cardRef}
         onMouseEnter={() => setHovered(index)}
         onMouseLeave={() => setHovered(null)}
         className={cn(
             "rounded-xl relative xs:border xs:dark:border-transparent xs:bg-white xs:dark:bg-neutral-800 xs:shadow-lg dark:shadow-neutral-950 overflow-hidden h-[280px] xs:h-[300px] w-full transition-all duration-300 ease-out",
-            hovered !== null && hovered !== index && "opacity-80 scale-[0.98]"
+            hovered == null ? "" : hovered == index ? 'mb-1 xs:mb-0' : "xs:opacity-80 xs:scale-[0.98]"
         )}
     >
         {(hovered === index || keepBlogMenuOpen) && (<BlogMenu blogId={id} authorId={author._id} authorName={authorName} liked={liked} saved={saved} followed={followed} setLiked={setLiked} setSaved={setSaved} setFollowed={setFollowed} setKeepBlogMenuOpen={setKeepBlogMenuOpen} />)}
@@ -48,7 +93,7 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
                         <span className='line-clamp-1'>
                             {authorName}
                         </span>
-                        {hovered === index && <FollowUnfollow authorId={author._id} authorName={authorName} showName={true} btnClassName='py-[1px] px-1 bg-indigo-700 hover:bg-green-700 text-white hover:text-white rounded gap-[2px]' followed={followed} setFollowed={setFollowed} />}
+                        {hovered === index && <FollowUnfollow authorId={author._id} authorName={authorName} showName={true} btnClassName='py-[1px] px-1 bg-indigo-700 hover:bg-green-700 text-white hover:text-white dark:hover:text-white rounded gap-[2px]' followed={followed} setFollowed={setFollowed} />}
                     </span>
                     <span className="mx-2 flex items-center">&#128900;</span>
                     <span className='line-clamp-1 flex items-center whitespace-nowrap'>{formattedDate}</span>
@@ -71,7 +116,7 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
                         <ShareBtn url={`${window.location.protocol}//${window.location.host}/blog/${id}`} shareBtnsClassName="-left-10 bottom-4" />
                         <BlogSaveUnsave blogId={id} saved={saved} setSaved={setSaved} />
                     </span>
-                    <span className='flex items-center gap-1'><ion-icon name="eye-outline"></ion-icon> <p className="text-xs">{Math.floor(Math.random() * (100 - 40 + 1)) + 40} views</p></span>
+                    <span className='flex items-center gap-1'><ion-icon name="eye-outline"></ion-icon> <p className="text-xs">{views} views</p></span>
                 </div>
             </div>
             <div className={cn("w-full h-[1px] xs:hidden bg-neutral-200 dark:bg-neutral-600 z-30 absolute bottom-1 transition-opacity duration-300 ",

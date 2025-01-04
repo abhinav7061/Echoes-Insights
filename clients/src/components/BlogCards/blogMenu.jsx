@@ -13,10 +13,10 @@ const BlogMenu = ({ blogId, authorId, authorName, liked, saved, followed, setLik
     <div
       className="absolute top-2 right-2 z-50 flex gap-2 cursor-default"
     >
-      <button className="flex items-center justify-center bg-gray-200 hover:bg-gray-400 w-8 h-8 rounded-full overflow-hidden group transition-[width] hover:w-28 duration-500 ease-out">
+      <button className="flex items-center justify-center bg-gray-200 hover:bg-gray-400 w-28 xs:w-8 h-8 rounded-full overflow-hidden group transition-[width] hover:w-28 duration-500 ease-out" title="Hide this post">
         <ion-icon name="close"></ion-icon>
-        <p className="hidden px-1 group-hover:block text-xs whitespace-nowrap">
-          Hide this post
+        <p className="xs:hidden px-1 group-hover:block text-xs whitespace-nowrap">
+          Hide this blog
         </p>
       </button>
 
@@ -27,6 +27,7 @@ const BlogMenu = ({ blogId, authorId, authorName, liked, saved, followed, setLik
             setOpen((open) => !open);
             setKeepBlogMenuOpen(prev => !prev);
           }}
+          title="See blog menu"
         >
           <ion-icon name="ellipsis-horizontal"></ion-icon>
         </button>
