@@ -4,13 +4,13 @@ import { useParams } from "react-router-dom";
 import styles, { color } from '../../style';
 import { format } from "date-fns";
 import { motion, useScroll } from "framer-motion";
-import BlogPageSkeletonloading from "./BlogPageSkeletonloading";
 import BlogContents from "../../components/BlogContents";
 import Toc from "./Toc";
 import ErrorMessage from "../../components/ErrorMessage";
 import EditDeleteBtn from "./EditDeleteBtn";
 import BlogFloatAction from "./BlogFloatAction";
 import TemplateBtn from "../../components/BlogActions/templateBtn";
+import BlogPageSkeletonloading from "../../components/SkeletonLoader.js/BlogPageSkeletonloading";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -63,7 +63,7 @@ const BlogPage = () => {
     const content = postInfo.content;
     const cover = postInfo?.cover;
     const summary = postInfo.summary;
-
+    const totalLikes = postInfo?.likesCount || 0;
     return (
         <>
             <motion.div
@@ -99,6 +99,7 @@ const BlogPage = () => {
                     blogId={blogId}
                     authorId={author._id}
                     authorName={authorName}
+                    totalLikes={totalLikes}
                     shareBtnsClassName={`${needToShowTOC ? 'md:-left-0 md:translate-x-[-100%] translate-x-0' : 'md:left-10'} bottom-4 -left-5 xs:bottom-5 md:-bottom-2`}
                     toc={needToShowTOC && <TemplateBtn icon='list' onClick={() => setShowTOC(true)} className={`md:hidden border-l border-neutral-300 dark:border-neutral-500 md:p-3 ps-4 pe-0 ${showTOC ? 'pointer-events-none' : ''}`} />}
                     className={needToShowTOC ? 'md:ps-12' : ''}

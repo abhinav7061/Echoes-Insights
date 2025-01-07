@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { toast } from 'sonner'
 import useTextSelection from "../../hooks/useTextSelection";
 import ShareSocialList from "../BlogActions/shareSocialList";
+import CopyBtn from "../BlogActions/copyBlogLink";
 
 const BlogContents = ({ content, className }) => {
     const [isContentLoaded, setIsContentLoaded] = useState(false);
@@ -14,19 +15,15 @@ const BlogContents = ({ content, className }) => {
     const addStylesCopyBtn = () => {
         const snippets = document.querySelectorAll('.ql-syntax');
         const numberOfSnippets = snippets.length;
-
         for (let i = 0; i < numberOfSnippets; i++) {
-            // Reference the current snippet
             const currentSnippet = snippets[i];
 
-            // Create the wrapper div
             const wrapperDiv = document.createElement('div');
             wrapperDiv.className = 'relative bg-neutral-700 dark:bg-neutral-800 mt-4 text-gray-400 rounded-lg border border-neutral-700 dark:border-neutral-800';
 
-            // create div which contains the lng name and copy btn
             const lngDiv = document.createElement('div');
-            lngDiv.className = 'px-4 py-1 sm:py-2 text-neutral-50 rounded-t-lg bg-transparent flex justify-end items-center sticky z-10 top-[70px]';
-            // Create the copy button
+            lngDiv.className = 'px-4 py-1.5 sm:py-2 text-neutral-50 rounded-t-lg bg-transparent flex justify-end items-center sticky z-10 top-[70px]';
+
             const copyButton = document.createElement('button');
             copyButton.className = 'px-2 text-[14px] py-[4px] flex items-center gap-1 text-neutral-50 rounded bg-neutral-700 dark:bg-neutral-800 cursor-pointer';
             const copyHtml = '<ion-icon name="copy-outline"></ion-icon><p style="font-size: 11px; line-height:12px;">Copy code</p>';
@@ -49,18 +46,13 @@ const BlogContents = ({ content, className }) => {
                 });
             });
 
-            // Append the lng name and copy button to the wrapper div
             const lngName = document.createElement('span');
-            lngName.className = 'text-[11px] absolute top-1.5 sm:top-2.5 left-4 z-[15]';
+            lngName.className = 'text-[11px] absolute top-2 sm:top-2.5 left-4 z-[15]';
             const detectedLanguage = hljs.highlightAuto(snippets[i]?.textContent).language || 'Plain Text'
             lngName.innerText = detectedLanguage;
             wrapperDiv.appendChild(lngName);
             lngDiv.appendChild(copyButton);
-
-            // Append the lngDiv to the wrapper div
             wrapperDiv.appendChild(lngDiv);
-
-            // Move the snippet into the wrapper div
             currentSnippet.parentNode.insertBefore(wrapperDiv, currentSnippet);
             wrapperDiv.appendChild(currentSnippet);
         }
@@ -131,7 +123,7 @@ const BlogContents = ({ content, className }) => {
             if (contentRef.current) {
                 const containerWidth = contentRef.current.offsetWidth;
                 const containerLeftPosition = contentRef.current.offsetLeft;
-                const shareWidth = window.innerWidth > 1024 ? 210 : 160;
+                const shareWidth = window.innerWidth > 1024 ? 220 : 180;
 
                 let top = y + 20;
                 let left = x - shareWidth / 2;
@@ -167,6 +159,13 @@ const BlogContents = ({ content, className }) => {
                     url={shareUrl}
                     title={selectedText}
                     style={{ top: sharePosition.top, left: sharePosition.left }}
+                    extraItems={[
+                        <CopyBtn
+                            btnClassName='text-blue dark:text-sky-500'
+                            title="Copy selected text"
+                            copy={selectedText}
+                        />
+                    ]}
                 />
             )}
         </>

@@ -20,8 +20,10 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
     const id = card._id
     const cover = card.cover
     const views = card.views;
+    const totalLikes = card?.likesCount || 0;
     const [liked, setLiked] = useState(false);
     const [saved, setSaved] = useState(false);
+    const [likesCount, setLikesCount] = useState(totalLikes);
     const [followed, setFollowed] = useState(false);
     const [keepBlogMenuOpen, setKeepBlogMenuOpen] = useState(false);
     const [enableScrollEffect, setEnableScrollEffect] = useState(window.innerWidth < 480);
@@ -61,11 +63,6 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
             window.removeEventListener("scroll", handleScroll);
         };
     }, [enableScrollEffect]);
-    console.log({
-        isEqual: hovered == index,
-        hovered,
-        index
-    })
 
     return (<div
         ref={cardRef}
@@ -76,7 +73,7 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
             hovered == null ? "" : hovered == index ? 'mb-1 xs:mb-0' : "xs:opacity-80 xs:scale-[0.98]"
         )}
     >
-        {(hovered === index || keepBlogMenuOpen) && (<BlogMenu blogId={id} authorId={author._id} authorName={authorName} liked={liked} saved={saved} followed={followed} setLiked={setLiked} setSaved={setSaved} setFollowed={setFollowed} setKeepBlogMenuOpen={setKeepBlogMenuOpen} />)}
+        {(hovered === index || keepBlogMenuOpen) && (<BlogMenu blogId={id} authorId={author._id} authorName={authorName} liked={liked} saved={saved} followed={followed} setLiked={setLiked} setSaved={setSaved} likesCount={likesCount} setFollowed={setFollowed} setLikesCount={setLikesCount} setKeepBlogMenuOpen={setKeepBlogMenuOpen} />)}
         <Link to={`/blog/${id}`} className="relative inset-0 flex flex-col">
             <div className="h-[165px] z-0">
                 <img src={cover.url} alt="blog cover" className={cn(
@@ -86,7 +83,9 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
                 />
             </div>
             {hovered === index && <div className="bg-black/70 h-full w-full absolute z-[5]"></div>}
-            <div className="flex flex-col w-full px-4 py-2 justify-end z-10 h-[115px] xs:h-[135px] bg-transparent">
+            <div className={cn("flex flex-col w-full xs:px-4 py-2 justify-end z-10 h-[115px] xs:h-[135px] bg-transparent transition-all duration-700",
+                hovered === index ? "px-2" : ""
+            )}>
                 <div className={`text-[10px] font-semibold flex text-neutral-400 dark:text-neutral-400`}>
                     <span className="flex items-center gap-2" title={authorName}>
                         <img src={people01} alt="" className="rounded-full h-4 aspect-square" />
@@ -95,7 +94,7 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
                         </span>
                         {hovered === index && <FollowUnfollow authorId={author._id} authorName={authorName} showName={true} btnClassName='py-[1px] px-1 bg-indigo-700 hover:bg-green-700 text-white hover:text-white dark:hover:text-white rounded gap-[2px]' followed={followed} setFollowed={setFollowed} />}
                     </span>
-                    <span className="mx-2 flex items-center">&#128900;</span>
+                    <span className="mx-2 flex items-center text-base">&#8226;</span>
                     <span className='line-clamp-1 flex items-center whitespace-nowrap'>{formattedDate}</span>
                 </div>
                 <h1 className={cn("font-poppins font-semibold dark:text-white text-base line-clamp-1 transition-colors duration-500 ease-in-out",
@@ -108,11 +107,11 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
                 )}>
                     {summary}
                 </p>
-                <div className={cn("mb-1 text-base flex justify-between items-center dark:text-neutral-100",
+                <div className={cn("mt-1 text-base flex justify-between items-center dark:text-neutral-100",
                     hovered === index ? "text-neutral-200" : ""
                 )}>
                     <span className="transition-colors flex-grow duration-500 flex gap-2" title="Like this blog post">
-                        <BlogLikeDislike blogId={id} liked={liked} setLiked={setLiked} />
+                        <BlogLikeDislike blogId={id} liked={liked} setLiked={setLiked} likesCount={likesCount} setLikesCount={setLikesCount} />
                         <ShareBtn url={`${window.location.protocol}//${window.location.host}/blog/${id}`} shareBtnsClassName="-left-10 bottom-4" />
                         <BlogSaveUnsave blogId={id} saved={saved} setSaved={setSaved} />
                     </span>

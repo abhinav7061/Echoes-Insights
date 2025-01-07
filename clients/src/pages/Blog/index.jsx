@@ -1,9 +1,8 @@
 import React from 'react'
-import BlogItem from './BlogItem';
-import BlogItemSkeletonloading from './BlogItemSkeletonloading';
 import useBlogSummaries from '../../hooks/useBlogSummaries';
 import ErrorMessage from '../../components/ErrorMessage';
 import { BlogCards } from '../../components/BlogCards';
+import BlogItemSkeletonloading from '../../components/SkeletonLoader.js/BlogItemSkeletonloading';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 

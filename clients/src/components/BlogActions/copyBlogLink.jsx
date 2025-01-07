@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import TemplateBtn from './templateBtn';
 import { toast } from 'sonner';
 
-const CopyBtn = ({ icon = 'copy', showName, btnClassName, copyLink, className }) => {
+const CopyBtn = ({ icon = 'copy', showName, btnClassName, copy, title = 'Copy link of this blog', className }) => {
     const [recentlyCopied, setRecentlyCopied] = useState(false);
     const handleCopy = async () => {
         try {
-            await navigator.clipboard.writeText(copyLink);
+            await navigator.clipboard.writeText(copy);
             setRecentlyCopied(true);
             setTimeout(() => {
                 setRecentlyCopied(false);
             }, 2000);
-            toast.success('Link copied to clipboard');
+            toast.success('Copied to clipboard');
         } catch (error) {
             console.error('Error copying link:', error.message);
             toast.error('Failed to copy link');
@@ -21,7 +21,7 @@ const CopyBtn = ({ icon = 'copy', showName, btnClassName, copyLink, className })
         <span className={`relative flex items-center ${className}`}>
             <TemplateBtn
                 icon={recentlyCopied ? 'checkmark-circle' : icon}
-                title={`Copy link of this blog`}
+                title={title}
                 onClick={handleCopy}
                 showName={showName}
                 className={`${recentlyCopied ? 'text-green-400 hover:text-green-400 hover:dark:text-green-400' : ''} ${btnClassName}`}
