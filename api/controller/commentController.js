@@ -2,6 +2,7 @@ const { sendErrorResponse } = require("../lib/responseHelper");
 const User = require("../models/userSchema");
 const Blog = require("../models/blogSchema");
 const Comment = require('../models/commentSchema');
+const CommentReply = require("../models/commentReplySchema");
 
 exports.createComment = async (req, res) => {
     try {
@@ -59,6 +60,7 @@ exports.commentCount = async (req, res) => {
     try {
         // Count the number of comments for the specified blog ID
         const count = await Comment.countDocuments({ blogId });
+        const replyCount = await CommentReply.countDocuments({ blogId });
         res.status(200).json({ success: true, count });
     } catch (error) {
         return sendErrorResponse(res, 500, error.message);

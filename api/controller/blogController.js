@@ -52,7 +52,7 @@ exports.getBlog = async (req, res) => {
         if (!postDoc) {
             return sendErrorResponse(res, 404, `Your blog cann't be found`)
         }
-        postDoc.views += 1;
+        // postDoc.views += 1;
         await postDoc.save();
         res.json({
             success: true,

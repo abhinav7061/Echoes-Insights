@@ -16,11 +16,13 @@ exports.toggleBlogLike = async (req, res) => {
         const existingLike = await BlogLike.findOne({ blogId, userId });
 
         if (existingLike) {
+            const likes = await Blog.findByIdAndUpdate(blogId, { $inc: { likesCount: -1 } }, { new: true });
             await BlogLike.findByIdAndDelete(existingLike._id);
-            return sendSuccessResponse(res, 200, 'Blog disliked');
+            return sendSuccessResponse(res, 200, 'Blog disliked', { likesCount: likes.likesCount });
         } else {
+            const likes = await Blog.findByIdAndUpdate(blogId, { $inc: { likesCount: 1 } }, { new: true });
             await BlogLike.create({ blogId, userId });
-            return sendSuccessResponse(res, 201, 'Blog liked');
+            return sendSuccessResponse(res, 201, 'Blog liked', { likesCount: likes.likesCount });
         }
     } catch (error) {
         return sendErrorResponse(res, 500, error.message);
@@ -39,10 +41,12 @@ exports.toggleCommentLike = async (req, res) => {
 
         if (existingLike) {
             await CommentLike.findByIdAndDelete(existingLike._id);
-            return sendSuccessResponse(res, 200, 'Comment disliked');
+            const likes = await Comment.findByIdAndUpdate(commentId, { $inc: { likesCount: -1 } }, { new: true });
+            return sendSuccessResponse(res, 200, 'Comment disliked', { likesCount: likes.likesCount });
         } else {
             await CommentLike.create({ commentId, userId });
-            return sendSuccessResponse(res, 201, 'Comment liked');
+            const likes = await Comment.findByIdAndUpdate(commentId, { $inc: { likesCount: 1 } }, { new: true });
+            return sendSuccessResponse(res, 201, 'Comment liked', { likesCount: likes.likesCount });
         }
     } catch (error) {
         return sendErrorResponse(res, 500, error.message);
@@ -61,10 +65,12 @@ exports.toggleCommentReplyLike = async (req, res) => {
 
         if (existingLike) {
             await CommentReplyLike.findByIdAndDelete(existingLike._id);
-            return sendSuccessResponse(res, 200, 'Comment reply disliked');
+            const likes = await CommentReply.findByIdAndUpdate(commentReplyId, { $inc: { likesCount: -1 } }, { new: true });
+            return sendSuccessResponse(res, 200, 'Comment reply disliked', { likesCount: likes.likesCount });
         } else {
             await CommentReplyLike.create({ commentReplyId, userId });
-            return sendSuccessResponse(res, 201, 'Comment reply liked');
+            const likes = await CommentReply.findByIdAndUpdate(commentReplyId, { $inc: { likesCount: -1 } }, { new: true });
+            return sendSuccessResponse(res, 201, 'Comment reply liked', { likesCount: likes.likesCount });
         }
     } catch (error) {
         return sendErrorResponse(res, 500, error.message);

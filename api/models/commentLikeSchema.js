@@ -17,4 +17,5 @@ const commentLikeSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('CommentLike', commentLikeSchema);
+const CommentLike = mongoose.model('CommentLike', commentLikeSchema);
+module.exports = CommentLike;

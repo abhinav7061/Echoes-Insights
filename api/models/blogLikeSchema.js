@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const blogLikeSchema = new mongoose.Schema({
     blogId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment",
+        ref: "Blog",
         required: true,
     },
     userId: {
@@ -17,4 +17,5 @@ const blogLikeSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('BlogLike', blogLikeSchema);
+const BlogLike = mongoose.model('BlogLike', blogLikeSchema);
+module.exports = BlogLike;
