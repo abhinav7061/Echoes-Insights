@@ -15,10 +15,6 @@ const commentReplySchema = new mongoose.Schema({
         ref: "User",
         required: true,
     },
-    commentsCount: {
-        type: Number,
-        default: 0,
-    },
     likesCount: {
         type: Number,
         default: 0,
@@ -27,11 +23,23 @@ const commentReplySchema = new mongoose.Schema({
     timestamps: true
 });
 
-commentReplySchema.pre('remove', async function (next) {
+commentReplySchema.pre('deleteOne', { document: true, query: false }, async function (next) {
     const commentReplyId = this._id;
 
     try {
         await CommentReplyLike.deleteMany({ commentReplyId });
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+
+commentReplySchema.pre('deleteMany', async function (next) {
+    const filter = this.getFilter();
+
+    try {
+        const commentReplyIds = await CommentReply.distinct('_id', filter);
+        await CommentReplyLike.deleteMany({ commentReplyId: { $in: commentReplyIds } });
         next();
     } catch (err) {
         next(err);

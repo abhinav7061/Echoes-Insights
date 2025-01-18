@@ -9,8 +9,7 @@ const ObjectId = mongoose.Types.ObjectId;
 exports.isAuthenticatedUser = async (req, res, next) => {
     try {
         const jwtToken = req?.cookies?.jwtToken || req?.body?.jwtToken || req?.headers["authorization"].replace("Bearer ", "");
-
-        if (!jwtToken) {
+        if (!jwtToken || jwtToken == 'null') {
             return sendErrorResponse(res, 401, "Login first to access resources");
         }
 

@@ -23,12 +23,12 @@ exports.connectCloudinary = () => {
  * @returns {Promise<Object>} - A promise that resolves to the Cloudinary response object containing the uploaded image details.
  * @throws Will log an error message to the console if an error occurs during the upload process.
  */
-exports.uploadProfileImageToCloudinary = async (image, folder, public_id = null) => {
+exports.uploadToCloudinary = async (image, folder, public_id = null, resourceType = 'image') => {
     try {
         // Convert buffer to a readable stream
         const stream = Readable.from(image.buffer);
         const uploadOptions = {
-            resource_type: 'image',
+            resource_type: resourceType,
             folder,
             overwrite: true,
         };
@@ -73,9 +73,9 @@ exports.generateOptimizedUrl = (public_id, version) => {
     return optimizedUrl;
 }
 
-exports.deleteImageFromCloudinary = async (folder, public_id) => {
+exports.deleteFromCloudinary = async (public_id) => {
     try {
-        cloudinary.api.delete_resources_by_prefix(`${folder}/${public_id}`, function (error, result) {
+        await cloudinary.api.delete_resources_by_prefix(public_id, function (error, result) {
             console.log({ result, error });
         });
     } catch (error) {
@@ -83,7 +83,7 @@ exports.deleteImageFromCloudinary = async (folder, public_id) => {
     }
 }
 
-exports.checkIsImageAvailableOnCloudinary = async (public_id) => {
+exports.checkIsResourceAvailableOnCloudinary = async (public_id) => {
     try {
         await cloudinary.api.resource(`polling/profile_images/${public_id}`, function (error, result) {
             if (error) {

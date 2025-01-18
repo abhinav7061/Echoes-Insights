@@ -41,7 +41,7 @@ const UserAccess = () => {
                 <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
                     {
                         userAccessAction.map((item) => <li key={item.id} className={`${item?.hasOwnItem ? "" : "px-4 py-2"} "cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-700 dark:hover:text-white"`}>
-                            {item?.hasOwnItem ? item.listItem : <span className="flex gap-1 items-center justify-center w-min"><ion-icon name={item.icon}></ion-icon>{item.name}</span>}
+                            {item?.hasOwnItem ? item.listItem : <span className="flex gap-1 items-center justify-center w-min whitespace-nowrap"><ion-icon name={item.icon}></ion-icon>{item.name}</span>}
                         </li>)
                     }
                 </ul>

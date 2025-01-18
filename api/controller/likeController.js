@@ -69,7 +69,7 @@ exports.toggleCommentReplyLike = async (req, res) => {
             return sendSuccessResponse(res, 200, 'Comment reply disliked', { likesCount: likes.likesCount });
         } else {
             await CommentReplyLike.create({ commentReplyId, userId });
-            const likes = await CommentReply.findByIdAndUpdate(commentReplyId, { $inc: { likesCount: -1 } }, { new: true });
+            const likes = await CommentReply.findByIdAndUpdate(commentReplyId, { $inc: { likesCount: 1 } }, { new: true });
             return sendSuccessResponse(res, 201, 'Comment reply liked', { likesCount: likes.likesCount });
         }
     } catch (error) {

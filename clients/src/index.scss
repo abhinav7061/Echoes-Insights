@@ -59,12 +59,12 @@
 	}
 
 	pre {
-		color: rgb(247, 223, 201);
+		color: rgb(255, 0, 191);
 		overflow: auto;
 		border-bottom-left-radius: 8px;
 		border-bottom-right-radius: 8px;
 		padding: 30px;
-		background-color: #333333;
+		background-color: rgb(252, 252, 252);
 	}
 
 	code {
@@ -129,6 +129,7 @@
 
 		pre {
 			background-color: #000000;
+			color: rgb(247, 223, 201);
 		}
 
 		code {

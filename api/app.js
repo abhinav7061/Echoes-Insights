@@ -33,12 +33,19 @@ const blog = require("./router/blogRoutes");
 const like = require("./router/likeRoutes");
 const saveBlog = require("./router/blogSaveRoutes");
 const follow = require("./router/followerRoutes");
+const readingProgress = require("./router/readingProgressRoutes");
+const comment = require("./router/commentRoutes");
+const commentReply = require("./router/commentReplyRoutes");
+
 //using routes
 app.use("/api/v1/user", user);
 app.use("/api/v1/blog", blog);
 app.use("/api/v1/like", like);
 app.use("/api/v1/save-blog", saveBlog);
 app.use("/api/v1/follow", follow);
+app.use("/api/v1/reading-progress", readingProgress);
+app.use("/api/v1/comment", comment);
+app.use("/api/v1/comment-reply", commentReply);
 app.use('/api/v1/blog-cover', express.static(__dirname + '/uploads/blog_cover')); // route to  serve the static file(profile image in this project)
 
 app.get('/', (req, res) => {

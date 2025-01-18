@@ -23,6 +23,10 @@ const apiRequest = async (url, method, body = null, headers = {}, useFormData = 
         const response = await fetch(`${apiRoot}${url}`, options);
         const data = await response.json();
 
+        if (!data.success) {
+            throw new Error(data.message);
+        }
+
         return data;
     } catch (error) {
         console.error('Error:', error.message);

@@ -19,13 +19,13 @@ const BlogContents = ({ content, className }) => {
             const currentSnippet = snippets[i];
 
             const wrapperDiv = document.createElement('div');
-            wrapperDiv.className = 'relative bg-neutral-700 dark:bg-neutral-800 mt-4 text-gray-400 rounded-lg border border-neutral-700 dark:border-neutral-800';
+            wrapperDiv.className = 'relative bg-neutral-100 dark:bg-neutral-800 mt-4 rounded-lg border border-neutral-300 dark:border-neutral-800';
 
             const lngDiv = document.createElement('div');
-            lngDiv.className = 'px-4 py-1.5 sm:py-2 text-neutral-50 rounded-t-lg bg-transparent flex justify-end items-center sticky z-10 top-[70px]';
+            lngDiv.className = 'px-4 py-1.5 sm:py-2 rounded-t-lg bg-transparent flex justify-end items-center sticky z-10 top-[70px]';
 
             const copyButton = document.createElement('button');
-            copyButton.className = 'px-2 text-[14px] py-[4px] flex items-center gap-1 text-neutral-50 rounded bg-neutral-700 dark:bg-neutral-800 cursor-pointer';
+            copyButton.className = 'px-2 text-[14px] py-[4px] flex items-center gap-1 rounded bg-neutral-100 dark:bg-neutral-800 cursor-pointer';
             const copyHtml = '<ion-icon name="copy-outline"></ion-icon><p style="font-size: 11px; line-height:12px;">Copy code</p>';
             copyButton.innerHTML = copyHtml;
 
@@ -151,7 +151,7 @@ const BlogContents = ({ content, className }) => {
         <>
             <div
                 ref={contentRef}
-                className={`content ${className} text-black dark:text-gray-100`}
+                className={`content ${className}`}
                 dangerouslySetInnerHTML={{ __html: content }}
             />
             {selectedText && (

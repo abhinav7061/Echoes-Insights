@@ -1,0 +1,39 @@
+:root {
+  --accent: #fe0222;
+}
+
+.progress {
+  position: sticky;
+  top: 80px;
+  width: 80px;
+  height: 80px;
+  margin: 0;
+  padding: 0;
+}
+
+.progress svg {
+  transform: translateX(-100px) rotate(-90deg);
+}
+
+circle {
+  stroke-dashoffset: 0;
+  stroke-width: 5%;
+  fill: none;
+}
+
+.bg {
+  stroke: var(--accent);
+  opacity: 0.2;
+}
+
+.progress .indicator {
+  stroke: var(--accent);
+}
+
+section>div {
+  /* width: 200px; */
+  height: auto;
+  /* overflow: scroll; */
+  border: 2px dotted var(--accent);
+  position: relative;
+}

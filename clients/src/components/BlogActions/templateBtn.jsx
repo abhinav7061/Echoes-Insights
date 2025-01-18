@@ -13,8 +13,8 @@ const TemplateBtn = ({ name, showName = false, icon, onClick, title, className =
             onMouseLeave={onMouseLeave}
         >
             <p className={`flex ${loading ? "animate-spin" : ""} ${iconClassName}`}><ion-icon name={loading ? 'reload-circle-outline' : icon}></ion-icon></p>
-            {children}
             {showName && <p className="whitespace-nowrap"> {loading ? "wait..." : name}</p>}
+            {children}
         </span>
     )
 }

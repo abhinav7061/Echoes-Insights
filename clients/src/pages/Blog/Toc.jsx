@@ -50,8 +50,10 @@ const Toc = ({ content, showTOC, setShowTOC, className = '', needToShowTOC, setN
     useEffect(() => {
         if (toc.length > 1) {
             window.addEventListener('scroll', handleScroll);
-            handleScroll(); // Call once to set the initial state
+            handleScroll();
             setNeedToShowTOC(true);
+        } else {
+            setNeedToShowTOC(false);
         }
         return () => {
             window.removeEventListener('scroll', handleScroll);

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { cn } from "../../lib/utils";
 import { Link } from "react-router-dom";
+import { getReadingProgress } from '../../lib/apiCalls/readingProgressApi.js'
 import { formatDistanceStrict } from "date-fns";
 import { people01 } from "../../assets";
 import BlogMenu from "./blogMenu";
@@ -8,6 +9,7 @@ import FollowUnfollow from "../BlogActions/followUnfollow";
 import ShareBtn from "../BlogActions/shareBtn";
 import BlogLikeDislike from "../BlogActions/blogLikeDislike";
 import BlogSaveUnsave from "../BlogActions/blogSaveUnsave";
+import debounce from "../../lib/debounce.js";
 
 const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
     const cardRef = useRef(null);
@@ -21,6 +23,7 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
     const cover = card.cover
     const views = card.views;
     const totalLikes = card?.likesCount || 0;
+    const [readProgress, setReadProgress] = useState(0);
     const [liked, setLiked] = useState(false);
     const [saved, setSaved] = useState(false);
     const [likesCount, setLikesCount] = useState(totalLikes);
@@ -42,6 +45,21 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
     }, []);
 
     useEffect(() => {
+        const fetchProgress = async () => {
+            try {
+                const response = await getReadingProgress(id);
+                response.success
+                    ? setReadProgress(response?.progress || 0)
+                    : (() => { throw new Error(response?.message || 'Unable to fetch reading progress'); })();
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fetchProgress();
+    }, []);
+
+    useEffect(() => {
         if (!enableScrollEffect) return;
         const handleScroll = () => {
             if (cardRef.current) {
@@ -56,11 +74,13 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
             }
         };
 
-        window.addEventListener("scroll", handleScroll);
-        handleScroll();
+        const debouncedScroll = debounce(handleScroll, 1000);
+
+        window.addEventListener("scroll", debouncedScroll);
+        debouncedScroll();
 
         return () => {
-            window.removeEventListener("scroll", handleScroll);
+            window.removeEventListener("scroll", debouncedScroll);
         };
     }, [enableScrollEffect]);
 
@@ -78,9 +98,16 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
             <div className="h-[165px] z-0">
                 <img src={cover.url} alt="blog cover" className={cn(
                     "object-cover w-full transition-[height] duration-500 ease-in-out rounded-xl bg-white dark:bg-[#1E1E1E]",
-                    hovered === index ? "h-80 absolute z-0" : "h-[165px] xs:border - b dark:border-neutral-700"
+                    hovered === index ? "h-[280px] xs:h-[300px] absolute z-0" : "h-[165px] xs:border-b dark:border-neutral-700"
                 )}
                 />
+                {readProgress > 0 && <div className={cn("transition-[height] duration-500 flex items-end ease-in-out rounded-xl overflow-hidden bg-transparent absolute top-0 left-0 right-0",
+                    hovered === index ? "h-[280px] xs:h-[300px]" : "h-[165px]"
+                )}>
+                    <div className="w-full bg-neutral-400 dark:bg-neutral-600">
+                        <div className="h-1 bg-red-600 rounded-full" style={{ width: `${readProgress}%` }}></div>
+                    </div>
+                </div>}
             </div>
             {hovered === index && <div className="bg-black/70 h-full w-full absolute z-[5]"></div>}
             <div className={cn("flex flex-col w-full xs:px-4 py-2 justify-end z-10 h-[115px] xs:h-[135px] bg-transparent transition-all duration-700",
@@ -94,7 +121,7 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
                         </span>
                         {hovered === index && <FollowUnfollow authorId={author._id} authorName={authorName} showName={true} btnClassName='py-[1px] px-1 bg-indigo-700 hover:bg-green-700 text-white hover:text-white dark:hover:text-white rounded gap-[2px]' followed={followed} setFollowed={setFollowed} />}
                     </span>
-                    <span className="mx-2 flex items-center text-base">&#8226;</span>
+                    <span className="mx-2 flex items-center text-base">&middot;</span>
                     <span className='line-clamp-1 flex items-center whitespace-nowrap'>{formattedDate}</span>
                 </div>
                 <h1 className={cn("font-poppins font-semibold dark:text-white text-base line-clamp-1 transition-colors duration-500 ease-in-out",
@@ -121,7 +148,7 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
             <div className={cn("w-full h-[1px] xs:hidden bg-neutral-200 dark:bg-neutral-600 z-30 absolute bottom-1 transition-opacity duration-300 ",
                 hovered === index ? "opacity-0" : ""
             )}></div>
-        </Link>
+        </Link >
     </div >
     )
 });

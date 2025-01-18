@@ -51,16 +51,25 @@ const blogSchema = new Schema({
     timestamps: true,
 })
 
-blogSchema.pre('remove', async function (next) {
-    //will update later for faster responce
+blogSchema.pre('deleteOne', { document: true, query: false }, async function (next) {
     const blogId = this._id;
     try {
         await BlogLike.deleteMany({ blogId });
         await BlogSave.deleteMany({ blogId });
-        const commentIds = await Comment.distinct('_id', { blogId });
-        for (const comment of commentIds) {
-            await comment.remove();
-        }
+        await Comment.deleteMany({ blogId });
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+
+blogSchema.pre('deleteMany', async function (next) {
+    const filter = this.getFilter();
+    try {
+        const blogIds = await Comment.distinct('_id', filter);
+        await BlogLike.deleteMany({ blogId: { $in: blogIds } });
+        await BlogSave.deleteMany({ blogId: { $in: blogIds } });
+        await Comment.deleteMany({ blogId: { $in: blogIds } });
         next();
     } catch (err) {
         next(err);
