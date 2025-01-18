@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { color } from '../../style'
 import WarningPrompt from '../../components/CustomPopup/WarningPrompt';
+import { deleteBlog } from '../../lib/apiCalls/blogApi';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -10,37 +11,19 @@ const DeleteBlog = ({ blogId }) => {
     const navigate = useNavigate();
     const [showPrompt, setShowPrompt] = useState(false);
 
-    const deleteBlog = async () => {
-        const toastId = toast.loading("deleting blog...", { duration: Infinity })
-        try {
-            const res = await fetch(`${apiUrl}/blog/deleteBlog/${blogId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`
-                },
-                credentials: 'include'
-            });
-            const data = await res.json();
-            toast.dismiss(toastId);
-            if (data.success) {
+    const handleAcceptance = async (accepted) => {
+        if (accepted) {
+            const toastId = toast.loading("deleting blog...", { duration: Infinity });
+            try {
+                await deleteBlog(blogId);
+                toast.dismiss(toastId);
                 toast.success('Blog deleted successfully');
                 setShowPrompt(false);
-                navigate('/blog');
+                navigate('/');
+            } catch (error) {
+                toast.dismiss(toastId);
+                toast.error('Failed to delete blog');
             }
-            else {
-                throw new Error(data.message);
-            }
-        } catch (error) {
-            console.log(error.message);
-            toast.dismiss(toastId);
-            toast.error('Failed to delete blog');
-        }
-    }
-
-    const handleAcceptance = (accepted) => {
-        if (accepted) {
-            deleteBlog();
         }
         else {
             setShowPrompt(false);

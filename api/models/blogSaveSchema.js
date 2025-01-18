@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const blogSaveSchema = new mongoose.Schema({
     blogId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Poll",
+        ref: "Blog",
         required: true
     },
     userId: {
@@ -17,4 +17,5 @@ const blogSaveSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('BlogSave', blogSaveSchema);
+const BlogSave = mongoose.model('BlogSave', blogSaveSchema);
+module.exports = BlogSave;

@@ -2,62 +2,37 @@ import React, { useState, useEffect, Suspense } from 'react'
 import Navbar from './Navbar';
 import Footer from './Footer';
 import styles from '../style';
-import { toast, Toaster } from 'sonner';
+import { Toaster } from 'sonner';
 import { Outlet } from 'react-router-dom';
 import { useUserAuthentication } from '../context/userContext';
 import { logo } from '../assets';
 import applyTheme from '../lib/themeManager';
-const apiUrl = import.meta.env.VITE_API_URL;
+import { authenticateUser } from '../lib/apiCalls/userApi';
 
 const Layout = () => {
-    const { jwtToken, login, logout } = useUserAuthentication();
+    const { login, logout } = useUserAuthentication();
     const [loading, setLoading] = useState(true)
     const checkUserAuthentication = async () => {
-        try {
-            const res = await fetch(`${apiUrl}/user/isAuthenticatedUser`, {
-                headers: {
-                    "Authorization": `Bearer ${jwtToken}`
-                },
-                credentials: "include",
-            });
-            const data = await res.json();
-            if (res.ok && data.success) {
-                login(data.user, jwtToken);
-
-            } else {
-                logout();
-            }
-        } catch (error) {
-            console.error('Failed to fetch user data', error);
-            toast.error('Server Error')
-            logout();
-        } finally {
-            setLoading(false);
-        }
+        await authenticateUser(login, logout);
+        setLoading(false);
     }
     useEffect(() => {
         checkUserAuthentication();
         applyTheme();
-    }, [])
-
-    // Add this in your useEffect or where you handle the link click
-    useEffect(() => {
         const handleHashChange = () => {
             const hash = window.location.hash;
             if (hash) {
                 const element = document.querySelector(hash);
                 if (element) {
                     window.scrollTo({
-                        top: element.offsetTop - 80, // Adjust 64 to match your header height
+                        top: element.offsetTop - 80,
                         behavior: 'smooth',
                     });
                 }
             }
         };
-
         window.addEventListener('hashchange', handleHashChange);
 
-        // Cleanup
         return () => {
             window.removeEventListener('hashchange', handleHashChange);
         };
@@ -65,9 +40,9 @@ const Layout = () => {
 
     return (
         <>
-            {loading ? <div className='flex justify-center items-center text-5xl bg-white dark:bg-neutral-950 text-black dark:text-white h-[100vh]'><img src={logo} width={250} alt="Loading..." className='animate-pulse' /></div> : (<>
+            {loading ? <div className='flex justify-center items-center text-5xl h-[100vh]'><img src={logo} width={250} alt="Loading..." className='animate-pulse' /></div> : (<>
                 <div className={`${styles.flexStart}`}>
-                    <div className={`${styles.boxWidth} ${styles.paddingX} relative`}>
+                    <div className={`${styles.boxWidth} ${styles.paddingX} relative bg-white dark:bg-neutral-950 text-black dark:text-white`}>
                         <div className='relative w-full min-h-screen flex flex-col'>
                             <Navbar />
                             <Toaster position="top-right" richColors closeButton='true' />

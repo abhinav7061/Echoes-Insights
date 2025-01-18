@@ -46,7 +46,7 @@ const Footer = () => (
 
       <div className="flex flex-row md:mt-0 mt-6 gap-3">
         {socialMedia.map(({ id, link, Icon }) => (
-          <a key={id} href={link} target="_blank" className="text-neutral-800 rounded-md overflow-hidden border border-neutral-700">
+          <a key={id} href={link} target="_blank" className="dark:text-neutral-800 rounded-md overflow-hidden border dark:border-neutral-700">
             <Icon size={30} bgStyle={{ fill: "currentcolor" }} />
           </a>
         ))}

@@ -1,10 +1,8 @@
 const User = require("../models/userSchema");
 const mongoose = require("mongoose");
 const Blog = require("../models/blogSchema");
-const { sendErrorResponse } = require("../lib/responseHelper");
-const { renameFileUploadedByMulter } = require("../lib/renameFileUploadedByMulter");
-const { deleteFile } = require("../lib/deleteFile");
-const { uploadProfileImageToCloudinary, generateOptimizedUrl } = require("../Config/cloudinary");
+const { sendErrorResponse, sendSuccessResponse } = require("../lib/responseHelper");
+const { uploadToCloudinary, generateOptimizedUrl, deleteFromCloudinary } = require("../Config/cloudinary");
 
 exports.getAllBlogSummaries = async (req, res) => {
     try {
@@ -52,7 +50,7 @@ exports.getBlog = async (req, res) => {
         if (!postDoc) {
             return sendErrorResponse(res, 404, `Your blog cann't be found`)
         }
-        postDoc.views += 1;
+        // postDoc.views += 1;
         await postDoc.save();
         res.json({
             success: true,
@@ -75,7 +73,7 @@ exports.createBlog = async (req, res) => {
     try {
         const cover = req.file;
         const authorId = req.user._id;
-        const result = await uploadProfileImageToCloudinary(cover, 'EchoesAndInsights/BlogCover');
+        const result = await uploadToCloudinary(cover, 'EchoesAndInsights/BlogCover');
         public_id = result.public_id
         url = generateOptimizedUrl(result.public_id, result.version);
         const { title, summary, content } = req.body;
@@ -115,7 +113,7 @@ exports.editBlog = async (req, res) => {
         }
         let newUrl = null;
         if (cover) {
-            const result = await uploadProfileImageToCloudinary(cover, 'EchoesAndInsights/BlogCover', postDoc?.cover?.public_id);
+            const result = await uploadToCloudinary(cover, 'EchoesAndInsights/BlogCover', postDoc?.cover?.public_id);
             const optimizedUrl = generateOptimizedUrl(result.public_id, result.version);
             postDoc.cover.url = optimizedUrl;
             postDoc.cover.public_id = result.public_id;
@@ -141,12 +139,9 @@ exports.deleteBlog = async (req, res) => {
         if (!postDoc) {
             return sendErrorResponse(res, 404, 'Blog not found');
         }
-        await deleteFile('uploads/blog_cover/', postDoc.cover);
+        await deleteFromCloudinary(postDoc?.cover?.public_id)
         await postDoc.deleteOne();
-        res.json({
-            success: true,
-            message: 'Blog Deleted Successfully'
-        });
+        return sendSuccessResponse(res, 200, 'Blog Deleted Successfully');
     } catch (error) {
         sendErrorResponse(res, 401, error.message)
     }

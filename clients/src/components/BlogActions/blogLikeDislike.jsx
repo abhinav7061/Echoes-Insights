@@ -5,7 +5,7 @@ import { checkBlogLike, toggleBlogLike } from '../../lib/apiCalls/likeApi';
 import { toast } from 'sonner';
 import { useUserAuthentication } from '../../context/userContext';
 
-const BlogLikeDislike = ({ blogId, icon = 'heart-outline', showName, btnClassName, className, liked, setLiked }) => {
+const BlogLikeDislike = ({ blogId, icon = 'heart-outline', showName, btnClassName, className, likesCount = 0, setLikesCount, liked, setLiked }) => {
     const [iconName, setIconName] = useState(icon);
     const [showCofetti, setShowCofetti] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -22,6 +22,7 @@ const BlogLikeDislike = ({ blogId, icon = 'heart-outline', showName, btnClassNam
                         setShowCofetti(false);
                     }, 500);
                 }
+                setLikesCount(result.likesCount);
                 setLiked(!liked);
                 toast.success(result.message);
             } else {
@@ -66,7 +67,9 @@ const BlogLikeDislike = ({ blogId, icon = 'heart-outline', showName, btnClassNam
                 className={btnClassName}
                 name={liked ? 'Deslike' : 'Like'}
                 loading={loading}
-            />
+            >
+                <span className={`text-[10px] font-semibold absolute -top-2 px-1 h-[14px] text-white dark:text-black rounded-full flex items-center justify-center bg-blue dark:bg-golden ${showName ? "left-1 -translate-x-full" : "right-2 translate-x-full"}`}>{likesCount}</span>
+            </TemplateBtn>
         </span>
     )
 }

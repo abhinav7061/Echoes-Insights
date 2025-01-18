@@ -9,3 +9,7 @@ export const createBlog = async ({ title, summary, content, files }) => {
 
     return apiRequest('/blog/createBlog', 'POST', data, {}, true);
 };
+
+export const deleteBlog = (blogId) => {
+    return apiRequest(`/blog/deleteBlog/${blogId}`, 'DELETE' );
+}

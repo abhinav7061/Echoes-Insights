@@ -19,8 +19,8 @@ const ReportIssue = ({ blogId, icon = 'flag', showName, btnClassName, className 
                 name={'Report an issue'}
             />
             {showReportForm && (
-                <div className="fixed top-0 left-0 w-screen h-screen bg-green-800/30 flex items-center justify-center text-black dark:text-white">
-                    <div ref={formRef} className="bg-white dark:bg-neutral-700 p-4 rounded-md shadow-base w-96">
+                <div className="fixed top-0 left-0 w-screen h-screen bg-transparent inset-0 flex items-center justify-center text-black dark:text-white">
+                    <div ref={formRef} className="bg-white dark:bg-neutral-700 p-4 rounded-md shadow-base w-[90vw] max-w-md">
                         <h2 className="text-lg font-bold mb-4">Report an issue</h2>
                         <textarea
                             className="w-full p-2 border bg-transparent outline-none border-gray-300 focus:border-blue dark:focus:border-golden rounded-md mb-4"

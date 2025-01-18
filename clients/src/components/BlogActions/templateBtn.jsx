@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TemplateBtn = ({ name, showName = false, icon, onClick, title, className = '', onMouseEnter, onMouseLeave, iconClassName = '', loading = false }) => {
+const TemplateBtn = ({ name, showName = false, icon, onClick, title, className = '', onMouseEnter, onMouseLeave, iconClassName = '', loading = false, children }) => {
     return (
         <span
             className={`dark:text-neutral-200 hover:text-blue dark:hover:text-golden flex gap-1 items-center ${loading ? "opacity-70 cursor-not-allowed pointer-events-none" : "cursor-pointer"} ${className}`}
@@ -14,6 +14,7 @@ const TemplateBtn = ({ name, showName = false, icon, onClick, title, className =
         >
             <p className={`flex ${loading ? "animate-spin" : ""} ${iconClassName}`}><ion-icon name={loading ? 'reload-circle-outline' : icon}></ion-icon></p>
             {showName && <p className="whitespace-nowrap"> {loading ? "wait..." : name}</p>}
+            {children}
         </span>
     )
 }
