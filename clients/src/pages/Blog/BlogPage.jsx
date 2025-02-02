@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
+import { Helmet } from 'react-helmet';
 import { format } from "date-fns";
 import Toc from "./Toc";
 import ErrorMessage from "../../components/ErrorMessage";
@@ -75,6 +76,18 @@ const BlogPage = () => {
     const { title, formattedDate, author, authorName, content, cover, summary, totalLikes, totalComments } = derivedValues;
     return (
         <>
+            <Helmet>
+                <title>{title}</title>
+                <meta property="og:title" content={title} />
+                <meta property="og:description" content={summary} />
+                <meta property="og:image" content={cover} />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="630" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={title} />
+                <meta name="twitter:description" content={summary} />
+                <meta name="twitter:image" content={cover} />
+            </Helmet>
             <div className={`my-8 flex w-full ${needToShowTOC ? 'justify-between' : 'justify-center flex-row-reverse'} md:gap-4`}>
                 <Toc content={content} showTOC={showTOC} setShowTOC={setShowTOC} needToShowTOC={needToShowTOC} setNeedToShowTOC={setNeedToShowTOC} />
                 <BlogDetails blogId={blogId} summary={summary} authorName={authorName} formattedDate={formattedDate} title={title} needToShowTOC={needToShowTOC} content={content} cover={cover} />
@@ -89,7 +102,7 @@ const BlogPage = () => {
                 />
             </div>
             <div className="flex flex-col xs:flex-row justify-center gap-3 sm:gap-10 break-words">
-                <CommentSection blogId={blogId} commentsCount={totalComments} className='' />
+                <CommentSection blogId={blogId} authorId={author._id} commentsCount={totalComments} className='' />
                 <RelatedBlogSection className='' />
             </div>
         </>
