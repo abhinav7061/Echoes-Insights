@@ -13,7 +13,7 @@ import ErrorMessage from '../ErrorMessage'
 import useInfiniteScroll from '../../hooks/useInfiniteScroll'
 import CommentActions from './CommentActions'
 
-const CommentSection = ({ blogId, commentsCount, className }) => {
+const CommentSection = ({ blogId, authorId, commentsCount, className }) => {
     const [showComments, setShowComments] = useState(false);
     const [totalComments, setTotalComments] = useState(commentsCount);
     const { data: comments, setData: setComments, loading, error, hasMore, loaderRef, debouncedReset } = useInfiniteScroll(`/comment/all-comment/${blogId}`);
@@ -58,7 +58,7 @@ const CommentSection = ({ blogId, commentsCount, className }) => {
                         comments.map(comment => {
                             return (
                                 <div key={comment._id} className=' relative mb-2'>
-                                    <CommentItem _id={comment._id} totalReply={comment.repliesCount} user={comment.user} createdAt={comment.createdAt} likesCount={comment.likesCount} comment={comment.comment} setComments={setComments} setTotalComments={setTotalComments} showComments={showComments} />
+                                    <CommentItem _id={comment._id} authorId={authorId} totalReply={comment.repliesCount} user={comment.user} createdAt={comment.createdAt} likesCount={comment.likesCount} comment={comment.comment} setComments={setComments} setTotalComments={setTotalComments} showComments={showComments} />
                                 </div>
                             )
                         })
@@ -74,14 +74,14 @@ const CommentSection = ({ blogId, commentsCount, className }) => {
 
 export default CommentSection
 
-export const CommentItem = ({ _id, totalReply, user, createdAt, comment, setComments, likesCount, setTotalComments, showComments }) => {
+export const CommentItem = ({ _id, authorId, totalReply, user, createdAt, comment, setComments, likesCount, setTotalComments, showComments }) => {
     const [repliesCount, setRepliesCount] = useState(totalReply);
     const [replies, setReplies] = useState([]);
     return (
         <>
             <div className='w-full flex items-start text-sm relative'>
                 {repliesCount > 0 && <div className='h-[calc(100%-35px)] absolute bottom-0 left-3 flex-shrink-0 w-[2px] bg-neutral-300 dark:bg-neutral-500 z-0' />}
-                <CommentCard userImageClass='w-7 h-7 z-[5]' avatar={user?.avatar} name={user?.name} date={createdAt} text={comment} action={<CommentActions value={comment} commentId={_id} setComments={setComments} setTotalComments={setTotalComments} />}>
+                <CommentCard isAuthor={authorId == user._id} userImageClass='w-7 h-7 z-[5]' avatar={user?.avatar} name={user?.name} date={createdAt} text={comment} action={<CommentActions value={comment} commentId={_id} setComments={setComments} setTotalComments={setTotalComments} />}>
                     <div className='flex gap-3 items-center mt-2'>
                         <LikeDislike id={_id} showName={true} likesCount={likesCount} checkLike={checkCommentLike} toggleLike={toggleCommentLike} likeType='comment' />
                         <span className='h-3 border-l border-neutral-400'></span>

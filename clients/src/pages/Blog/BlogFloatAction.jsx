@@ -35,7 +35,7 @@ const BlogFloatAction = ({ blogId, authorId, authorName, totalLikes = 0, shareBt
                 setSaved={setSaved}
                 setFollowed={setFollowed}
                 setLikesCount={setLikesCount}
-                className='sticky top-32 justify-center w-min md:items-end flex-row md:flex-col gap-4 items-center mx-2 border md:border-0 dark:border-neutral-600 dark:bg-neutral-900/50 bg-neutral-100/50 shadow-base md:shadow-none backdrop-blur-lg px-6 py-3 md:p-0 md:bg-transparent rounded-full md:rounded-none'
+                className='sticky top-32 justify-center w-min md:items-end flex-row md:flex-col gap-4 items-center mx-2 border md:border-0 dark:border-neutral-600 dark:bg-neutral-950/50 bg-neutral-100/50 shadow-base md:shadow-none backdrop-blur-lg px-6 py-3 md:p-0 md:bg-transparent rounded-full md:rounded-none'
                 iconClassName='w-min'
                 btnClassName='w-min text-lg xs:text-2xl md:text-lg p-0 md:p-3 rounded-[10px] hover:rounded-xl sm:rounded-xl sm:hover:rounded-2xl md:bg-neutral-200 dark:md:bg-neutral-800 transition-all duration-300'
                 shareBtnsClassName={shareBtnsClassName}

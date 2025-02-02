@@ -1,4 +1,4 @@
-import logo from './logo.webp';
+import logo from './logo.png';
 import send from "./Send.svg";
 import shield from "./Shield.svg";
 import star from "./Star.svg";
