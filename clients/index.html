@@ -29,6 +29,8 @@
 
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png" />
+  <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
   <link rel="shortcut icon" href="/favicon/favicon.ico" />
   <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet' />
@@ -36,23 +38,18 @@
     integrity="sha512-+tHv/KFkcjuA2bm+udAuNFE+QEV+WFBjiZaKXj0YqoGyC6wn+5PWU2SOfex9CUivuJIIuigTsJr1Re38gxSulw=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <title>Echoes & Insights: A Blogging Platform</title>
-  <!-- Google Tag Manager -->
-  <script>(function (w, d, s, l, i) {
-      w[l] = w[l] || []; w[l].push({
-        'gtm.start':
-          new Date().getTime(), event: 'gtm.js'
-      }); var f = d.getElementsByTagName(s)[0],
-        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-K4QPZ68M');</script>
-  <!-- End Google Tag Manager -->
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K4Y888Z6QS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-K4Y888Z6QS');
+  </script>
 </head>
 
 <body>
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K4QPZ68M" height="0" width="0"
-      style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
   <noscript>You need to enable javascript to run this application</noscript>
   <div id="root" class="dark:bg-neutral-900 bg-neutral-50"></div>
   <script type="module" src="/src/main.jsx"></script>
