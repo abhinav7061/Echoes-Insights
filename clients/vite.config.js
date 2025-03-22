@@ -12,4 +12,12 @@ export default defineConfig({
 	// 		},
 	// 	},
 	// },
+	server: {
+		host: "0.0.0.0", // Bind to all network interfaces
+		port: 5173, // Optional, specify the port
+		strictPort: true, // Ensures Vite doesn't switch ports
+		hmr: {
+			clientPort: 5173, // Ensures HMR works on network devices
+		},
+	},
 })
