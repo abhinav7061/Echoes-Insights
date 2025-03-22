@@ -35,7 +35,7 @@ const Shorts = () => {
     };
 
     useEffect(() => {
-        document.body.style.overflow = (isShowComments || windowInWidth < 480) ? 'hidden' : 'auto'
+        document.body.style.overflow = ((isShowComments && windowInWidth < 1200) || windowInWidth < 480) ? 'hidden' : 'auto'
     }, [isShowComments, windowInWidth])
 
     useEffect(() => {
@@ -60,7 +60,7 @@ const Shorts = () => {
         <div className={`fixed top-0 bottom-0 right-0 left-0 xs:relative z-[1001] xs:z-auto bg-white dark:bg-neutral-950 h-screen xs:h-[calc(100vh-90px)] `}>
             <div
                 role='button'
-                className="absolute top-3 left-3 xs:bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800/40 xs:dark:bg-neutral-800 dark:hover:bg-neutral-700 flex p-3 text-2xl  rounded-full transition-all duration-500 z-10 xs:hidden"
+                className="absolute top-3 left-3 bg-neutral-100/30 sm:bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800/40 xs:dark:bg-neutral-800 dark:hover:bg-neutral-700 flex p-3 text-2xl  rounded-full transition-all duration-500 z-10 xs:hidden"
                 onClick={() => navigate(-1)}
             >
                 <ion-icon name="arrow-back-outline"></ion-icon>
@@ -74,30 +74,30 @@ const Shorts = () => {
                         <div key={short.id} className="relative snap-start h-full flex gap-5 flex-shrink-0 w-full">
                             <div className="absolute h-full sm:relative left-3 flex flex-col gap-3 justify-center z-10">
                                 <button
-                                    className="xs:bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800/40 sm:dark:bg-neutral-800 dark:hover:bg-neutral-700 flex p-3 text-2xl rounded-full transition-all duration-500"
+                                    className="bg-neutral-100/30 sm:bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800/40 sm:dark:bg-neutral-800 dark:hover:bg-neutral-700 flex p-3 text-2xl rounded-full transition-all duration-500"
                                     onClick={() => setIsShowComments(!isShowComments)}
                                 >
                                     <ion-icon name="chatbubble-outline"></ion-icon>
                                 </button>
                                 <button
-                                    className="xs:bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800/40 sm:dark:bg-neutral-800 dark:hover:bg-neutral-700 flex p-3 text-2xl  rounded-full transition-all duration-500"
+                                    className="bg-neutral-100/30 sm:bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800/40 sm:dark:bg-neutral-800 dark:hover:bg-neutral-700 flex p-3 text-2xl  rounded-full transition-all duration-500"
                                 >
                                     <ion-icon name="thumbs-up-outline"></ion-icon>
                                 </button>
                                 <button
-                                    className="xs:bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800/40 sm:dark:bg-neutral-800 dark:hover:bg-neutral-700 flex p-3 text-2xl  rounded-full transition-all duration-500"
+                                    className="bg-neutral-100/30 sm:bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800/40 sm:dark:bg-neutral-800 dark:hover:bg-neutral-700 flex p-3 text-2xl  rounded-full transition-all duration-500"
                                 >
                                     <ion-icon name="thumbs-down-outline"></ion-icon>
                                 </button>
                                 <button
-                                    className="xs:bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800/40 sm:dark:bg-neutral-800 dark:hover:bg-neutral-700 flex p-3 text-2xl  rounded-full transition-all duration-500"
+                                    className="bg-neutral-100/30 sm:bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800/40 sm:dark:bg-neutral-800 dark:hover:bg-neutral-700 flex p-3 text-2xl  rounded-full transition-all duration-500"
                                 >
                                     <ion-icon name="bookmark-outline"></ion-icon>
                                 </button>
                             </div>
-                            <div className='short xs:rounded-lg w-full max-w-[500px] overflow-hidden xs:border dark:border-neutral-700 flex-grow relative flex flex-col justify-end bg-[url(https://cdn.pixabay.com/photo/2016/01/02/02/03/orange-1117645_960_720.jpg)] bg-cover bg-center bg-no-repeat'>
-                                <div className="absolute inset-0 bg-black bg-opacity-60"></div>
-                                <p className="p-5 ps-16 sm:ps-3 text-justify overflow-auto z-[1]">{short.text}</p>
+                            <div className='short xs:rounded-2xl w-full max-w-[500px] overflow-hidden xs:border dark:border-neutral-700 flex-grow relative flex flex-col justify-end bg-[url(https://cdn.pixabay.com/photo/2016/01/02/02/03/orange-1117645_960_720.jpg)] bg-cover bg-center bg-no-repeat'>
+                                <div className="absolute inset-0 bg-black bg-opacity-70 xs:bg-opacity-80"></div>
+                                <p className="m-6 me-0 pe-6 ps-12 sm:ps-0 text-justify font-semibold font-sans text-lg text-neutral-200 overflow-auto z-[1]">{short.text}</p>
                                 <div className='w-full p-3 pt-0 flex gap-3 items-center z-[1]'>
                                     <img src='https://cdn.pixabay.com/photo/2016/01/02/02/03/orange-1117645_960_720.jpg' className='rounded-full h-10 w-10 object-cover' />
                                     <div className='flex flex-col h-full justify-end flex-grow'>
@@ -115,14 +115,14 @@ const Shorts = () => {
                         </div>
                     ))}
                 </div>
-                <div ref={commentRef} className={`w-0 h-0 z-[1000] ${isShowComments ? 'xs:w-[600px] h-[95%] top-3 max-h-[500px] lg:w-[450px] max-w-[95vw] xs:border' : ''} absolute lg:static bg-white dark:bg-neutral-950 top-20 bottom-20 xs:transition-all xs:duration-500 lg:h-[calc(100vh-90px)] overflow-y-scroll rounded-lg dark:border-neutral-700`}>
-                    {isShowComments && <div className='fixed h-screen w-screen bg-neutral-600/20 top-0 left-0 z-[-1] lg:hidden' onClick={() => setIsShowComments(false)} />}
+                {isShowComments && <div className='fixed h-screen w-screen bg-neutral-800/40 dark:bg-neutral-600/20 top-0 left-0 z-[1000]' onClick={() => setIsShowComments(false)} />}
+                <div ref={commentRef} className={`w-0 h-0 z-[1001] lg:z-[20]  ${isShowComments ? 'xs:w-[600px] h-[95%] top-3 max-h-[500px]  lg:w-[450px] max-w-[95vw] xs:border' : ''} absolute lg:static bg-white dark:bg-neutral-950 top-20 bottom-20 xs:transition-all xs:duration-500 lg:h-[calc(100vh-90px)] overflow-y-scroll rounded-2xl dark:border-neutral-700`}>
                     <CommentSection blogId={'6770433fb69ffe51da45802b'} authorId={'6770433fb69ffe51da45802b'} className='sm:w-full' isShowComments={isShowComments} setIsShowComments={setIsShowComments} commentInputClass={styles.commentInput} preventBodyScroll={false} />
                 </div>
                 <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex-col gap-3 z-10 hidden lg:flex">
                     <button
                         onClick={() => handleScroll('up')}
-                        className={cn("xs:bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800/40 xs:dark:bg-neutral-800 dark:hover:bg-neutral-700 flex p-3 text-2xl  rounded-full transition-all duration-500",
+                        className={cn("bg-neutral-100/30 sm:bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800/40 xs:dark:bg-neutral-800 dark:hover:bg-neutral-700 flex p-3 text-2xl  rounded-full transition-all duration-500",
                             index === 0 && "opacity-0 translate-y-[calc(100%+12px)]",
                         )}
                         style={{ visibility: index === 0 ? 'hidden' : 'visible' }}
@@ -131,7 +131,7 @@ const Shorts = () => {
                     </button>
                     <button
                         onClick={() => handleScroll('down')}
-                        className={cn("xs:bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800/40 xs:dark:bg-neutral-800 dark:hover:bg-neutral-700 flex p-3 text-2xl  rounded-full transition-all duration-500",
+                        className={cn("bg-neutral-100/30 sm:bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800/40 xs:dark:bg-neutral-800 dark:hover:bg-neutral-700 flex p-3 text-2xl  rounded-full transition-all duration-500",
                             index === shortsData.length - 1 && "opacity-0 -translate-y-[calc(100%+12px)]",
                         )}
                         style={{ visibility: index === shortsData.length - 1 ? 'hidden' : 'visible' }}

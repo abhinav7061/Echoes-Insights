@@ -14,13 +14,50 @@ import useInfiniteScroll from '../../hooks/useInfiniteScroll'
 import CommentActions from './CommentActions'
 import useWindowSize from '../../hooks/useWindowSize'
 
+const MIN_HEIGHT = 0;
+const MAX_HEIGHT = window.innerHeight - 240;
+
 const CommentSection = ({ blogId, authorId, commentsCount, className, isShowComments = false, setIsShowComments, preventBodyScroll = true, commentInputClass }) => {
     const [showComments, setShowComments] = useState(isShowComments);
     const [totalComments, setTotalComments] = useState(commentsCount);
+    const [touchStartY, setTouchStartY] = useState(0);
+    const [touchMoveY, setTouchMoveY] = useState(0);
+    const [draggedHeight, setDraggedHeight] = useState(null);
     const { data: comments, setData: setComments, loading, error, hasMore, loaderRef, debouncedReset } = useInfiniteScroll(`/comment/all-comment/${blogId}`);
     const commentContainerRef = useRef();
+    const commentsDiv = useRef();
     const { windowInWidth } = useWindowSize();
-    useOutsideClick(commentContainerRef, () => setShowComments(false));
+    useOutsideClick(commentContainerRef, () => {
+        if (windowInWidth < 1200 && preventBodyScroll) setShowComments(false)
+    })
+
+    const handleTouchStart = (e) => {
+        setTouchStartY(e.touches[0].clientY);
+        setDraggedHeight(null);
+    };
+    const handleTouchMove = (e) => {
+        const moveY = e.touches[0].clientY;
+        const deltaY = moveY - touchStartY;
+
+        if (deltaY > 100 && commentsDiv.current?.scrollTop === 0) {
+            setDraggedHeight(Math.max(MAX_HEIGHT - deltaY, MIN_HEIGHT));
+        } else {
+            setDraggedHeight(null);
+        }
+
+        setTouchMoveY(moveY);
+    };
+    const handleTouchEnd = () => {
+        const swipeDistance = touchMoveY - touchStartY;
+
+        if (swipeDistance > 100 && commentsDiv.current?.scrollTop === 0) {
+            setShowComments(false);
+        }
+
+        setTouchStartY(0);
+        setTouchMoveY(0);
+    };
+
     const handleCommentSubmit = async (comment) => {
         try {
             const result = await addComment(blogId, comment);
@@ -40,6 +77,7 @@ const CommentSection = ({ blogId, authorId, commentsCount, className, isShowComm
     }, [isShowComments]);
 
     useEffect(() => {
+        setDraggedHeight(null);
         setIsShowComments && setIsShowComments(showComments);
     }, [showComments]);
     useEffect(() => {
@@ -56,8 +94,8 @@ const CommentSection = ({ blogId, authorId, commentsCount, className, isShowComm
     }
 
     return (
-        <div className={`w-full sm:w-3/5 ${className}`}>
-            <div className={`rounded-xl xs:rounded-none border xs:border-0 px-4 py-2 xs:pb-5  dark:bg-neutral-950 border-neutral-200 dark:border-neutral-700 xs:pointer-events-none ${showComments ? "pointer-events-none" : ""}`}
+        <div className={`w-full sm:w-3/5 ${showComments ? '' : 'h-[78px] xs:h-auto overflow-hidden'} ${className}`}>
+            <div className={`rounded-xl xs:rounded-none border xs:border-0 px-4 py-2 xs:pb-5 bg-white dark:bg-neutral-950 border-neutral-200 dark:border-neutral-700 xs:pointer-events-none ${showComments ? "pointer-events-none" : ""}`}
                 onClick={() => (window.innerWidth < 480) && setShowComments(!showComments)}
                 role='button'
             >
@@ -66,12 +104,19 @@ const CommentSection = ({ blogId, authorId, commentsCount, className, isShowComm
                 </h1>
                 <span className='xs:hidden flex text-xs mt-1'><CommentCard userImageClass='w-7 h-7' name='top Commenter' date='2025-01-11T14:21:00.190Z' text='this is top comment' /></span>
             </div>
-            <div ref={commentContainerRef} className={cn('xs:block xs:static h-[calc(100vh-240px)] xs:h-auto xs:bg-white xs:dark:bg-neutral-950',
-                showComments ? "flex flex-col fixed w-full xs:w-auto top-60 left-0 bg-neutral-50 dark:bg-neutral-800 z-[100] rounded-t-xl shadow-[0_-5px_20px_0px_rgba(23,23,23,0.7)] xs:shadow-none" : "hidden"
-            )}>
+            <div ref={commentContainerRef} className={cn('xs:block xs:static xs:h-auto xs:bg-white xs:dark:bg-neutral-950 xs:rounded-t-none transition-[height] duration-700 ease-in-out',
+                showComments ? "flex flex-col fixed w-full xs:w-auto bottom-0 left-0 bg-neutral-50 dark:bg-neutral-800 z-[100] rounded-t-xl shadow-[0_-5px_20px_0px_rgba(23,23,23,0.7)] xs:shadow-none h-[calc(100vh-240px)]" : "h-0"
+            )}
+                style={draggedHeight !== null? {
+                    height: `${draggedHeight}px`
+                }: {}}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+            >
                 <div className='h-[24px] sticky xs:hidden top-0 bg-neutral-50 dark:bg-neutral-800 w-full z-[100]  flex py-2 justify-center rounded-t-xl' role='button' onClick={() => setShowComments(false)}><div className='h-2 w-20 rounded-full bg-neutral-500'></div></div>
                 <CommentInputForm className={`px-2 xs:mb-6 pb-3 xs:py-4 sticky top-0 xs:top-16 bg-neutral-50 dark:bg-neutral-800 xs:bg-white xs:dark:bg-neutral-950 ${commentInputClass}`} onSubmit={handleCommentSubmit} />
-                <div className='flex-grow p-4 h-auto overflow-y-scroll xs:overflow-y-visible'>
+                <div ref={commentsDiv} className='flex-grow p-4 h-auto overflow-y-scroll xs:overflow-y-visible'>
                     {
                         comments.map(comment => {
                             return (
