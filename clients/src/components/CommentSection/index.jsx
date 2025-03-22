@@ -12,12 +12,14 @@ import { addComment } from '../../lib/apiCalls/commentApi'
 import ErrorMessage from '../ErrorMessage'
 import useInfiniteScroll from '../../hooks/useInfiniteScroll'
 import CommentActions from './CommentActions'
+import useWindowSize from '../../hooks/useWindowSize'
 
-const CommentSection = ({ blogId, authorId, commentsCount, className, isShowComments = false, preventBodyScroll=true, commentInputClass }) => {
+const CommentSection = ({ blogId, authorId, commentsCount, className, isShowComments = false, setIsShowComments, preventBodyScroll = true, commentInputClass }) => {
     const [showComments, setShowComments] = useState(isShowComments);
     const [totalComments, setTotalComments] = useState(commentsCount);
     const { data: comments, setData: setComments, loading, error, hasMore, loaderRef, debouncedReset } = useInfiniteScroll(`/comment/all-comment/${blogId}`);
     const commentContainerRef = useRef();
+    const { windowInWidth } = useWindowSize();
     useOutsideClick(commentContainerRef, () => setShowComments(false));
     const handleCommentSubmit = async (comment) => {
         try {
@@ -38,20 +40,16 @@ const CommentSection = ({ blogId, authorId, commentsCount, className, isShowComm
     }, [isShowComments]);
 
     useEffect(() => {
-        const handleResize = () => {
-            if (!preventBodyScroll) return;
-            if (showComments) {
-                document.body.style.overflow = window.innerWidth < 460 ? 'hidden' : 'auto';
-            } else {
-                document.body.style.overflow = 'auto';
-            }
+        setIsShowComments && setIsShowComments(showComments);
+    }, [showComments]);
+    useEffect(() => {
+        if (!preventBodyScroll) return;
+        if (showComments) {
+            document.body.style.overflow = window.innerWidth < 460 ? 'hidden' : 'auto';
+        } else {
+            document.body.style.overflow = 'auto';
         }
-        window.addEventListener('resize', handleResize)
-        handleResize();
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        }
-    }, [showComments])
+    }, [showComments, windowInWidth])
 
     if (error) {
         return <span className='w-full sm:w-3/5'><ErrorMessage heading='Error fetching Comments' message={error} action={debouncedReset} /></span>

@@ -116,8 +116,8 @@ const Shorts = () => {
                     ))}
                 </div>
                 <div ref={commentRef} className={`w-0 h-0 z-[1000] ${isShowComments ? 'xs:w-[600px] h-[95%] top-3 max-h-[500px] lg:w-[450px] max-w-[95vw] xs:border' : ''} absolute lg:static bg-white dark:bg-neutral-950 top-20 bottom-20 xs:transition-all xs:duration-500 lg:h-[calc(100vh-90px)] overflow-y-scroll rounded-lg dark:border-neutral-700`}>
-                    {/* {isShowComments && <div className='fixed h-screen w-screen bg-neutral-600/20 top-0 left-0 z-[-1] lg:hidden' onClick={() => setIsShowComments(false)} />} */}
-                    <CommentSection blogId={'6770433fb69ffe51da45802b'} authorId={'6770433fb69ffe51da45802b'} className='sm:w-full' isShowComments={isShowComments} commentInputClass={styles.commentInput} preventBodyScroll={false} />
+                    {isShowComments && <div className='fixed h-screen w-screen bg-neutral-600/20 top-0 left-0 z-[-1] lg:hidden' onClick={() => setIsShowComments(false)} />}
+                    <CommentSection blogId={'6770433fb69ffe51da45802b'} authorId={'6770433fb69ffe51da45802b'} className='sm:w-full' isShowComments={isShowComments} setIsShowComments={setIsShowComments} commentInputClass={styles.commentInput} preventBodyScroll={false} />
                 </div>
                 <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex-col gap-3 z-10 hidden lg:flex">
                     <button
