@@ -38,7 +38,7 @@ const Reply = ({ commentId, repliesCount, setRepliesCount, setReplies, setTotalC
             </TemplateBtn>
             {show && <div
                 ref={container}
-                className='absolute translate-x-[-40%] w-[300px] max-w-[90vw]  xs:translate-x-[-50%] sm:translate-x-0 bg-neutral-200 px-4 py-2 rounded-lg dark:bg-neutral-700 xs:dark:bg-neutral-800  top-6 z-[100] xs:w-full min-w-[200px] shadow-sm shadow-neutral-400 dark:shadow-neutral-600 '
+                className='absolute translate-x-[-40%] w-[300px] max-w-[90vw] xs:translate-x-[-20%] sm:translate-x-0 bg-neutral-200 px-4 py-2 rounded-lg dark:bg-neutral-700 xs:dark:bg-neutral-800  top-6 z-[100] xs:w-full min-w-[300px] shadow-sm shadow-neutral-400 dark:shadow-neutral-600'
             >
                 <CommentInputForm onSubmit={(reply) => handleReply(reply)} isReply={true} autoFocus={true} />
             </div>}

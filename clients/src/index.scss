@@ -15,6 +15,12 @@
 	margin: 0;
 }
 
+body {
+	width: 100vw;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
 @font-face {
 	font-family: 'logo-font';
 	src: url('./assets/logo-font.otf') format('opentype');
@@ -216,4 +222,9 @@
 	75% {
 		transform: translateY(-2px);
 	}
+}
+
+.scrollbar-none {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
 }
