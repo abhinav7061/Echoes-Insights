@@ -38,13 +38,8 @@ const CommentSection = ({ blogId, authorId, commentsCount, className, isShowComm
     const handleTouchMove = (e) => {
         const moveY = e.touches[0].clientY;
         const deltaY = moveY - touchStartY;
-
-        if (deltaY > 100 && commentsDiv.current?.scrollTop === 0) {
-            setDraggedHeight(Math.max(MAX_HEIGHT - deltaY, MIN_HEIGHT));
-        } else {
-            setDraggedHeight(null);
-        }
-
+        const draggH = commentsDiv.current?.scrollTop === 0 ? Math.max(MAX_HEIGHT - deltaY, MIN_HEIGHT) : null;
+        setDraggedHeight(draggH);
         setTouchMoveY(moveY);
     };
     const handleTouchEnd = () => {
@@ -53,7 +48,7 @@ const CommentSection = ({ blogId, authorId, commentsCount, className, isShowComm
         if (swipeDistance > 100 && commentsDiv.current?.scrollTop === 0) {
             setShowComments(false);
         }
-
+        setDraggedHeight(null);
         setTouchStartY(0);
         setTouchMoveY(0);
     };
@@ -94,7 +89,7 @@ const CommentSection = ({ blogId, authorId, commentsCount, className, isShowComm
     }
 
     return (
-        <div className={`w-full sm:w-3/5 ${showComments ? '' : 'h-[78px] xs:h-auto overflow-hidden'} ${className}`}>
+        <div className={`w-full sm:w-3/5 ${className}`}>
             <div className={`rounded-xl xs:rounded-none border xs:border-0 px-4 py-2 xs:pb-5 bg-white dark:bg-neutral-950 border-neutral-200 dark:border-neutral-700 xs:pointer-events-none ${showComments ? "pointer-events-none" : ""}`}
                 onClick={() => (window.innerWidth < 480) && setShowComments(!showComments)}
                 role='button'
@@ -104,12 +99,13 @@ const CommentSection = ({ blogId, authorId, commentsCount, className, isShowComm
                 </h1>
                 <span className='xs:hidden flex text-xs mt-1'><CommentCard userImageClass='w-7 h-7' name='top Commenter' date='2025-01-11T14:21:00.190Z' text='this is top comment' /></span>
             </div>
-            <div ref={commentContainerRef} className={cn('xs:block xs:static xs:h-auto xs:bg-white xs:dark:bg-neutral-950 xs:rounded-t-none transition-[height] duration-700 ease-in-out',
-                showComments ? "flex flex-col fixed w-full xs:w-auto bottom-0 left-0 bg-neutral-50 dark:bg-neutral-800 z-[100] rounded-t-xl shadow-[0_-5px_20px_0px_rgba(23,23,23,0.7)] xs:shadow-none h-[calc(100vh-240px)]" : "h-0"
+            <div ref={commentContainerRef} className={cn('fixed bottom-0 left-0 w-full xs:w-auto z-[100] bg-neutral-50 dark:bg-neutral-800 xs:block xs:static xs:h-auto xs:bg-white xs:dark:bg-neutral-950 rounded-t-2xl xs:rounded-t-none transition-[height] duration-500 ease-in-out',
+                showComments ? "flex flex-col shadow-[0_-5px_20px_0px_rgba(23,23,23,0.7)] xs:shadow-none h-[calc(100vh-240px)]" : "h-0"
             )}
-                style={draggedHeight !== null? {
-                    height: `${draggedHeight}px`
-                }: {}}
+                style={draggedHeight !== null ? {
+                    height: `${draggedHeight}px`,
+                    transition: 'none'
+                } : {}}
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
