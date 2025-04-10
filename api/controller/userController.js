@@ -16,7 +16,8 @@ exports.registerUser = async (req, res) => {
 
         return sendSuccessResponse(res, 200, 'Registered Successfully', {
             user: { id: user._id, name: user.name, email: user.email, avatar: user?.avatar },
-            cookies: [{ name: 'jwtToken', value: jwtToken, options: { expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), httpOnly: true } }]
+            cookies: [{ name: 'jwtToken', value: jwtToken, options: { expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), httpOnly: true } }],
+            jwtToken
         });
     } catch (error) {
         console.error(error);
@@ -42,7 +43,8 @@ exports.loginUser = async (req, res) => {
 
         return sendSuccessResponse(res, 200, 'Logged in Successfully', {
             user: { id: user._id, name: user.name, email: user.email, avatar: user?.avatar },
-            cookies: [{ name: 'jwtToken', value: jwtToken, options: cookieOptions }]
+            cookies: [{ name: 'jwtToken', value: jwtToken, options: cookieOptions }],
+            jwtToken
         });
     } catch (error) {
         console.error('Error: ', error);
