@@ -14,6 +14,7 @@ function App() {
 					<Route path="/reset-password" element={<ResetPassword />} />
 					<Route path="/create_blog" element={<CreateBlog />} />
 					<Route path='/shorts' element={<Shorts />} />
+					<Route path='/shorts/:shortId' element={<Shorts />} />
 					<Route path="*" element={<NoPage />} />
 				</Route>
 			</Routes>

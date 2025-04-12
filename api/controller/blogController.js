@@ -146,3 +146,57 @@ exports.deleteBlog = async (req, res) => {
         sendErrorResponse(res, 401, error.message)
     }
 };
+
+exports.getShorts = async (req, res) => {
+    try {
+        const limit = parseInt(req.query.limit) || 5;
+        const cursor = req.query.cursor;
+
+        let currentShort
+        console.log({
+            query: req.query
+        })
+
+        if (cursor && cursor !== 'undefined') {
+            currentShort = await Blog.findById(cursor)
+                .populate('author', 'name')
+                .select('title summary createdAt cover author');
+            if (!currentShort) {
+                sendErrorResponse(res, 404, 'Shorts not found');
+                currentShort = await Blog.findOne()
+                    .populate('author', 'name')
+                    .sort({ createdAt: -1 })
+                    .select('title summary createdAt cover author')
+                    .limit(1);
+            }
+        }
+        else {
+            currentShort = await Blog.findOne()
+                .populate('author', 'name')
+                .sort({ createdAt: -1 })
+                .select('title summary createdAt cover author')
+                .limit(1);
+        }
+
+        const shortsBefore = await Blog.find({ createdAt: { $lt: currentShort.createdAt } })
+            .populate('author', 'name')
+            .sort({ createdAt: -1 })
+            .limit(limit - 1)
+            .select('title summary createdAt cover author');
+        const shorts = [
+            currentShort,
+            ...shortsBefore,
+        ];
+        const nextShort = await Blog.findOne({
+            createdAt: { $lt: shorts[shorts.length - 1]?.createdAt }
+        })
+            .sort({ createdAt: -1 })
+            .select('_id');
+
+        const nextCursor = nextShort ? nextShort._id : null;
+
+        return sendSuccessResponse(res, 200, 'Shorts fetched', { data: shorts, nextCursor });
+    } catch (error) {
+        return sendErrorResponse(res, 400, error.message);
+    }
+};
