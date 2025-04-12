@@ -13,7 +13,7 @@ const useInfiniteScroll = (apiEndpoint, perPage = 10, initialPage = 1, fetchPara
     const loaderRef = useRef(null);
     const isFetching = useRef(false);
 
-    const fetchMoreData = useCallback(async () => {
+    const fetchMoreData = useCallback(async (url) => {
         if (isFetching.current || !hasMore || loading) return;
         isFetching.current = true;
         setLoading(true);
@@ -28,7 +28,7 @@ const useInfiniteScroll = (apiEndpoint, perPage = 10, initialPage = 1, fetchPara
             }).toString();
 
             const response = await apiRequest(
-                `${apiEndpoint}?${queryParams}`,
+                `${url}?${queryParams}`,
                 'GET',
                 null,
                 fetchParams
@@ -42,7 +42,7 @@ const useInfiniteScroll = (apiEndpoint, perPage = 10, initialPage = 1, fetchPara
             isFetching.current = false;
             setLoading(false);
         }
-    }, [apiEndpoint, page, perPage, search, sort, fetchParams, hasMore, loading]);
+    }, [page, perPage, search, sort, fetchParams, hasMore, loading]);
 
     const debouncedReset = useRef(
         debounce(() => {
@@ -58,9 +58,9 @@ const useInfiniteScroll = (apiEndpoint, perPage = 10, initialPage = 1, fetchPara
 
     useEffect(() => {
         if (hasMore) {
-            fetchMoreData();
+            fetchMoreData(apiEndpoint);
         }
-    }, [page, hasMore]);
+    }, [page, hasMore, apiEndpoint]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -83,6 +83,13 @@ const useInfiniteScroll = (apiEndpoint, perPage = 10, initialPage = 1, fetchPara
             }
         };
     }, [hasMore, loading, isFetching]);
+
+    useEffect(() => {
+        setPage(1);
+        setHasMore(true);
+        setData([]);
+        if (page == 1 && hasMore) fetchMoreData(apiEndpoint);
+    }, [apiEndpoint])
 
     return { data, setData, page, setPage, loading, error, hasMore, loaderRef, setSearch, setSort, debouncedReset };
 };
