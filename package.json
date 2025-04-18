@@ -6,13 +6,9 @@
   "scripts": {
     "server": "npm start --prefix api",
     "client": "npm run dev --prefix clients",
-    "both": " npm run server & npm run client",
+    "both": "npm run server & npm run client",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "abhi",
-  "license": "ISC",
-  "dependencies": {
-    "concurrently": "^8.2.1",
-    "dotenv": "^16.4.5"
-  }
+  "license": "ISC"
 }
