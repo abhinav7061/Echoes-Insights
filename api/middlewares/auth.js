@@ -20,7 +20,7 @@ exports.isAuthenticatedUser = async (req, res, next) => {
 
         const user = await User.findById(decoded._id);
         if (!user) {
-            return sendErrorResponse(res, 404, "User not found");
+            return sendErrorResponse(res, 401, "User not found");
         }
         req.user = user;
         next();
@@ -44,6 +44,11 @@ exports.isBlogAuthor = async (req, res, next) => {
     } catch (error) {
         sendErrorResponse(res, 500, error.message);
     }
+}
+
+exports.isAdmin = async (req, res, next) => {
+    if (req.user.role !== 'admin') return sendErrorResponse(res, 501, "You are not admin");
+    next();
 }
 
 exports.demoRestrictionMiddleware = async (req, res, next) => {
