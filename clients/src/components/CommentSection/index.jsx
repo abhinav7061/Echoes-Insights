@@ -36,9 +36,12 @@ const CommentSection = ({ blogId, authorId, commentsCount, className, isShowComm
         setDraggedHeight(null);
     };
     const handleTouchMove = (e) => {
+        e.preventDefault();
+
         const moveY = e.touches[0].clientY;
         const deltaY = moveY - touchStartY;
-        const draggH = commentsDiv.current?.scrollTop === 0 ? Math.max(MAX_HEIGHT - deltaY, MIN_HEIGHT) : null;
+        const draggH = commentsDiv.current?.scrollTop === 0 ? Math.min(Math.max(MAX_HEIGHT - deltaY, MIN_HEIGHT), MAX_HEIGHT) : null;
+
         setDraggedHeight(draggH);
         setTouchMoveY(moveY);
     };

@@ -119,7 +119,7 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
                         <span className='line-clamp-1'>
                             {authorName}
                         </span>
-                        {hovered === index && <FollowUnfollow authorId={author._id} authorName={authorName} showName={true} btnClassName='py-[1px] px-1 bg-indigo-700 hover:bg-green-700 text-white hover:text-white dark:hover:text-white rounded gap-[2px]' followed={followed} setFollowed={setFollowed} />}
+                        <FollowUnfollow authorId={author._id} authorName={authorName} showName={true} btnClassName={`py-[1px] px-1 bg-indigo-700 hover:bg-green-700 text-white hover:text-white dark:hover:text-white rounded gap-[2px] transition-opacity duration-300 ${hovered === index ? "block" : "hidden"}`} followed={followed} setFollowed={setFollowed} />
                     </span>
                     <span className="mx-2 flex items-center text-base">&middot;</span>
                     <span className='line-clamp-1 flex items-center whitespace-nowrap'>{formattedDate}</span>

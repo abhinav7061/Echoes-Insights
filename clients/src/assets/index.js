@@ -14,6 +14,7 @@ import login from "./login.svg";
 import register from "./register.svg";
 import link from "./link.svg"
 import LikeAnimation from "./LikeAnimation.gif";
+import writer from './writer.png'
 
 export {
   logo,
@@ -31,5 +32,6 @@ export {
   login,
   register,
   link,
-  LikeAnimation
+  LikeAnimation,
+  writer
 };

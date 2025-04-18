@@ -1,4 +1,4 @@
-import { Layout, Login, Signup, ResetPassword, Blog, CreateBlog, BlogPage, Shorts, EditBlog, NoPage } from './modules';
+import { Layout, Login, Signup, ResetPassword, Blog, CreateBlog, BlogPage, Shorts, EditBlog, NoPage, WriterOnboarding } from './modules';
 import { Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -10,6 +10,7 @@ function App() {
 					<Route path='/blog/:blogId' element={<BlogPage />} />
 					<Route path='/edit_blog/:id' element={<EditBlog />} />
 					<Route path="/register" element={<Signup />} />
+					<Route path="/writer-registration" element={<WriterOnboarding />} />
 					<Route path="/login" element={<Login />} />
 					<Route path="/reset-password" element={<ResetPassword />} />
 					<Route path="/create_blog" element={<CreateBlog />} />
