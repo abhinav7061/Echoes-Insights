@@ -36,6 +36,8 @@ const follow = require("./router/followerRoutes");
 const readingProgress = require("./router/readingProgressRoutes");
 const comment = require("./router/commentRoutes");
 const commentReply = require("./router/commentReplyRoutes");
+const writer = require("./router/writer.routes");
+const sampleBlog = require("./router/sampleBlog.routes");
 
 //using routes
 app.use("/api/v1/user", user);
@@ -46,6 +48,8 @@ app.use("/api/v1/follow", follow);
 app.use("/api/v1/reading-progress", readingProgress);
 app.use("/api/v1/comment", comment);
 app.use("/api/v1/comment-reply", commentReply);
+app.use("/api/v1/writer", writer)
+app.use("/api/v1/sampleBlog", sampleBlog)
 app.use('/api/v1/blog-cover', express.static(__dirname + '/uploads/blog_cover')); // route to  serve the static file(profile image in this project)
 
 app.get('/', (req, res) => {

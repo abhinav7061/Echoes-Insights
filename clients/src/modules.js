@@ -2,6 +2,7 @@ import DarkMode from './components/DarkMode';
 import Layout from './layout';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import WriterOnboarding from './pages/WriterOnboarding'
 import ResetPassword from './pages/ResetPassword';
 import Blog from './pages/Blog';
 import NoPage from './pages/NoPage';
@@ -16,6 +17,7 @@ export {
     NoPage,
     Login,
     Signup,
+    WriterOnboarding,
     DarkMode,
     Layout,
     Blog,

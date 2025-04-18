@@ -1,7 +1,9 @@
 import React from 'react';
 import { useController } from 'react-hook-form';
+import Label from './label';
+import Error from './error';
 
-const TextArea = ({ name, control, showError = true, className = '', maxHeightMultiplier = 5, ...props }) => {
+const TextArea = ({ name, control, showError = true, label, className = '', maxHeightMultiplier = 5, required = false, ...props }) => {
     const {
         field,
         fieldState: { error },
@@ -26,15 +28,17 @@ const TextArea = ({ name, control, showError = true, className = '', maxHeightMu
     };
 
     return (
-        <>
+        <div className={className}>
+            <Label label={label} htmlFor={name} required={required} />
             <textarea
                 {...field}
+                id={name}
                 onChange={handleTextAreaInput}
-                className={`w-full outline-none resize-none overflow-hidden ${className}`}
+                className={`w-full outline-none resize-none overflow-hidden bg-transparent`}
                 {...props}
             />
-            {showError && error && <p className="text-red-500 text-sm mt-1">{error.message}</p>}
-        </>
+            <Error showError={showError} error={error} />
+        </div>
     );
 };
 

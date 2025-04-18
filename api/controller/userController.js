@@ -15,7 +15,7 @@ exports.registerUser = async (req, res) => {
         const jwtToken = user.generateToken();
 
         return sendSuccessResponse(res, 200, 'Registered Successfully', {
-            user: { id: user._id, name: user.name, email: user.email, avatar: user?.avatar },
+            user: { id: user._id, name: user.name, email: user.email, avatar: user?.avatar, role: user?.role },
             cookies: [{ name: 'jwtToken', value: jwtToken, options: { expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), httpOnly: true } }],
             jwtToken
         });
@@ -42,7 +42,7 @@ exports.loginUser = async (req, res) => {
         if (remember_me) cookieOptions.expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
         return sendSuccessResponse(res, 200, 'Logged in Successfully', {
-            user: { id: user._id, name: user.name, email: user.email, avatar: user?.avatar },
+            user: { id: user._id, name: user.name, email: user.email, avatar: user?.avatar, role: user?.role },
             cookies: [{ name: 'jwtToken', value: jwtToken, options: cookieOptions }],
             jwtToken
         });
@@ -55,7 +55,7 @@ exports.loginUser = async (req, res) => {
 exports.isUserLoggedIn = async (req, res) => {
     try {
         return sendSuccessResponse(res, 200, 'User is Authenticated', {
-            user: { id: req.user._id, name: req.user.name, email: req.user.email, avatar: req.user?.avatar },
+            user: { id: req.user._id, name: req.user.name, email: req.user.email, avatar: req.user?.avatar, role: req.user?.role },
             isUserAuthenticated: true,
         });
     } catch (error) {
