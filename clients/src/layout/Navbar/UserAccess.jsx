@@ -7,6 +7,7 @@ import { useUserAuthentication } from '../../context/userContext';
 import useOutsideClick from "../../hooks/useOutsideClick";
 import Dropdown, { DefaultTrigger, DropdownMenuItem } from "../../components/Dropdown";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const UserAccess = () => {
     const navigate = useNavigate();
@@ -39,10 +40,10 @@ const UserAccess = () => {
             <Dropdown trigger={DefaultTrigger} triggerChild={<><span className="text-[28px] flex -mr-[5px]"><ion-icon name="add-outline"></ion-icon></span>Create</>} triggerClassName='rounded-full ps-2 pe-3 py-1' contentClassName='mt-4'>
                 {(user?.role == 'writer' || user?.role == 'admin') ?
                     <>
-                        <DropdownMenuItem className="flex items-center gap-1">
+                        <DropdownMenuItem className="flex items-center gap-1" onClick={() => navigate('/create-blog')}>
                             <span className="text-xl flex"> <ion-icon name="create-outline"></ion-icon></span> <p>Create Post</p>
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="flex items-center gap-1">
+                        <DropdownMenuItem className="flex items-center gap-1" onClick={() => toast.info("This is under development! stay tuned with us!")}>
                             <span className="text-xl flex"><ion-icon name="albums-outline"></ion-icon></span>  <p>Create Shorts</p>
                         </DropdownMenuItem>
                     </>
