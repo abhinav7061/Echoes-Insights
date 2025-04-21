@@ -67,3 +67,28 @@ exports.demoRestrictionMiddleware = async (req, res, next) => {
     }
     next();
 }
+
+exports.permit = (...allowedRoles) => {
+    return (req, res, next) => {
+        const userRole = req.user?.role || [];
+        const hasRole = allowedRoles.includes(userRole);
+        if (!hasRole) {
+            return sendErrorResponse(res, 403, "Forbidden: Access denied");
+        }
+        next();
+    };
+};
+
+exports.isOwnerOrAdmin = async (req, res, next) => {
+    const blog = await Blog.findById(req.params.blogId);
+    if (!blog) return sendErrorResponse(res, 404, "Blog not found");
+
+    if (
+        blog.author.toString() === req.user.id ||
+        req.user.role == "admin"
+    ) {
+        return next();
+    }
+
+    return sendErrorResponse(res, 403, "You are not allowed to modify this blog.");
+};
