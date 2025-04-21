@@ -1,18 +1,10 @@
 import React from 'react'
 
 const Loader = () => {
-    const style = {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        width: '100%',
-        backgroundColor: '#000',
-        color: '#fff',
-        fontSize: 44,
-    }
     return (
-        <div style={style}>Loading...</div>
+        <div className="flex justify-center items-center h-screen">
+            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue dark:border-golden"></div>
+        </div>
     )
 }
 
