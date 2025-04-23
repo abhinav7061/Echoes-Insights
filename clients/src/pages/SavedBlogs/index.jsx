@@ -14,7 +14,7 @@ const SavedBlogs = () => {
         hasMore,
     } = useInfiniteApi('/save-blog/saved-blogs-summary', null, { params: { limit: 8 } });
 
-    if (!blogs?.length) return <NoSavedBlogs />
+    if (!blogs?.length && !loading) return <NoSavedBlogs />
 
     return (
         <div className='w-full'>

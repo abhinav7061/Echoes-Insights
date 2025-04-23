@@ -13,7 +13,7 @@ const LikedBlogs = () => {
         hasMore,
     } = useInfiniteApi('/like/blog', null, { params: { limit: 8 } });
 
-    if (!blogs.length) return <NoLikedBlogs />;
+    if (!blogs.length && !loading) return <NoLikedBlogs />;
     return (
         <div className='w-full'>
             <div className='grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-[2px] xs:gap-1.5 sm:gap-3'>
