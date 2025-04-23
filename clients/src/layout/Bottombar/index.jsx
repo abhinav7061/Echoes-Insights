@@ -61,7 +61,7 @@ const Bottombar = () => {
                     render={render}
                     text={text}
                     active={active}
-                    onClick={() => navigate(path)}
+                    onClick={() => path && navigate(path)}
                 />
             ))}
         </div>

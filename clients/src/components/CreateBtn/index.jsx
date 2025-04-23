@@ -26,11 +26,11 @@ const CreateBtn = ({ text, position }) => {
                 <span className="text-xl flex"><ion-icon name="log-in-outline"></ion-icon></span> <p>Login First</p>
             </DropdownMenuItem> : (user?.role == 'writer' || user?.role == 'admin') ?
                 <>
-                    <DropdownMenuItem className="flex items-center gap-1" onClick={() => toast.info("This is under development! stay tuned with us!")}>
-                        <span className="text-xl flex"><ion-icon name="albums-outline"></ion-icon></span>  <p>Create Shorts</p>
-                    </DropdownMenuItem>
                     <DropdownMenuItem className="flex items-center gap-1" onClick={() => navigate('/create-blog')}>
                         <span className="text-xl flex"> <ion-icon name="create-outline"></ion-icon></span> <p>Create Post</p>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex items-center gap-1" onClick={() => toast.info("This is under development! stay tuned with us!")}>
+                        <span className="text-xl flex"><ion-icon name="albums-outline"></ion-icon></span>  <p>Create Shorts</p>
                     </DropdownMenuItem>
                 </>
                 : <DropdownMenuItem className="flex items-center gap-1" onClick={() => navigate('/writer-registration')}>
