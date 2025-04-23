@@ -15,8 +15,16 @@ import register from "./register.svg";
 import link from "./link.svg"
 import LikeAnimation from "./LikeAnimation.gif";
 import writer from './writer.png'
+import main_logo from './logo.svg'
+import shorts_logo from './shorts_logo.svg'
+import shorts_icon from './shorts_icon.svg'
+import filled_shorts_icon from './filled_shorts_icon.svg'
 
 export {
+  main_logo,
+  shorts_logo,
+  shorts_icon,
+  filled_shorts_icon,
   logo,
   send,
   shield,

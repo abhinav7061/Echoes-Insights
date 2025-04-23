@@ -39,14 +39,14 @@ function DarkMode() {
                 <ion-icon name={icon}></ion-icon> Appearances
             </div>
             <div className="absolute items-center hidden z-50 group-hover:flex left-4 translate-y-[-58%] translate-x-[-100%]">
-                <div className="bg-neutral-100 dark:bg-neutral-800 border dark:border-neutral-700 backdrop-blur-sm py-3 rounded-md flex flex-col z-10">
+                <div className="bg-neutral-100 dark:bg-neutral-800 backdrop-blur-sm py-3 rounded-xl flex flex-col z-10">
                     {darkBtn.map((elm, index) => (
                         <div
                             onClick={() => {
                                 setTheme(elm.text);
                                 setIcon(elm.icon);
                             }}
-                            className={`${theme === elm.text ? 'text-sky-600' : 'text-black dark:text-white hover:bg-gray-100 dark:hover:bg-neutral-700'} text-sm py-1 px-5 flex items-center gap-1 flex-row ${index !== darkBtn.length - 1 ? "mb-2" : "mb-0"}`}
+                            className={`${theme === elm.text ? 'text-sky-600' : 'text-black dark:text-white hover:bg-gray-200 dark:hover:bg-neutral-700'} text-sm py-1 px-5 flex items-center gap-1 flex-row ${index !== darkBtn.length - 1 ? "mb-2" : "mb-0"}`}
                             key={index}
                         >
                             <ion-icon name={elm.icon}></ion-icon> {elm.text}

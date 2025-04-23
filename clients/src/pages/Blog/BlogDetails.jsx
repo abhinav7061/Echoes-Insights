@@ -30,7 +30,7 @@ const BlogDetails = ({ blogId, summary, authorName, formattedDate, title, needTo
                     </div>
                 </div>
                 {cover && <div className="mb-5">
-                    <img src={cover?.url} alt="" className="object-fill w-full rounded-2xl h-52 xs:h-80" />
+                    <img src={cover?.url} alt="" className="object-cover w-full rounded-2xl h-52 xs:h-80" />
                 </div>}
                 <div className="border border-neutral-300 dark:border-neutral-700 rounded-r-md mb-5 flex justify-start flex-row overflow-hidden bg-neutral-200/50 dark:bg-neutral-800">
                     <span className="bg-neutral-400 dark:bg-neutral-600 w-2 flex-shrink-0"></span>

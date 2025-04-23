@@ -4,8 +4,8 @@
 
 :root {
 	--color: #1075fa;
-	--btnBackground: linear-gradient(to bottom right, rgb(201, 197, 197) 3%, hsla(0, 1%, 66%, 0.304) 97%);
-	--btnForeground: linear-gradient(to bottom right, hsla(0, 0%, 85%, 0.5) 0%, hsla(0, 0%, 100%, 0) 100%);
+	--btnBackground: rgb(229, 229, 229);
+	--btnForeground: rgba(229, 229, 229, .3);
 }
 
 * {
@@ -126,8 +126,8 @@ body {
 
 .dark {
 	--color: #ffdb70;
-	--btnBackground: linear-gradient(to bottom right, hsla(240, 1%, 25%, 0.589) 3%, hsla(0, 0%, 19%, 0.404) 97%);
-	--btnForeground: linear-gradient(to bottom right, hsla(240, 1%, 18%, 0.251) 0%, hsla(240, 2%, 11%, 0) 100%), hsla(240, 3%, 13%, 0.719);
+	--btnBackground: rgb(38, 38, 38);
+	--btnForeground: rgba(38, 38, 38, 0.5);
 
 	.content {
 		color: white;
