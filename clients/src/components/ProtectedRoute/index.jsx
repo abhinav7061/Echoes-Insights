@@ -14,7 +14,7 @@ const ProtectedRoute = ({ children, access }) => {
 
     if (Array.isArray(access)) {
         if (!user) {
-            return <Navigate to="/login" replace />;
+            return <Navigate to="/login" state={{ redirect: location.pathname }} replace />;
         }
         return access.includes(user.role) ? children : <Navigate to="/" replace />;
     }

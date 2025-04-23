@@ -6,7 +6,7 @@ import useLockBody from "../../hooks/useLockBody";
 import { filled_shorts_icon, shorts_icon } from "../../assets";
 const SidebarContext = createContext();
 
-export default function Sidebar({ expanded, setExpanded, children }) {
+export default function Sidebar({ expanded, setExpanded, setFixedSidebar, children }) {
     const location = useLocation();
     const { windowInWidth } = useWindowSize();
     const fixedRoutes = useMemo(() => new Set(['blog', 'shorts']), []);
@@ -22,6 +22,9 @@ export default function Sidebar({ expanded, setExpanded, children }) {
 
     const isSpecialRoute = location.pathname.startsWith('/shorts');
     useLockBody(expanded && !isSpecialRoute && windowInWidth < 768);
+    useEffect(() => {
+        setFixedSidebar(fixed);
+    }, [fixed]);
     return (
         <aside
             className={cn(

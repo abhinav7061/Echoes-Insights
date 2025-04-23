@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styles from '../../style';
 import Button from '../../components/Button';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useUserAuthentication } from '../../context/userContext';
 import { toast } from 'sonner';
 import { login } from '../../assets';
@@ -10,6 +10,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 const Login = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { login: loginUser, jwtToken } = useUserAuthentication();
     const [message, setMessage] = useState({
         error: true,
@@ -44,10 +45,13 @@ const Login = () => {
                     error: false,
                     msg: data.message,
                 });
-                console.log(data)
                 loginUser(data.user, data.jwtToken);
                 toast.success(data.message);
-                navigate("/");
+                if (location.state?.redirect) {
+                    navigate(location.state.redirect);
+                } else {
+                    navigate("/");
+                }
                 setMessage("");
             } else {
                 setMessage({

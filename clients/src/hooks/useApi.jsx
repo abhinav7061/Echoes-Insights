@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const rootApi = import.meta.env.VITE_API_URL;
 
 export default function useApi(url, options = {}, autoFetch = false) {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(autoFetch);
     const [error, setError] = useState(null);
     const [data, setData] = useState(null);
     const [success, setSuccess] = useState(false);
@@ -79,8 +79,9 @@ export default function useApi(url, options = {}, autoFetch = false) {
             const errorMessage = err.name === 'AbortError'
                 ? 'Request was aborted'
                 : err.message || 'An unknown error occurred';
-
-            setError(errorMessage);
+            if (err.name !== 'AbortError') {
+                setError(errorMessage);
+            }
             setSuccess(false);
             return { error: errorMessage };
             // throw err; // Still throw error for cases where you want to handle it manually

@@ -12,6 +12,7 @@ const Sidebar = lazy(() => import('./Sidebar'))
 const SidebarOptions = lazy(() => import('./Sidebar').then((module) => ({ default: module.SidebarOptions })));
 const Bottombar = lazy(() => import('./Bottombar'));
 import useDeviceType from '../hooks/useDeviceType';
+import { cn } from '../lib/utils';
 
 const Layout = () => {
     const { login, logout } = useUserAuthentication();
@@ -19,6 +20,7 @@ const Layout = () => {
     const { isMobile, isDesktop } = useDeviceType();
     const [loading, setLoading] = useState(true)
     const [expanded, setExpanded] = useState(false);
+    const [fixedSidebar, setFixedSidebar] = useState(false);
 
     const checkUserAuthentication = async () => {
         await authenticateUser(login, logout);
@@ -53,10 +55,14 @@ const Layout = () => {
                     {(isMobile && location.pathname.startsWith('/shorts')) || <Navbar expanded={expanded} setExpanded={setExpanded} />}
                     <Toaster position="top-right" richColors closeButton='true' />
                     <div className='flex-grow flex w-full'>
-                        {isDesktop && <Sidebar expanded={expanded} setExpanded={setExpanded}>
+                        {isDesktop && <Sidebar expanded={expanded} setExpanded={setExpanded} setFixedSidebar={setFixedSidebar}>
                             <SidebarOptions />
                         </Sidebar>}
-                        <div className={`p-3 flex-grow ${styles.boxWidth} mx-auto`}>
+                        <div className={cn('p-3 flex-grow ${styles.boxWidth} mx-auto transition-[width] duration-300',
+                            expanded && 'w-[calc(100vw-192px)]',
+                            (!fixedSidebar && !expanded) && "w-full xs:w-[calc(100vw-80px)]",
+                            fixedSidebar && 'w-full',
+                        )}>
                             <Suspense fallback={<div className='flex justify-center items-center text-5xl text-black dark:text-white h-[100vh]'><img src={logo} width={250} alt="Loading..." className='animate-pulse' /></div>}>
                                 <Outlet />
                             </Suspense>

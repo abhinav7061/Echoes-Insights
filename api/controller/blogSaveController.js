@@ -37,13 +37,40 @@ exports.checkBlogSave = async (req, res) => {
 exports.mySavedBlogs = async (req, res) => {
     try {
         const userId = req.user._id;
-        const savedBlogs = await BlogSave.find({ userId });
-        const userSavedBlogs = savedBlogs.filter(save => save.blogId !== null);
-        const blogIds = userSavedBlogs.map((save) => save.blogId);
+        const limit = parseInt(req.query.limit) || 10;
+        const cursor = req.query.cursor;
 
-        await getBlogByCriteria(req, res, { blogIds });
-    } catch (error) {
-        sendErrorResponse(res, 500, error.message);
+        const query = {
+            userId,
+            ...(cursor && { createdAt: { $lt: new Date(cursor) } })
+        };
+
+        const savedDocs = await BlogSave.find(query)
+            .sort({ createdAt: -1 })
+            .limit(limit)
+            .populate({
+                path: 'blogId',
+                select: 'title summary createdAt cover views likesCount author',
+                populate: {
+                    path: 'author',
+                    select: 'name'
+                }
+            });
+
+        const blogs = savedDocs
+            .map(doc => doc.blogId)
+            .filter(blog => blog);
+
+        const lastDoc = savedDocs?.[savedDocs.length - 1];
+        const nextCursor = savedDocs.length === limit ? lastDoc?.createdAt : null;
+
+        return sendSuccessResponse(res, 200, "Saved blogs fetched successfully", {
+            data: blogs,
+            nextCursor,
+        });
+    } catch (err) {
+        console.error(err);
+        return sendErrorResponse(res, 500, "Server Error", { error: err.message });
     }
 };
 

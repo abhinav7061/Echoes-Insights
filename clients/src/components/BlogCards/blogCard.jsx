@@ -89,7 +89,7 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
         onMouseEnter={() => setHovered(index)}
         onMouseLeave={() => setHovered(null)}
         className={cn(
-            "rounded-xl relative xs:border xs:dark:border-transparent xs:bg-white xs:dark:bg-neutral-900 xs:shadow-lg dark:shadow-neutral-950 overflow-hidden h-[280px] xs:h-[300px] w-full transition-all duration-300 ease-out",
+            "rounded-xl relative xs:border xs:dark:border-transparent xs:bg-white xs:dark:bg-neutral-900 xs:shadow-lg dark:shadow-neutral-950 overflow-hidden h-[280px] xs:h-[300px] w-full transition-all duration-300 ease-out min-w-[200px]",
             hovered == null ? "" : hovered == index ? 'mb-1 xs:mb-0' : "xs:opacity-80 xs:scale-[0.98]"
         )}
     >
