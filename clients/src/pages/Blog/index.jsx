@@ -19,14 +19,12 @@ const Blog = () => {
       <Helmet>
         <title>Echoes & Insights: Blogs</title>
       </Helmet>
-      <div className='py-10'>
-        <div className='grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[2px] xs:gap-1.5 sm:gap-3 w-full'>
-          <BlogCards cards={blogs} />
-          {loading && Array.from({ length: perPage }).map((_, index) => <BlogItemSkeletonloading key={index} />)}
-        </div>
-        {!hasMore && <div className='w-full text-center dark:text-white font-bold text-3xl my-5'>You have reached to end</div>}
-        <div ref={loaderDiv} />
+      <div className='grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-[2px] xs:gap-1.5 sm:gap-3 w-full'>
+        <BlogCards cards={blogs} />
+        {loading && Array.from({ length: perPage }).map((_, index) => <BlogItemSkeletonloading key={index} />)}
       </div>
+      {!hasMore && <div className='w-full text-center dark:text-white font-bold text-3xl my-5'>You have reached to end</div>}
+      <div ref={loaderDiv} />
     </>
   )
 }

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import Button from '../Button';
 import useOutsideClick from '../../hooks/useOutsideClick';
+import { cn } from '../../lib/utils';
 
 const Dropdown = ({
     trigger: Trigger,
@@ -83,11 +84,10 @@ export const DropdownMenuItem = ({
     active = false,
 }) => (
     <li
-        className={`block w-full text-left px-4 py-2 text-sm rounded-md ${disabled
-                ? 'text-neutral-400 cursor-not-allowed'
-                : 'hover:bg-neutral-200 dark:hover:bg-neutral-700 cursor-pointer'
-            } ${active ? 'bg-neutral-100 dark:bg-neutral-700' : ''
-            } ${className}`}
+        className={cn('block w-full text-left p-2 text-sm rounded-md',
+            disabled ? 'text-neutral-400 cursor-not-allowed' : 'hover:bg-neutral-200 dark:hover:bg-neutral-700 cursor-pointer',
+            active && 'bg-neutral-100 dark:bg-neutral-700',
+            className)}
         onClick={disabled ? undefined : onClick}
         role="menuitem"
         aria-disabled={disabled}

@@ -1,148 +1,164 @@
-import { useContext, createContext, useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-import { logo } from "../../assets";
-import { UserContext } from "../../contexts/UserContext";
-import LogoutBtn from "../../components/Button/LogoutBtn";
-import useMediaQuery from "../../Hooks/useMediaQuery";
-import useOutsideClick from "../../hooks/useOutsideClick";
+import { useContext, createContext, useRef, useEffect, useMemo } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useWindowSize from "../../hooks/useWindowSize";
+import { cn } from "../../lib/utils";
+import useLockBody from "../../hooks/useLockBody";
+import { filled_shorts_icon, shorts_icon } from "../../assets";
 const SidebarContext = createContext();
 
-export default function Sidebar({ children }) {
-    // Access user information from the context
-    const { userInfo } = useContext(UserContext);
-    const isLargeScreen = useMediaQuery('(min-width: 640px)');
-    const sidebarContainer = useRef(null);
+export default function Sidebar({ expanded, setExpanded, children }) {
+    const location = useLocation();
+    const { windowInWidth } = useWindowSize();
+    const fixedRoutes = useMemo(() => new Set(['blog', 'shorts']), []);
 
-    // State variable to manage Sidebar expansion
-    const [expanded, setExpanded] = useState(isLargeScreen);
-    useOutsideClick(sidebarContainer, () => {
-        if (!isLargeScreen) {
-            setExpanded(false)
-        }
-    });
+    const currentRoute = useMemo(() => location.pathname.split('/')[1], [location.pathname]);
+
+    const fixed = windowInWidth < 768 || fixedRoutes.has(currentRoute);
 
     useEffect(() => {
-        setExpanded(isLargeScreen);
-    }, [isLargeScreen])
+        const shouldExpand = windowInWidth > 768 && !fixedRoutes.has(currentRoute);
+        setExpanded(shouldExpand);
+    }, [windowInWidth, currentRoute, fixedRoutes, setExpanded]);
 
+    const isSpecialRoute = location.pathname.startsWith('/shorts');
+    useLockBody(expanded && !isSpecialRoute && windowInWidth < 768);
     return (
-        <aside ref={sidebarContainer} className={`sm:h-screen ${expanded ? 'h-screen top-0' : 'h-min py-1 sm:py-0 sm:overflow-visible top-0'} sm:sticky fixed sm:shadow-sm left-0 duration-500 overflow-hidden transition-all flex z-[10]`}>
-            {/* Logo and toggle button */}
-            <nav className={`h-full flex flex-col border-r items-center ${expanded ? 'bg-slate-900' : 'sm:bg-white border-r-0'} duration-500  transition-all`}>
-                <div className={`w-full flex justify-between items-center ${expanded ? "p-3" : "p-1 sm:p-3"}`}>
-                    <img
-                        src={logo}
-                        className={`overflow-hidden transition-all ${expanded ? "w-28" : "w-0"}`}
-                        alt=""
-                    />
-                    <button
-                        onClick={() => setExpanded((curr) => !curr)}
-                        className={` bg-gray-200 hover:bg-gray-300 flex items-center justify-center  ${expanded ? "p-3 rounded-lg" : "text-xl sm:text-base sm:p-3 border border-slate-900 sm:border-0 rounded-full sm:rounded-lg overflow-hidden"}`}
-                        title={`${!expanded ? "Open Sidebar" : "Close Sidebar"}`}
-                        type="button"
-                    >
-                        {expanded ? <ion-icon name="arrow-back-circle-outline" aria-label="Collapse Sidebar"></ion-icon> : <span>
-                            <img src={userInfo?.avatar?.url} alt={`${userInfo?.name}`} className="w-7 h-7 object-top object-cover sm:hidden" />
-                            <span className="hidden sm:flex">
-                                <ion-icon name="arrow-forward-circle-outline" aria-label="Expand Sidebar"></ion-icon>
-                            </span>
-                        </span>}
-                    </button>
-                </div>
-
-                {/* Provide the Sidebar state via context */}
-                <SidebarContext.Provider value={{ expanded, setExpanded }}>
-                    <ul className={`flex-1 w-full overflow-y-scroll px-3 flex flex-col items-center1 ${expanded ? "" : "hidden sm:block"}`}>{children}</ul>
-                </SidebarContext.Provider>
-
-                {/* User information and logout button */}
-                {userInfo && (
-                    <div className={`border-t p-3 flex ${expanded ? "" : "hidden sm:block"}`} title={!expanded ? userInfo?.name : ''}>
-                        <Link to='my_profile' className="w-10 h-10 rounded-md flex justify-center items-center bg-blue-400 text-white overflow-hidden" onClick={() => {
-                            if (!isLargeScreen) {
-                                setExpanded(false)
-                            }
-                        }}>
-                            <img src={userInfo.avatar.url} alt={`${userInfo.name}`} className="w-10 h-10 object-top object-cover " />
-                        </Link>
-                        <div className={`flex justify-between items-center overflow-hidden transition-all ${expanded ? "ml-3" : "hidden"} `}>
-                            <div className="leading-4">
-                                <h4 className="font-semibold text-white" title={userInfo.name}>{userInfo.name}</h4>
-                                <span className="text-xs text-gray-400 line-clamp-1 w-32 md:w-40" title={userInfo.email}>{userInfo.email}</span>
-                            </div>
-                            <LogoutBtn />
-                        </div>
-                    </div>
+        <aside
+            className={cn(
+                "h-screen flex-shrink-0 bg-white dark:bg-neutral-950",
+                "top-0 left-0 duration-300 overflow-hidden transition-all flex",
+                expanded ? "w-48" : "sm:overflow-visible xs:w-20",
+                fixed ? "fixed z-[2000]" : "xs:sticky xs:top-16 sm:h-[calc(100vh-64px)]",
+                fixed && !expanded ? "w-0 xs:w-0" : '',
+            )}
+        >
+            <div
+                className={cn(
+                    "fixed top-0 left-0 w-screen h-screen z-0 bg-neutral-800/40 dark:bg-neutral-600/20",
+                    expanded ? "block" : "hidden",
+                    !fixed && "xs:hidden"
                 )}
-            </nav>
-        </aside >
+                onClick={() => setExpanded(false)}
+            />
+
+            <SidebarContext.Provider value={{ expanded, setExpanded, fixed }}>
+                <div className={cn(
+                    "h-full flex-shrink-0 w-full flex flex-col items-center bg-white dark:bg-neutral-950",
+                    "overflow-y-auto overflow-x-hidden z-10 transition-all duration-300",
+                    expanded && "px-2"
+                )}>
+                    <div className={cn(
+                        "w-full flex justify-between items-center h-16",
+                        !fixed && "xs:hidden"
+                    )}>
+                        <Link to='/' className="bg-gradient-to-r from-indigo-500 from-20% via-sky-500 via-40% to-emerald-600 to-90% bg-clip-text text-clip">
+                            <h1 className="text-sm font-bold font-logoFont text-transparent whitespace-nowrap">Echoes & Insights</h1>
+                        </Link>
+                        <button
+                            onClick={() => setExpanded(false)}
+                            className='text-2xl flex'
+                        >
+                            <ion-icon name="menu"></ion-icon>
+                        </button>
+                    </div>
+                    <nav className="w-full py-2 space-y-1">{children}</nav>
+                </div>
+            </SidebarContext.Provider>
+        </aside>
     );
 }
 
 // SidebarItem component
-export function SidebarItem({ icon, text, active, alert }) {
-    const { expanded, setExpanded } = useContext(SidebarContext);
-    const [tooltipPosition, setTooltipPosition] = useState({ top: 0 });
-    const itemRef = useRef(null);
-    const isLargeScreen = useMediaQuery('(min-width: 640px)');
-
-    useEffect(() => {
-        const handleScroll = () => {
-            if (itemRef.current && !expanded) {
-                const { top, right } = itemRef.current.getBoundingClientRect();
-                setTooltipPosition({ top: top + 1, right: right });
-            }
-        };
-
-        // Add scroll event listener to the parent container
-        const parentElement = itemRef.current?.parentElement?.parentElement;
-        parentElement?.addEventListener('scroll', handleScroll);
-
-        // Initial position update
-        handleScroll();
-
-        // Cleanup event listener on component unmount
-        return () => {
-            parentElement?.removeEventListener('scroll', handleScroll);
-        };
-    }, [expanded]);
+export function SidebarItem({ icon, text, active, alert, onClick, ...rest }) {
+    const { expanded, setExpanded, fixed } = useContext(SidebarContext);
+    const { windowInWidth } = useWindowSize();
+    const isXs = windowInWidth < 480;
 
     return (
         <li
-            ref={itemRef}
-            className={`relative flex items-center p-3 my-1 font-medium rounded-md cursor-pointer transition-colors group
-                    ${active
-                    ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
-                    : `hover:bg-indigo-50 ${expanded ? 'text-white' : 'text-gray-500'} hover:text-gray-600`
-                }
-                    ${!expanded ? 'w-10 h-10' : 'ps-5'}
-                `}
+            className={cn('relative flex flex-shrink-0 items-center px-3 py-2 rounded-md cursor-pointer transition-colors',
+                active ? "bg-neutral-200 dark:bg-neutral-700" : 'hover:bg-neutral-200/50 dark:hover:bg-neutral-700/50',
+                expanded || "justify-center",
+                (!expanded && !fixed) && 'flex-col'
+            )}
             onClick={() => {
-                if (!isLargeScreen) {
+                if (isXs || fixed) {
                     setExpanded(false)
                 }
+                onClick?.();
             }}
+            {...rest}
         >
-            {icon}
+            <span className="text-xl flex">{icon}</span>
             <span
-                className={`overflow-hidden transition-all ${expanded ? " md:w-44 ml-3" : "hidden"}`}
+                className={`overflow-hidden ${expanded ? "ml-4 text-[15px]" : "text-xs"}`}
             >
                 {text}
             </span>
             {alert && (
                 <div
-                    className={`absolute right-2 w-2 h-2 rounded bg-indigo-400 ${expanded ? "" : "top-2"}`}
+                    className={`absolute right-2 w-1.5 h-1.5 top-3 rounded bg-indigo-400`}
                 />
             )}
-            {/* showing sidebar items name on hover */}
-            {!expanded && (
-                <div
-                    className={`fixed rounded-md px-2 py-1 bg-indigo-100 text-indigo-800 text-sm invisible group-hover:visible group-hover:opacity-100 transition-all transform group-hover:translate-x-6 duration-300 ease-in-out`}
-                    style={{ top: tooltipPosition.top, left: tooltipPosition.right }}
-                >
-                    <p className="text-center whitespace-nowrap">{text}</p>
-                </div>
-            )}
         </li>
+    );
+}
+
+export const SidebarOptions = () => {
+    const navigate = useNavigate();
+    const sidebarItems = [
+        {
+            path: '/',
+            iconName: 'home',
+            text: 'Home',
+        },
+        {
+            path: '/shorts',
+            icon: (active) => (
+                <img
+                    src={active ? filled_shorts_icon : shorts_icon}
+                    className="dark:invert w-5"
+                />
+            ),
+            text: 'Shorts',
+        },
+        {
+            path: '/history',
+            iconName: 'alarm',
+            text: 'History',
+        },
+        {
+            path: '/saved',
+            iconName: 'bookmark',
+            text: 'Saved',
+        },
+        {
+            path: '/likes',
+            iconName: 'thumbs-up',
+            text: 'Likes',
+            alert: true,
+        },
+    ].map(item => ({
+        ...item,
+        active: location.pathname === item.path ||
+            (item.path === '/shorts' && location.pathname.startsWith('/shorts')),
+    }));
+
+    return (
+        <>
+            {sidebarItems.map(({ path, iconName, icon, text, active, alert }) => (
+                <SidebarItem
+                    key={path}
+                    icon={icon
+                        ? icon(active)
+                        : <ion-icon name={`${iconName}${active ? '' : '-outline'}`}></ion-icon>
+                    }
+                    text={text}
+                    active={active}
+                    alert={alert}
+                    onClick={() => navigate(path)}
+                />
+            ))}
+        </>
     );
 }
