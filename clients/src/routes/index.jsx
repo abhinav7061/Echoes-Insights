@@ -10,6 +10,9 @@ const Login = lazy(() => import('../pages/Login'));
 const ResetPassword = lazy(() => import('../pages/ResetPassword'));
 const CreateBlog = lazy(() => import('../pages/Blog/CreateBlog'));
 const Shorts = lazy(() => import('../pages/Shorts'));
+const History = lazy(() => import('../pages/History'));
+const SavedBlogs = lazy(() => import('../pages/SavedBlogs'));
+const LikedBlogs = lazy(() => import('../pages/LikedBlogs'));
 const NoPage = lazy(() => import('../pages/NoPage'));
 
 const routes = [
@@ -40,6 +43,9 @@ const routes = [
             { path: 'reset-password', element: <ResetPassword />, access: 'public' },
             { path: 'shorts', element: <Shorts />, access: 'public' },
             { path: 'shorts/:shortId', element: <Shorts />, access: 'public' },
+            { path: 'history', element: <History />, access: ['user', 'writer', 'admin'] },
+            { path: 'saved', element: <SavedBlogs />, access: ['user', 'writer', 'admin'] },
+            { path: 'likes', element: <LikedBlogs />, access: ['user', 'writer', 'admin'] },
             { path: '*', element: <NoPage />, access: 'public' }
         ]
     }

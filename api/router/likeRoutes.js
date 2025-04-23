@@ -8,8 +8,11 @@ const {
     toggleCommentReplyLike,
     checkBlogLike,
     checkCommentLike,
-    checkCommentReplyLike
+    checkCommentReplyLike,
+    getLikedBlogs
 } = require('../controller/likeController');
+
+router.route('/blog').get(isAuthenticatedUser, getLikedBlogs);
 
 router.route('/blog/:blogId/like-dislike').post(isAuthenticatedUser, demoRestrictionMiddleware, toggleBlogLike);
 router.route('/comment/:commentId/like-dislike').post(isAuthenticatedUser, demoRestrictionMiddleware, toggleCommentLike);

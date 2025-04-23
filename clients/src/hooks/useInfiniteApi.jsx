@@ -1,21 +1,21 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import useGet from './useGet';
 
-export default function useInfiniteApi(url, initialCursor, options = {}, limit = 5) {
+export default function useInfiniteApi(url, initialCursor = null, options = {}) {
   const [data, setData] = useState([]);
-  const [nextCursor, setNextCursor] = useState(initialCursor || null);
+  const [nextCursor, setNextCursor] = useState(initialCursor);
   const [hasMore, setHasMore] = useState(true);
+  const [isFetching, setIsFetching] = useState(true);
   const loaderRef = useRef(null);
   const observer = useRef(null);
 
-  const { get, loading, error } = useGet(url, {}, options, false);
+  const { get, error } = useGet(url, {}, options, false);
 
   const fetchData = useCallback(async (reset = false) => {
-
+    setIsFetching(true);
     const params = {
       ...options?.params,
-      ...(nextCursor && { cursor: nextCursor }),
-      limit,
+      ...(nextCursor && !reset && { cursor: nextCursor }),
     };
 
     const response = await get(params);
@@ -24,37 +24,56 @@ export default function useInfiniteApi(url, initialCursor, options = {}, limit =
     setData(prev => reset ? newData : [...prev, ...newData]);
     setNextCursor(response.nextCursor || null);
     setHasMore(!!response.nextCursor);
-
-    return response;
-  }, [url, nextCursor, options, limit]);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+    setIsFetching(false);
+  }, [get, hasMore, isFetching, nextCursor, options?.params]);
 
   useEffect(() => {
-    if (!hasMore || loading) return;
+    fetchData(true);
+  }, [url]);
 
-    observer.current = new IntersectionObserver((entries) => {
+  useEffect(() => {
+    if (!hasMore || isFetching) return;
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '100px',
+      threshold: 0.1,
+    };
+
+    const handleIntersect = (entries) => {
       if (entries[0].isIntersecting) {
         fetchData();
       }
-    }, { threshold: 0.5 });
+    };
 
-    if (loaderRef.current) {
-      observer.current.observe(loaderRef.current);
+    const currentObserver = new IntersectionObserver(handleIntersect, observerOptions);
+    observer.current = currentObserver;
+
+    const currentLoader = loaderRef.current;
+    if (currentLoader) {
+      currentObserver.observe(currentLoader);
     }
 
     return () => {
-      observer.current?.disconnect();
+      if (currentObserver && currentLoader) {
+        currentObserver.unobserve(currentLoader);
+      }
     };
-  }, [loading, hasMore, fetchData]);
+  }, [fetchData, hasMore, isFetching]);
+
+  const reset = useCallback(() => {
+    setData([]);
+    setNextCursor(initialCursor);
+    setHasMore(true);
+    fetchData(true);
+  }, [initialCursor, fetchData]);
 
   return {
     data,
-    loading,
+    loading: isFetching,
     error,
     loaderRef,
     hasMore,
+    reset,
   };
 }
