@@ -102,7 +102,7 @@ const CommentSection = ({ blogId, authorId, commentsCount, className, isShowComm
                 </h1>
                 <span className='xs:hidden flex text-xs mt-1'><CommentCard userImageClass='w-7 h-7' name='top Commenter' date='2025-01-11T14:21:00.190Z' text='this is top comment' /></span>
             </div>
-            <div ref={commentContainerRef} className={cn('fixed bottom-0 left-0 w-full xs:w-auto z-[100] bg-neutral-50 dark:bg-neutral-800 xs:block xs:static xs:h-auto xs:bg-white xs:dark:bg-neutral-950 rounded-t-2xl xs:rounded-t-none transition-[height] duration-500 ease-in-out',
+            <div ref={commentContainerRef} className={cn('fixed bottom-0 left-0 w-full xs:w-auto z-[2001] bg-neutral-50 dark:bg-neutral-800 xs:block xs:static xs:h-auto xs:bg-white xs:dark:bg-neutral-950 rounded-t-2xl xs:rounded-t-none transition-[height] duration-500 ease-in-out',
                 showComments ? "flex flex-col shadow-[0_-5px_20px_0px_rgba(23,23,23,0.7)] xs:shadow-none h-[calc(100vh-240px)]" : "h-0"
             )}
                 style={draggedHeight !== null ? {

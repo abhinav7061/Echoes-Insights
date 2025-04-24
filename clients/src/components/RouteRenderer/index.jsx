@@ -1,12 +1,12 @@
 import { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Loader from '../Loader';
 import ProtectedRoute from '../ProtectedRoute';
+import LogoLoader from '../Loader/logo_loader';
 
 const renderRoutes = (routes) => {
     return routes.map((route, index) => {
         const element = route.element ? (
-            <Suspense fallback={<Loader />}>
+            <Suspense fallback={<LogoLoader className='h-screen' size={100} />}>
                 <ProtectedRoute access={route.access}>
                     {route.element}
                 </ProtectedRoute>

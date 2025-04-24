@@ -63,8 +63,8 @@ const Toc = ({ content, showTOC, setShowTOC, className = '', needToShowTOC, setN
     return (
         <>
             {needToShowTOC && <div className={`sticky top-[76px] max-h-[calc(100vh-80px)] z-[100] ${className}`}>
-                <div className={`dark:text-neutral-100 absolute ${showTOC ? 'flex justify-center w-[calc(100vw-50px)] md:w-64' : 'w-0'} transition-[width] duration-500 overflow-hidden md:relative md:w-full`}>
-                    <div ref={tocRef} className={`border border-neutral-300 dark:border-neutral-700 backdrop-blur-xl md:backdrop-blur-0 md:bg-transparent dark:md:bg-transparent md:border-0 bg-neutral-200/80 dark:bg-neutral-800/80 max-w-xl w-[80vw] md:w-64 rounded-2xl px-5 py-3 md:p-0 md:pr-3 overflow-hidden h-full`}>
+                <div className={`dark:text-neutral-100 absolute flex justify-center ${showTOC ? 'w-[calc(100vw-30px)] md:w-64' : 'w-0'} transition-[width] duration-500 overflow-hidden md:relative md:w-full rounded-2xl`}>
+                    <div ref={tocRef} className={`border flex-shrink-0 border-neutral-300 dark:border-neutral-700 backdrop-blur-xl md:backdrop-blur-0 md:bg-transparent dark:md:bg-transparent md:border-0 bg-neutral-200/80 dark:bg-neutral-800/80 max-w-xl w-[calc(100vw-30px)]  md:w-64 rounded-2xl px-5 py-3 md:p-0 md:pr-3 overflow-hidden h-full`}>
                         <span className='flex justify-end items-center px-2 h-12 md:h-4'><button
                             className='p-1 md:hidden bg-neutral-400 dark:bg-neutral-800 text-neutral-100 rounded-md flex text-xl'
                             onClick={() => setShowTOC(false)}

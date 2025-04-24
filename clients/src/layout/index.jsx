@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react'
 const Navbar = lazy(() => import('./Navbar'));
 const Footer = lazy(() => import('./Footer'));
-import styles from '../style';
 import { Toaster } from 'sonner';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useUserAuthentication } from '../context/userContext';
@@ -13,6 +12,7 @@ const SidebarOptions = lazy(() => import('./Sidebar').then((module) => ({ defaul
 const Bottombar = lazy(() => import('./Bottombar'));
 import useDeviceType from '../hooks/useDeviceType';
 import { cn } from '../lib/utils';
+import LogoLoader from '../components/Loader/logo_loader';
 
 const Layout = () => {
     const { login, logout } = useUserAuthentication();
@@ -50,7 +50,7 @@ const Layout = () => {
 
     return (
         <>
-            {loading ? <div className='flex justify-center items-center text-5xl h-[100vh]'><img src={logo} width={250} alt="Loading..." className='animate-pulse' /></div> : (<>
+            {loading ? <LogoLoader className='h-screen' size={100} /> : (<>
                 <div className='relative w-full min-h-screen flex flex-col bg-white dark:bg-neutral-950 text-black dark:text-white'>
                     {(isMobile && location.pathname.startsWith('/shorts')) || <Navbar expanded={expanded} setExpanded={setExpanded} />}
                     <Toaster position="top-right" richColors closeButton='true' />
