@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import BlogActions from "../../components/BlogActions";
 import useScrollDirection from '../../hooks/useScrollDirection';
+import useDeviceType from '../../hooks/useDeviceType';
 
 const BlogFloatAction = ({ blogId, authorId, authorName, totalLikes = 0, shareBtnsClassName, toc, className }) => {
     const [liked, setLiked] = useState(false);
@@ -9,12 +10,16 @@ const BlogFloatAction = ({ blogId, authorId, authorName, totalLikes = 0, shareBt
     const [followed, setFollowed] = useState(false);
     const [bottomPosition, setBottomPosition] = useState(0);
     const scrollDirection = useScrollDirection();
+    const { isMobile } = useDeviceType();
 
     useEffect(() => {
         if (scrollDirection === 'down') {
             setBottomPosition(-64);
         } else {
-            setBottomPosition(0);
+            if (isMobile)
+                setBottomPosition(55);
+            else
+                setBottomPosition(0)
         }
     }, [scrollDirection]);
     return (

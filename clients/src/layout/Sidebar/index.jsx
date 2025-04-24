@@ -1,9 +1,10 @@
-import { useContext, createContext, useRef, useEffect, useMemo } from "react";
+import { useContext, createContext, useEffect, useMemo } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useWindowSize from "../../hooks/useWindowSize";
 import { cn } from "../../lib/utils";
 import useLockBody from "../../hooks/useLockBody";
 import { filled_shorts_icon, shorts_icon } from "../../assets";
+import { useUserAuthentication } from "../../context/userContext";
 const SidebarContext = createContext();
 
 export default function Sidebar({ expanded, setExpanded, setFixedSidebar, children }) {
@@ -92,9 +93,9 @@ export function SidebarItem({ icon, text, active, alert, onClick, ...rest }) {
             }}
             {...rest}
         >
-            <span className="text-xl flex">{icon}</span>
+            <span className="text-xl flex flex-shrink-0">{icon}</span>
             <span
-                className={`overflow-hidden ${expanded ? "ml-4 text-[15px]" : "text-xs"}`}
+                className={`overflow-hidden line-clamp-1 ${expanded ? "ml-4 text-[15px]" : "text-xs"}`}
             >
                 {text}
             </span>
@@ -109,6 +110,7 @@ export function SidebarItem({ icon, text, active, alert, onClick, ...rest }) {
 
 export const SidebarOptions = () => {
     const navigate = useNavigate();
+    const { isAuthenticatedUser } = useUserAuthentication();
     const sidebarItems = [
         {
             path: '/',
@@ -120,7 +122,7 @@ export const SidebarOptions = () => {
             icon: (active) => (
                 <img
                     src={active ? filled_shorts_icon : shorts_icon}
-                    className="dark:invert w-5"
+                    className="dark:invert w-5 h-5"
                 />
             ),
             text: 'Shorts',
@@ -129,23 +131,26 @@ export const SidebarOptions = () => {
             path: '/history',
             iconName: 'alarm',
             text: 'History',
+            show: isAuthenticatedUser,
         },
         {
             path: '/saved',
             iconName: 'bookmark',
             text: 'Saved',
+            show: isAuthenticatedUser,
         },
         {
             path: '/likes',
             iconName: 'thumbs-up',
             text: 'Likes',
+            show: isAuthenticatedUser,
             alert: true,
         },
     ].map(item => ({
         ...item,
         active: location.pathname === item.path ||
             (item.path === '/shorts' && location.pathname.startsWith('/shorts')),
-    }));
+    })).filter(item => item.show !== false);
 
     return (
         <>

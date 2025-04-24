@@ -4,8 +4,9 @@ import styles, { color } from '../../style';
 import EditDeleteBtn from './EditDeleteBtn';
 import BlogContents from '../../components/BlogContents';
 import { motion, useScroll } from "framer-motion";
-import BlogReadingProgress from './BlogReadingProgress';
+const BlogReadingProgress = React.lazy(() => import('./BlogReadingProgress'));
 import { useUserAuthentication } from '../../context/userContext';
+import { cn } from '../../lib/utils';
 
 const BlogDetails = ({ blogId, summary, authorName, formattedDate, title, needToShowTOC, content, cover }) => {
     const { isAuthenticatedUser } = useUserAuthentication();
@@ -18,9 +19,9 @@ const BlogDetails = ({ blogId, summary, authorName, formattedDate, title, needTo
         <>
             <motion.div className="progress-bar" style={{ scaleX: scrollYProgress }} />
             {isAuthenticatedUser && <BlogReadingProgress ref={contentRef} blogId={blogId} scrollYProgress={scrollYProgress} />}
-            <div ref={contentRef} className={`w-full ${needToShowTOC ? 'md:w-3/5' : 'md:w-3/4'} mt-10`}>
+            <div ref={contentRef} className={cn("w-full mt-10 sm:px-0", needToShowTOC ? 'md:w-3/5' : 'md:w-3/4 sm:px-16', "xs:p-5 ss:px-10")}>
                 <div className={`${styles.flexCenter} flex-col mb-5`}>
-                    <h1 className={`${color.textBlackWhite} ${styles.heading3}`}>{title}</h1>
+                    <h1 className={styles.heading3}>{title}</h1>
                     <div className="flex items-center gap-8 mt-2">
                         <div className="flex flex-col items-center">
                             <time className={`font-poppins font-bold text-base md:text-xl ${color.textSlate}`}>{formattedDate}</time>
@@ -36,7 +37,7 @@ const BlogDetails = ({ blogId, summary, authorName, formattedDate, title, needTo
                     <span className="bg-neutral-400 dark:bg-neutral-600 w-2 flex-shrink-0"></span>
                     <span className="py-1.5 px-4 sm:py-5 sm:px-7 flex-grow">
                         <h2 className="text-2xl mb-1 font-bold text-blue dark:text-golden">Summary</h2>
-                        <p className="font-semibold font-serif text-neutral-800 dark:text-neutral-300">{summary}</p>
+                        <p className="font-semibold font-serif text-neutral-800 dark:text-neutral-300 whitespace-pre-wrap">{summary}</p>
                     </span>
                 </div>
                 <BlogContents content={content} />

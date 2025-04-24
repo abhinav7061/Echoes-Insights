@@ -1,0 +1,69 @@
+import useDarkMode from '../../hooks/useDarkMode';
+import { cn } from '../../lib/utils';
+
+const LogoLoader = ({ size = 30, className, ...rest }) => {
+    const isDarkMode = useDarkMode();
+    const color = isDarkMode ? "#ffdb70" : "#1075fa";
+
+    return (
+        <div className={cn("flex justify-center items-center h-full", className)} {...rest}>
+            <svg width={size} height={size} viewBox="0 0 30 30" fill="none">
+                <style>{`
+                    .outline {
+                      stroke-dasharray: 300;
+                      stroke-dashoffset: 300;
+                      animation: draw 2s infinite ease-in-out;
+                    }
+                    .symbol {
+                      opacity: 0;
+                      animation: fade 2s infinite ease-in-out;
+                    }
+                    @keyframes draw {
+                      0% { stroke-dashoffset: 300; }
+                    //   50% { stroke-dashoffset: 0; }
+                    //   100% { stroke-dashoffset: 300; }
+                        100% { stroke-dashoffset: 0; }
+                    }
+                    @keyframes fade {
+                      0%, 30% { opacity: 0; }
+                      50%, 100% { opacity: 1; }
+                    //   100% { opacity: 0; }
+                    }
+                `}
+                </style>
+                <g clipPath="url(#clip0_8_17)">
+                    <path
+                        className="outline"
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M2.11842 0.518163C2.06737 0.345815 2.02606 0.172898 1.99414 0H-6.10352e-05V30H4.48849L21.4647 24.9724C24.1125 24.1883 26.8946 25.6991 27.6787 28.3468L28.0234 29.5106C28.0716 29.6734 28.1111 29.8367 28.1423 30H29.9999V0H25.7372L8.67599 5.05273C6.02824 5.83686 3.24615 4.32611 2.46201 1.67835L2.11842 0.518163ZM18.0938 7H17.4063H14.5313C13.3333 7 12.3229 7.22135 11.5 7.66406C10.6771 8.10156 10.0547 8.70052 9.63281 9.46094C9.21094 10.2161 9 11.0729 9 12.0313C9 13 9.21094 13.8646 9.63281 14.625C10.0547 15.3802 10.6771 15.9766 11.5 16.4141C12.3229 16.8464 13.3333 17.0625 14.5313 17.0625H15.4688V10.125H17.4063V23H20.5313V7H18.0938Z"
+                        fill="none"
+                        stroke={color}
+                        strokeWidth="1"
+                    />
+                    <path
+                        className="outline"
+                        d="M1.99414 0H-6.10352e-05V30H4.48849L21.4647 24.9724C24.1125 24.1883 26.8946 25.6991 27.6787 28.3468L28.0234 29.5106C28.0716 29.6734 28.1111 29.8367 28.1423 30H29.9999V0H25.7372L8.67599 5.05273C6.02824 5.83686 3.24615 4.32611 2.46201 1.67835L2.11842 0.518163C2.06737 0.345815 2.02606 0.172898 1.99414 0Z"
+                        fill="none"
+                        stroke={color}
+                        strokeWidth="2"
+                    />
+                    <path
+                        className="symbol"
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M18.0938 7H17.4063H14.5313C13.3333 7 12.3229 7.22135 11.5 7.66406C10.6771 8.10156 10.0547 8.70052 9.63281 9.46094C9.21094 10.2161 9 11.0729 9 12.0313C9 13 9.21094 13.8646 9.63281 14.625C10.0547 15.3802 10.6771 15.9766 11.5 16.4141C12.3229 16.8464 13.3333 17.0625 14.5313 17.0625H15.4688V10.125H17.4063V23H20.5313V7H18.0938Z"
+                        fill={color}
+                    />
+                </g>
+                <defs>
+                    <clipPath id="clip0_8_17">
+                        <rect x="-6.10352e-05" width="30" height="30" rx="3" fill={color} />
+                    </clipPath>
+                </defs>
+            </svg>
+        </div>
+    );
+};
+
+export default LogoLoader;
