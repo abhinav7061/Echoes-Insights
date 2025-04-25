@@ -13,6 +13,7 @@ const Shorts = lazy(() => import('../pages/Shorts'));
 const History = lazy(() => import('../pages/History'));
 const SavedBlogs = lazy(() => import('../pages/SavedBlogs'));
 const LikedBlogs = lazy(() => import('../pages/LikedBlogs'));
+const Space = lazy(() => import('../pages/Space'));
 const NoPage = lazy(() => import('../pages/NoPage'));
 
 const routes = [
@@ -46,6 +47,7 @@ const routes = [
             { path: 'history', element: <History />, access: ['user', 'writer', 'admin'] },
             { path: 'saved', element: <SavedBlogs />, access: ['user', 'writer', 'admin'] },
             { path: 'likes', element: <LikedBlogs />, access: ['user', 'writer', 'admin'] },
+            { path: 'space', element: <Space />, access: ['user', 'writer', 'admin'] },
             { path: '*', element: <NoPage />, access: 'public' }
         ]
     }
