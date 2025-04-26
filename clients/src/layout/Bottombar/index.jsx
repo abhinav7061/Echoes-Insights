@@ -53,7 +53,7 @@ const Bottombar = () => {
     }));
 
     return (
-        <div className="fixed bottom-0 left-0 w-full h-14 bg-white dark:bg-neutral-950 z-[1000] grid grid-cols-5 py-1 border-t border-neutral-800 select-none">
+        <div className="fixed bottom-0 left-0 w-full h-14 bg-white dark:bg-neutral-950 z-[1000] grid grid-cols-5 py-1 border-t dark:border-neutral-800 select-none">
             {sidebarItems.map(({ path, iconName, icon, text, active, render }) => (
                 <BottombarItem
                     key={path}

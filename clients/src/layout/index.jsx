@@ -58,10 +58,11 @@ const Layout = () => {
                         {isDesktop && <Sidebar expanded={expanded} setExpanded={setExpanded} setFixedSidebar={setFixedSidebar}>
                             <SidebarOptions />
                         </Sidebar>}
-                        <div className={cn('p-3 flex-grow ${styles.boxWidth} mx-auto transition-[width] duration-300',
+                        <div className={cn('p-3 flex-grow max-w-[1900px] mx-auto transition-[width] duration-300',
                             expanded && 'w-[calc(100vw-192px)]',
                             (!fixedSidebar && !expanded) && "w-full xs:w-[calc(100vw-80px)]",
                             fixedSidebar && 'w-full',
+                            isMobile && 'py-16',
                         )}>
                             <Suspense fallback={<div className='flex justify-center items-center text-5xl text-black dark:text-white h-[100vh]'><img src={logo} width={250} alt="Loading..." className='animate-pulse' /></div>}>
                                 <Outlet />
