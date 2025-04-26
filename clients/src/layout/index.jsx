@@ -13,6 +13,7 @@ const Bottombar = lazy(() => import('./Bottombar'));
 import useDeviceType from '../hooks/useDeviceType';
 import { cn } from '../lib/utils';
 import LogoLoader from '../components/Loader/logo_loader';
+import PWAPrompts from '../components/PWAPrompts';
 
 const Layout = () => {
     const { login, logout } = useUserAuthentication();
@@ -53,6 +54,7 @@ const Layout = () => {
             {loading ? <LogoLoader className='h-screen' size={100} /> : (<>
                 <div className='relative w-full min-h-screen flex flex-col bg-white dark:bg-neutral-950 text-black dark:text-white'>
                     {(isMobile && location.pathname.startsWith('/shorts')) || <Navbar expanded={expanded} setExpanded={setExpanded} />}
+                    <PWAPrompts />
                     <Toaster position="top-right" richColors closeButton='true' />
                     <div className='flex-grow flex w-full'>
                         {isDesktop && <Sidebar expanded={expanded} setExpanded={setExpanded} setFixedSidebar={setFixedSidebar}>
