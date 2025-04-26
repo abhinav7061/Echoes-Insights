@@ -483,34 +483,34 @@ export default defineConfig({
 				screenshots: [
 					{
 						"src": "screenshots/sc_dark_mode.png",
-						"sizes": "1278x719",
+						"sizes": "1279x720",
 						"type": "image/png",
 						"form_factor": "wide",
 						"label": "Desktop screenshot 1"
 					},
 					{
 						"src": "screenshots/sc_desktop_blogpage.png",
-						"sizes": "1278x719",
+						"sizes": "1279x720",
 						"type": "image/png",
 						"form_factor": "wide",
 						"label": "Desktop screenshot 2"
 					},
 					{
 						"src": "screenshots/sc_desktop_shorts.png",
-						"sizes": "1278x719",
+						"sizes": "1279x720",
 						"type": "image/png",
 						"form_factor": "wide",
 						"label": "Desktop screenshot 3"
 					},
 					{
 						"src": "screenshots/sc_light_mode.png",
-						"sizes": "1278x719",
+						"sizes": "1279x720",
 						"type": "image/png",
 						"form_factor": "wide",
 						"label": "Desktop screenshot 4"
 					},
 					{
-						"src": "screenshots/sc_light_mode.png",
+						"src": "screenshots/sc_shorts_mobile.png",
 						"sizes": "1078x2260",
 						"type": "image/png",
 						"label": "Mobile screenshot 1"
