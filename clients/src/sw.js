@@ -1,68 +1,105 @@
-import { NavigationRoute, registerRoute, Route } from 'workbox-routing';
-import { cleanupOutdatedCaches, precacheAndRoute } from "workbox-precaching";
-import { CacheFirst, NetworkFirst, NetworkOnly } from "workbox-strategies";
-import { BackgroundSyncPlugin } from 'workbox-background-sync';
+import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching'
+import { registerRoute, Route } from 'workbox-routing'
+import { CacheFirst, NetworkFirst, NetworkOnly } from 'workbox-strategies'
+import { BackgroundSyncPlugin } from 'workbox-background-sync'
+import { clientsClaim } from 'workbox-core'
+import { NavigationRoute } from 'workbox-routing'
 
 const backendUrl = `${import.meta.env.VITE_API_URL}`;
 
-// Ensuring that the service worker cleans up outdated caches during installation
-self.addEventListener('install', (event) => {
+// Ensure the service worker takes control immediately
+clientsClaim();
+
+// Precache all assets defined in the manifest
+precacheAndRoute(self.__WB_MANIFEST);
+
+// Clean up outdated caches during activation
+self.addEventListener('activate', (event) => {
     event.waitUntil(
         cleanupOutdatedCaches()
     );
 });
 
-self.addEventListener('activate', (event) => {
-    event.waitUntil(
-        clients.claim().then(() => {
-            return cleanupOutdatedCaches();
-        })
-    );
-});
-
-// Precacheing and routing assets
-precacheAndRoute(self.__WB_MANIFEST);
-self.skipWaiting();
-
-// Caching images
-const imageRoute = new Route(
-    ({ request, sameOrigin }) => {
-        return sameOrigin && request.destination === 'image';
-    },
+// Cache images with CacheFirst strategy
+registerRoute(
+    ({ request }) => request.destination === 'image',
     new CacheFirst({
         cacheName: 'images',
+        plugins: [
+            {
+                cacheWillUpdate: async ({ response }) => {
+                    // Only cache successful responses
+                    return response.status === 200 ? response : null;
+                }
+            }
+        ]
     })
 );
-registerRoute(imageRoute);
 
-// Registering route for caching GET requests to the backend API with NetworkFirst strategy
-const fetchsRoutes = new Route(
-    ({ url }) => `${url.origin}/api/v1` === backendUrl && url.pathname.startsWith('/'),
+// Cache API GET requests with NetworkFirst strategy
+registerRoute(
+    ({ url }) => url.origin === new URL(backendUrl).origin && url.pathname.startsWith('/api/v1'),
     new NetworkFirst({
         cacheName: 'api-get',
+        networkTimeoutSeconds: 3,
+        plugins: [
+            {
+                cacheWillUpdate: async ({ response }) => {
+                    // Only cache successful responses
+                    return response && response.status === 200 ? response : null;
+                }
+            }
+        ]
     }),
     'GET'
 );
-registerRoute(fetchsRoutes);
 
-// Background synchronization
-const bgSyncPlugin = new BackgroundSyncPlugin("backgroundSyncQueue", {
-    maxRetentionTime: 24 * 60
+// Background sync for write operations
+const bgSyncPlugin = new BackgroundSyncPlugin('api-queue', {
+    maxRetentionTime: 24 * 60, // 24 hours
+    onSync: async ({ queue }) => {
+        let entry;
+        while (entry = await queue.shiftRequest()) {
+            try {
+                await fetch(entry.request);
+            } catch (error) {
+                await queue.unshiftRequest(entry);
+                throw error;
+            }
+        }
+    }
 });
 
+// Handle write operations with NetworkOnly + BackgroundSync
 registerRoute(
-    ({ url, request }) => `${url.origin}/api/v1` === backendUrl && url.pathname.startsWith('/'),
+    ({ url }) => url.origin === new URL(backendUrl).origin && url.pathname.startsWith('/api/v1'),
     new NetworkOnly({
-        plugins: [bgSyncPlugin],
+        plugins: [bgSyncPlugin]
     }),
     ['POST', 'PUT', 'DELETE', 'PATCH']
 );
 
-// Caching navigation routes
-const navigationRoute = new NavigationRoute(
+// Cache navigation routes
+registerRoute(
+    new NavigationRoute(
+        new NetworkFirst({
+            cacheName: 'navigation',
+            networkTimeoutSeconds: 3
+        })
+    )
+);
+
+// Optional: Add offline fallback page
+registerRoute(
+    ({ request }) => request.mode === 'navigate',
     new NetworkFirst({
-        cacheName: 'navigation',
-        networkTimeoutSeconds: 3,
+        cacheName: 'offline-fallback',
+        plugins: [
+            {
+                handlerDidError: async ({ request }) => {
+                    return caches.match('/offline.html') || Response.error();
+                }
+            }
+        ]
     })
 );
-registerRoute(navigationRoute);
