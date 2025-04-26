@@ -8,8 +8,6 @@ export default defineConfig({
 		VitePWA({
 			devOptions: {
 				enabled: true,
-				type: 'module',
-				navigateFallback: 'index.html'
 			},
 			strategies: 'injectManifest',
 			srcDir: 'src',
@@ -23,17 +21,10 @@ export default defineConfig({
 					'**/*.{js,css,html,ico,png,svg}',
 				],
 				maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
-				manifestTransforms: [async (entries) => {
-					entries.push({
-						url: 'manifest.webmanifest',
-						revision: null
-					})
-					return { manifest: entries }
-				}]
 			},
 			manifest: {
 				name: "Echoes & Insights",
-				short_name: "Echoes & Insights",
+				short_name: "Echosights",
 				description: "Echoes & Insights - A platform for in-depth tutorials, insightful blogs, and engaging exercises on programming, web development, and more. Learn, code, and grow with structured content.",
 				start_url: "/",
 				display: "standalone",
