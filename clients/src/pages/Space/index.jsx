@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useDeviceType from '../../hooks/useDeviceType';
-const ReadingHistory = React.lazy(() => import('../../components/ReadingHistory'));
+const History = React.lazy(() => import('../History'));
 const LikedBlogs = React.lazy(() => import('../LikedBlogs'));
 const SavedBlogs = React.lazy(() => import('../SavedBlogs'));
 const NoPage = React.lazy(() => import('../NoPage'));
@@ -12,7 +12,7 @@ const Space = () => {
     return (
         <>
             <Heading heading="history" navigateTo="/history" />
-            <ReadingHistory className="mb-0" shortFetch />
+            <History className="mb-0" shortFetch />
             <Heading heading="liked blogs" navigateTo="/likes" />
             <LikedBlogs className="mb-0" shortFetch />
             <Heading heading="saved blogs" navigateTo="/saved" />

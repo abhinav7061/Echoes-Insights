@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import useWindowSize from './useWindowSize';
 
 export default function useDeviceType() {
-    const [deviceType, setDeviceType] = useState('desktop');
+    const [deviceType, setDeviceType] = useState('');
     const { windowInWidth } = useWindowSize();
 
     useEffect(() => {
