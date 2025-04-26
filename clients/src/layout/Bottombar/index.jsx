@@ -2,6 +2,7 @@ import React from 'react'
 import CreateBtn from '../../components/CreateBtn';
 import { filled_shorts_icon, people01, shorts_icon } from '../../assets';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { cn } from '../../lib/utils';
 
 const Bottombar = () => {
     const navigate = useNavigate();
@@ -34,10 +35,12 @@ const Bottombar = () => {
         },
         {
             path: '/space',
-            icon: () => (
+            icon: (active) => (
                 <img
                     src={people01}
-                    className="w-6 border-[3px] rounded-full cursor-pointer"
+                    className={cn("w-6 rounded-full cursor-pointer",
+                        active ? 'border-[3px] border-neutral-800 dark:border-neutral-200' : 'border-0'
+                    )}
                     alt="User profile"
                 />
             ),
