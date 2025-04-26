@@ -10,12 +10,12 @@ const usePWA = () => {
     // Check if app is installed
     useEffect(() => {
         const checkInstalled = () => {
-            const isInstalled = 
+            const isInstalled =
                 window.matchMedia('(display-mode: standalone)').matches ||
                 window.navigator.standalone ||
                 document.referrer.includes('android-app://');
             setIsAppInstalled(isInstalled);
-            
+
             // Clear dismissed flags if app gets installed
             if (isInstalled) {
                 localStorage.removeItem('pwaInstallDismissed');
@@ -37,11 +37,11 @@ const usePWA = () => {
             // Only show if not installed and not recently dismissed
             const dismissed = localStorage.getItem('pwaInstallDismissed');
             const dismissedTime = localStorage.getItem('pwaInstallDismissedTime');
-            
+
             // Show if never dismissed or dismissed more than 7 days ago
-            const shouldShow = !dismissed || 
+            const shouldShow = !dismissed ||
                 (dismissedTime && Date.now() - parseInt(dismissedTime) > 7 * 24 * 60 * 60 * 1000);
-            
+
             if (shouldShow && !isAppInstalled) {
                 setDeferredPrompt(e);
                 setShowInstallPrompt(true);
@@ -67,10 +67,10 @@ const usePWA = () => {
                     if (reg.waiting) {
                         const updateDismissed = localStorage.getItem('pwaUpdateDismissed');
                         const updateDismissedTime = localStorage.getItem('pwaUpdateDismissedTime');
-                        
-                        const shouldShow = !updateDismissed || 
+
+                        const shouldShow = !updateDismissed ||
                             (updateDismissedTime && Date.now() - parseInt(updateDismissedTime) > 24 * 60 * 60 * 1000);
-                        
+
                         if (shouldShow) {
                             setShowUpdatePrompt(true);
                         }
@@ -82,10 +82,10 @@ const usePWA = () => {
                             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                                 const updateDismissed = localStorage.getItem('pwaUpdateDismissed');
                                 const updateDismissedTime = localStorage.getItem('pwaUpdateDismissedTime');
-                                
-                                const shouldShow = !updateDismissed || 
+
+                                const shouldShow = !updateDismissed ||
                                     (updateDismissedTime && Date.now() - parseInt(updateDismissedTime) > 24 * 60 * 60 * 1000);
-                                
+
                                 if (shouldShow) {
                                     setShowUpdatePrompt(true);
                                 }
@@ -97,14 +97,12 @@ const usePWA = () => {
                 }
             };
 
-            if (import.meta.env.PROD) {
-                registerSW();
-                
-                // Listen for controller change (update completed)
-                navigator.serviceWorker.addEventListener('controllerchange', () => {
-                    window.location.reload();
-                });
-            }
+            registerSW();
+
+            // Listen for controller change (update completed)
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                window.location.reload();
+            });
         }
     }, []);
 
