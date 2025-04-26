@@ -1,7 +1,7 @@
 {
   "routes": [
     {
-      "src": "/(logo\\.png|favicon/.*|assets/.*)",
+      "src": "/(logo\\.png|favicon/.*|assets/.*|manifest\\.webmanifest)",
       "dest": "/public/$1"
     },
     {
