@@ -1,4 +1,3 @@
-// src/hooks/usePWA.js
 import { useEffect, useState } from 'react';
 
 const usePWA = () => {
@@ -6,6 +5,7 @@ const usePWA = () => {
     const [showInstallPrompt, setShowInstallPrompt] = useState(false);
     const [showUpdatePrompt, setShowUpdatePrompt] = useState(false);
     const [isAppInstalled, setIsAppInstalled] = useState(false);
+    const [registration, setRegistration] = useState(null);
 
     // Check if app is installed
     useEffect(() => {
@@ -46,20 +46,30 @@ const usePWA = () => {
     // Handle service worker update
     useEffect(() => {
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').then((registration) => {
-                registration.addEventListener('updatefound', () => {
-                    const newWorker = registration.installing;
-                    newWorker.addEventListener('statechange', () => {
-                        if (newWorker.state === 'installed') {
-                            // Check if user previously dismissed the update
-                            const updateDismissed = localStorage.getItem('pwaUpdateDismissed');
-                            if (!updateDismissed && navigator.serviceWorker.controller) {
-                                setShowUpdatePrompt(true);
+            const registerSW = async () => {
+                try {
+                    const reg = await navigator.serviceWorker.register('/sw.js');
+                    setRegistration(reg);
+
+                    reg.addEventListener('updatefound', () => {
+                        const newWorker = reg.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed') {
+                                const updateDismissed = localStorage.getItem('pwaUpdateDismissed');
+                                if (!updateDismissed && navigator.serviceWorker.controller) {
+                                    setShowUpdatePrompt(true);
+                                }
                             }
-                        }
+                        });
                     });
-                });
-            });
+                } catch (error) {
+                    console.error('SW registration failed:', error);
+                }
+            };
+
+            if (import.meta.env.PROD) {
+                registerSW();
+            }
         }
     }, []);
 
@@ -85,7 +95,10 @@ const usePWA = () => {
 
     const handleUpdate = () => {
         setShowUpdatePrompt(false);
-        window.location.reload();
+        if (registration && registration.waiting) {
+            registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+            window.location.reload();
+        }
     };
 
     const dismissUpdate = () => {

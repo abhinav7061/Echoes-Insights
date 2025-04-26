@@ -44,12 +44,12 @@ const PWAPrompts = () => {
             {/* Update Prompt */}
             {showUpdatePrompt && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[9999]">
-                    <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg max-w-md w-11/12 shadow-lg">
+                    <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg max-w-md w-11/12">
                         <h3 className="text-lg font-semibold">Update Available</h3>
-                        <p className="text-gray-600 mt-2 mb-6">
+                        <p className="text-neutral-400 mt-2 mb-6">
                             A new version of the app is available. Update for the best experience.
                         </p>
-                        <div className="flex justify-end gap-2">
+                        <div className="flex justify-end gap-3">
                             <button
                                 onClick={dismissUpdate}
                                 className="px-4 py-1.5 rounded-full border border-red-500 text-red-500 text-sm hover:bg-red-500 hover:text-white hover:shadow-[0_0_25px_2px_rgba(239,68,68,0.7)] transition-all duration-500 ease-in-out"
