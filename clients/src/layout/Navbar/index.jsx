@@ -32,7 +32,7 @@ const Navbar = ({ expanded, setExpanded }) => {
 
     return (
         <header className={cn("w-full flex justify-between items-center h-16 sticky top-0 z-[500] backdrop-blur-md px-2 bg-white dark:bg-neutral-950 transition-all duration-300",
-            scrollDirection === 'down' && isMobile ? 'fixed -top-16' : 'fixed top-0',
+            scrollDirection === 'down' && isMobile ? 'fixed -top-16' : 'fixed xs:sticky',
         )}>
             {isDesktop && <button onClick={() => setExpanded(!expanded)} className={`text-2xl px-3 flex`}><ion-icon name="menu"></ion-icon></button>}
             <Link to='/' className="bg-gradient-to-r from-indigo-500 from-20% via-sky-500 via-40% to-emerald-600 to-90% p-2 bg-clip-text text-clip flex-grow ss:flex-grow-0">
