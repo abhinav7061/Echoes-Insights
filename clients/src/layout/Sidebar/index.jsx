@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import useWindowSize from "../../hooks/useWindowSize";
 import { cn } from "../../lib/utils";
 import useLockBody from "../../hooks/useLockBody";
-import { filled_shorts_icon, shorts_icon } from "../../assets";
+import { filled_shorts_icon, main_logo, shorts_icon } from "../../assets";
 import { useUserAuthentication } from "../../context/userContext";
 const SidebarContext = createContext();
 
@@ -48,15 +48,16 @@ export default function Sidebar({ expanded, setExpanded, setFixedSidebar, childr
             <SidebarContext.Provider value={{ expanded, setExpanded, fixed }}>
                 <div className={cn(
                     "h-full flex-shrink-0 w-full flex flex-col items-center bg-white dark:bg-neutral-950",
-                    "overflow-y-auto overflow-x-hidden z-10 transition-all duration-300",
+                    "overflow-y-auto overflow-x-hidden z-10 transition-all duration-300 scrollbar-thin",
                     expanded && "px-2"
                 )}>
                     <div className={cn(
-                        "w-full flex justify-between items-center h-16",
+                        "w-full flex justify-between items-center h-16 flex-shrink-0 sticky top-0 dark:bg-neutral-950 bg-white z-20",
                         !fixed && "xs:hidden"
                     )}>
-                        <Link to='/' className="bg-gradient-to-r from-indigo-500 from-20% via-sky-500 via-40% to-emerald-600 to-90% bg-clip-text text-clip">
-                            <h1 className="text-sm font-bold font-logoFont text-transparent whitespace-nowrap">Echoes & Insights</h1>
+                        <Link to='/' className="p-2 flex-grow ss:flex-grow-0 flex gap-1 items-center">
+                            <img src={main_logo} alt='' className="h-6" />
+                            <h1 className="font-semibold text-xl leading-5">EchoSights</h1>
                         </Link>
                         <button
                             onClick={() => setExpanded(false)}
@@ -93,7 +94,7 @@ export function SidebarItem({ icon, text, active, alert, onClick, ...rest }) {
             }}
             {...rest}
         >
-            <span className="text-xl flex flex-shrink-0">{icon}</span>
+            <span className="text-xl flex flex-shrink-0 h-5 w-5">{icon}</span>
             <span
                 className={`overflow-hidden line-clamp-1 ${expanded ? "ml-4 text-[15px]" : "text-xs"}`}
             >

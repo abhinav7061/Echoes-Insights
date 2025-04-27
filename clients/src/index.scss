@@ -1,11 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
 	--color: #1075fa;
 	--btnBackground: rgb(229, 229, 229);
 	--btnForeground: rgba(229, 229, 229, .3);
+	--scrollbar_color: #a8a8a8f5;
 }
 
 * {
@@ -13,6 +15,7 @@
 	box-sizing: border-box;
 	padding: 0;
 	margin: 0;
+	font-family: 'Roboto', Arial, Helvetica, sans-serif;
 }
 
 body {
@@ -128,6 +131,7 @@ body {
 	--color: #ffdb70;
 	--btnBackground: rgb(38, 38, 38);
 	--btnForeground: rgba(38, 38, 38, 0.5);
+	--scrollbar_color: #dddddd93;
 
 	.content {
 		color: white;
@@ -226,4 +230,67 @@ body {
 .scrollbar-none {
 	scrollbar-width: none;
 	-ms-overflow-style: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+	display: none;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+	width: 3px;
+	height: 3px;
+	transition: width 0.3s;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+	background-color: transparent;
+	border-radius: 4px;
+	height: 30px;
+	transition: all 1s ease-in-out;
+}
+
+.scrollbar-thin::-webkit-scrollbar:hover {
+	width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+	width: 6px;
+	background-color: #8f8d8d;
+}
+
+.dark .scrollbar-thin:hove::-webkit-scrollbar-track:hover::-webkit-scrollbar-thumb {
+	background-color: #a8a8a8f5 !important;
+}r::-webkit-scrollbar-thumb {
+	background-color: #dddddd93;
+}
+
+.scrollbar-thin:hover::-webkit-scrollbar-thumb {
+	background-color: #a8a8a8f5;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:active {
+	background-color: var(--color);
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+	background: rgb(255, 255, 255);
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-track {
+	background: rgb(10, 10, 10);
+}
+
+/* Firefox-specific styles */
+@supports (-moz-appearance: none) {
+	html {
+		scrollbar-color: transparent transparent;
+	}
+
+	html:hover {
+		scrollbar-color: #a8a8a8f5 transparent;
+	}
+
+	html:active {
+		scrollbar-color: var(--color) transparent;
+	}
 }

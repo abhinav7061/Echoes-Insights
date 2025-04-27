@@ -211,7 +211,7 @@ const FilePreviewItem = ({ file, previewUrl, onRemove, disabled }) => {
 
     return (
         <div className="flex items-center justify-between p-2 rounded bg-neutral-50 dark:bg-neutral-800/50">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 w-[calc(100%-2.5rem)]">
                 {previewUrl ? (
                     <img
                         src={previewUrl}
@@ -223,8 +223,8 @@ const FilePreviewItem = ({ file, previewUrl, onRemove, disabled }) => {
                         <span className="text-lg">{getFileIcon(file.type)}</span>
                     </div>
                 )}
-                <div>
-                    <p className="text-sm font-medium truncate max-w-xs">{file.name}</p>
+                <div className="w-[calc(100%-2.5rem)] overflow-hidden">
+                    <p className="text-sm font-medium truncate w-full">{file.name}</p>
                     <p className="text-xs text-neutral-500">
                         {(file.size / 1024).toFixed(1)}KB
                     </p>
