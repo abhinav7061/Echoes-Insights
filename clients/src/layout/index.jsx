@@ -52,7 +52,9 @@ const Layout = () => {
     return (
         <>
             {loading ? <LogoLoader className='h-screen' size={100} /> : (<>
-                <div className='relative w-full min-h-screen flex flex-col bg-white dark:bg-neutral-950 text-black dark:text-white'>
+                <div className={cn('relative w-full min-h-screen flex flex-col bg-white dark:bg-neutral-950 text-black dark:text-white',
+                )}>
+                    {location.pathname === '/space' && <div className='inset-0 absolute z-0 bg-gradient-to-t dark:from-neutral-950 dark:to-neutral-400/20 from-white to-neutral-950/10 h-[60vh]' />}
                     {(isMobile && location.pathname.startsWith('/shorts')) || <Navbar expanded={expanded} setExpanded={setExpanded} />}
                     <PWAPrompts />
                     <Toaster position="top-right" richColors closeButton='true' />

@@ -9,6 +9,7 @@ export const FileUpload = ({
     control,
     label,
     multiple = false,
+    showPreview = true,
     accept = "*/*",
     maxSize = 5 * 1024 * 1024, // 5MB default
     showError = true,
@@ -168,7 +169,7 @@ export const FileUpload = ({
                 />
             </div>
 
-            {(field.value && (multiple ? field.value.length > 0 : true)) && (
+            {(field.value && (multiple ? field.value.length > 0 : true) && showPreview) && (
                 <div className="mt-4 space-y-2">
                     {multiple ? (
                         field.value.map((file, index) => (

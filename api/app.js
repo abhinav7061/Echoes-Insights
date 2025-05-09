@@ -38,9 +38,11 @@ const comment = require("./router/commentRoutes");
 const commentReply = require("./router/commentReplyRoutes");
 const writer = require("./router/writer.routes");
 const sampleBlog = require("./router/sampleBlog.routes");
-const history = require("./router/history.routes")
+const history = require("./router/history.routes");
+const contact = require('./router/contactRoutes')
 
 //using routes
+
 app.use("/api/v1/user", user);
 app.use("/api/v1/blog", blog);
 app.use("/api/v1/like", like);
@@ -52,6 +54,7 @@ app.use("/api/v1/comment-reply", commentReply);
 app.use("/api/v1/writer", writer)
 app.use("/api/v1/sampleBlog", sampleBlog)
 app.use("/api/v1/history", history)
+app.use("/api/v1/contact", contact)
 app.use('/api/v1/blog-cover', express.static(__dirname + '/uploads/blog_cover')); // route to  serve the static file(profile image in this project)
 
 app.get('/', (req, res) => {

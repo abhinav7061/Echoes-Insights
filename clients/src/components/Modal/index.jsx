@@ -1,20 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-// import './Modal.css'; // Styled with CSS-in-JS alternative below
 
-/**
- * A highly reusable, scalable, and modular modal component.
- * 
- * Features:
- * - Portal implementation for proper DOM rendering
- * - Keyboard accessibility (Escape to close)
- * - Focus trapping
- * - Customizable via props
- * - Animation support
- * - Type checking with PropTypes
- * - Controlled and uncontrolled usage
- */
 const Modal = ({
     isOpen: propsIsOpen,
     onClose,
@@ -157,7 +143,7 @@ const Modal = ({
                 }}
             >
                 {(title || showCloseButton) && (
-                    <div className="flex items-center justify-between p-4 border-b dark:border-neutral-500 sticky top-0 bg-white dark:bg-neutral-800">
+                    <div className="flex items-center justify-between p-4 border-b dark:border-neutral-700 sticky top-0 bg-white dark:bg-neutral-800 z-10">
                         {title && (
                             <h2
                                 id={ariaLabelledby}

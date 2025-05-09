@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import usePWA from '../../hooks/usePWA';
+import CancelBtn from '../Button/cancelBtn';
+import AcceptBtn from '../Button/acceptBtn';
 
 const PWAPrompts = () => {
     const {
@@ -67,20 +69,8 @@ const PWAPrompts = () => {
                         Add this app to your home screen for a better experience
                     </p>
                     <div className="flex justify-end gap-3">
-                        <button
-                            onClick={dismissInstall}
-                            className="px-4 py-2 rounded-lg border border-red-500 text-red-500 hover:bg-red-500/10 transition-colors"
-                            aria-label="Dismiss install prompt"
-                        >
-                            Not Now
-                        </button>
-                        <button
-                            onClick={handleInstall}
-                            className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-                            aria-label="Install application"
-                        >
-                            Install
-                        </button>
+                        <CancelBtn title='Not Now' onClick={dismissInstall} aria-label="Dismiss install prompt" />
+                        <AcceptBtn title='Install' onClick={handleInstall} aria-label="Install application" />
                     </div>
                 </div>
             )}
@@ -100,20 +90,8 @@ const PWAPrompts = () => {
                         A new version is available. Update now for the latest features and improvements.
                     </p>
                     <div className="flex justify-end gap-3">
-                        <button
-                            onClick={dismissUpdate}
-                            className="px-4 py-2 rounded-lg border border-gray-500 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                            aria-label="Dismiss update prompt"
-                        >
-                            Later
-                        </button>
-                        <button
-                            onClick={handleUpdate}
-                            className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-                            aria-label="Update application"
-                        >
-                            Update Now
-                        </button>
+                        <CancelBtn title='Later' onClick={dismissUpdate} aria-label="Dismiss update prompt" />
+                        <AcceptBtn title='Update Now' onClick={handleUpdate} aria-label="Update application" />
                     </div>
                 </div>
             )}

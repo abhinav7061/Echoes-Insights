@@ -5,13 +5,13 @@ import { useNavigate } from 'react-router-dom';
 
 const rootApi = import.meta.env.VITE_API_URL;
 
-export default function useApi(url, options = {}, autoFetch = false) {
+export default function useApi(url, options = {}, autoFetch = false, checkAuth = false) {
     const [loading, setLoading] = useState(autoFetch);
     const [error, setError] = useState(null);
     const [data, setData] = useState(null);
     const [success, setSuccess] = useState(false);
     const abortControllerRef = useRef(null);
-    const { logout } = useUserAuthentication();
+    const { logout, isAuthenticatedUser } = useUserAuthentication();
     const navigate = useNavigate();
 
     const reset = useCallback(() => {
@@ -22,6 +22,12 @@ export default function useApi(url, options = {}, autoFetch = false) {
     }, []);
 
     const callApi = useCallback(async (config = {}) => {
+        if (checkAuth && !isAuthenticatedUser()) {
+            setError('User is not authenticated');
+            setLoading(false);
+            setSuccess(false);
+            return { error: 'User is not authenticated' };
+        }
         if (abortControllerRef.current) {
             abortControllerRef.current.abort();
         }
@@ -99,9 +105,16 @@ export default function useApi(url, options = {}, autoFetch = false) {
     }, []);
 
     useEffect(() => {
-        if (autoFetch)
+        if (autoFetch) {
+            if (checkAuth && !isAuthenticatedUser()) {
+                setError('User is not authenticated');
+                setLoading(false);
+                setSuccess(false);
+                return;
+            }
             callApi();
-    }, [autoFetch, callApi])
+        }
+    }, [autoFetch, callApi, checkAuth, isAuthenticatedUser])
 
     return {
         loading,

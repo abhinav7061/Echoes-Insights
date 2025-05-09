@@ -4,7 +4,7 @@ import Label from './label';
 import Error from './error';
 import { cn } from '../../lib/utils';
 
-const Input = ({ name, control, label, showError = true, type = 'text', className = '', required = false, ...props }) => {
+const Input = ({ name, control, label, showError = true, type = 'text', className = '', required = false, inputClass, ...props }) => {
     const {
         field,
         fieldState: { error },
@@ -17,8 +17,9 @@ const Input = ({ name, control, label, showError = true, type = 'text', classNam
                 {...field}
                 id={name}
                 type={type}
-                className="w-full p-2 rounded-md outline-none bg-neutral-100 dark:bg-neutral-900"
+                className={cn("w-full p-2 rounded-md outline-none bg-neutral-100 dark:bg-neutral-900", inputClass)}
                 {...props}
+                required={false}
             />
             <Error showError={showError} error={error} />
         </div>
