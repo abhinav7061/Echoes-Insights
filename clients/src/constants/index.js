@@ -128,3 +128,72 @@ export const shareSocialButtons = [
   { Component: WhatsappShareButton, key: 'whatsapp', logoColor: 'text-green-500' },
   { Component: LinkedinShareButton, key: 'linkedin', logoColor: 'text-sky-800' },
 ];
+
+export const platformFeatures = [
+  {
+    iconName: 'book-outline',
+    title: "Quality Content",
+    description: "Our platform focuses on delivering well-researched, engaging content across various topics."
+  },
+  {
+    iconName: 'people-outline',
+    title: "Community Driven",
+    description: "Built by and for passionate writers and readers who value knowledge sharing."
+  },
+  {
+    iconName: 'lock-closed-outline',
+    title: "Privacy Focused",
+    description: "We prioritize your data privacy and give you control over your information."
+  },
+  {
+    iconName: 'sparkles-outline',
+    title: "Constant Improvement",
+    description: "Regular updates and new features based on user feedback."
+  }
+];
+
+export const teamMembers = [
+  {
+    name: "Abhinav Kumar",
+    role: "Founder & CEO",
+    bio: "Passionate about creating platforms that empower writers."
+  },
+  {
+    name: "Aakash Kumar",
+    role: "Lead Developer",
+    bio: "Builds the technical foundation with user experience in mind."
+  },
+  {
+    name: "Abhishek Singh",
+    role: "Head of Content",
+    bio: "Editor with experience in digital publishing."
+  }
+];
+
+export const statistics = [
+  { value: '100K+', description: 'Monthly Readers' },
+  { value: '500+', description: 'Active Writers' },
+  { value: '10K+', description: 'Published Articles' },
+  { value: '5+', description: 'Years Operating' }
+];
+
+export const resourceSections = [
+  {
+    title: 'Documentation',
+    icon: 'book-outline',
+    links: [
+      { href: '#', icon: 'document-text-outline', label: 'Getting Started Guide' },
+      { href: '#', icon: 'code-slash-outline', label: 'API Documentation' },
+      { href: '#', icon: 'videocam-outline', label: 'Tutorial Videos' },
+    ],
+  },
+  {
+    title: 'Community Help',
+    icon: 'people-outline',
+    links: [
+      { href: '#', icon: 'logo-discord', label: 'Join our Discord Community' },
+      { href: '#', icon: 'logo-github', label: 'GitHub Discussions' },
+      { href: '#', icon: 'logo-stackoverflow', label: 'Stack Overflow' },
+    ],
+  },
+];

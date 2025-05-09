@@ -9,6 +9,7 @@ export const FileUpload = ({
     control,
     label,
     multiple = false,
+    showPreview = true,
     accept = "*/*",
     maxSize = 5 * 1024 * 1024, // 5MB default
     showError = true,
@@ -168,7 +169,7 @@ export const FileUpload = ({
                 />
             </div>
 
-            {(field.value && (multiple ? field.value.length > 0 : true)) && (
+            {(field.value && (multiple ? field.value.length > 0 : true) && showPreview) && (
                 <div className="mt-4 space-y-2">
                     {multiple ? (
                         field.value.map((file, index) => (
@@ -211,7 +212,7 @@ const FilePreviewItem = ({ file, previewUrl, onRemove, disabled }) => {
 
     return (
         <div className="flex items-center justify-between p-2 rounded bg-neutral-50 dark:bg-neutral-800/50">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 w-[calc(100%-2.5rem)]">
                 {previewUrl ? (
                     <img
                         src={previewUrl}
@@ -223,8 +224,8 @@ const FilePreviewItem = ({ file, previewUrl, onRemove, disabled }) => {
                         <span className="text-lg">{getFileIcon(file.type)}</span>
                     </div>
                 )}
-                <div>
-                    <p className="text-sm font-medium truncate max-w-xs">{file.name}</p>
+                <div className="w-[calc(100%-2.5rem)] overflow-hidden">
+                    <p className="text-sm font-medium truncate w-full">{file.name}</p>
                     <p className="text-xs text-neutral-500">
                         {(file.size / 1024).toFixed(1)}KB
                     </p>

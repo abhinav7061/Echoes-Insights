@@ -1,0 +1,52 @@
+/* calendar-overrides.css */
+.react-calendar {
+    background-color: transparent;
+    width: 100%;
+    border: none;
+    color: inherit;
+}
+
+.react-calendar__tile {
+    background: transparent;
+    color: inherit;
+    border-radius: 0.375rem;
+}
+
+.scheduled_tile {
+    background-color: #e4e4e4de;
+    position: relative;
+}
+
+.react-calendar__navigation__arrow:hover, .react-calendar__navigation__label:hover {
+    color: black;
+}
+
+.react-calendar__navigation__label, .react-calendar__navigation__arrow {
+    border-radius: 0.375rem;
+}
+
+.scheduled_tile::after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    height: 5px;
+    width: 5px;
+    border-radius: 10000px;
+    background: #006eff;
+}
+
+.react-calendar__tile--now {
+    background: aqua;
+    color: inherit;
+}
+
+.dark .react-calendar__tile--now {
+    background: #053e88;
+    color: inherit;
+}
+
+.react-calendar__navigation {
+    background: transparent;
+    border-bottom: none;
+}

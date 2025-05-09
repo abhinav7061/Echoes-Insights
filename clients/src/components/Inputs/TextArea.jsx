@@ -2,8 +2,9 @@ import React from 'react';
 import { useController } from 'react-hook-form';
 import Label from './label';
 import Error from './error';
+import { cn } from '../../lib/utils';
 
-const TextArea = ({ name, control, showError = true, label, className = '', maxHeightMultiplier = 5, required = false, ...props }) => {
+const TextArea = ({ name, control, showError = true, label, className = '', maxHeightMultiplier = 5, required = false, inputClass, ...props }) => {
     const {
         field,
         fieldState: { error },
@@ -34,7 +35,7 @@ const TextArea = ({ name, control, showError = true, label, className = '', maxH
                 {...field}
                 id={name}
                 onChange={handleTextAreaInput}
-                className={`w-full outline-none resize-none overflow-hidden bg-transparent`}
+                className={cn("w-full outline-none resize-none overflow-hidden bg-transparent rounded-md p-2", inputClass)}
                 {...props}
             />
             <Error showError={showError} error={error} />

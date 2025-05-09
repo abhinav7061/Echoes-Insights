@@ -12,8 +12,8 @@ import { MediumSpinLoader } from '../../components/Loader/spinLoader';
 import onboardingSchema, { onboardingDefaultValues } from '../../schemas/onboardingSchema';
 import { Checkbox } from '../../components/Inputs/checkbox';
 import { FileUpload } from '../../components/Inputs/fileUpload';
-import Modal from '../../components/Modal';
 import { useNavigate } from 'react-router-dom';
+import TermsAndConditions from '../../components/TermsAndConditions';
 
 const WriterOnboarding = () => {
   const methods = useForm({
@@ -30,7 +30,6 @@ const WriterOnboarding = () => {
   const sampleLinks = watch('sampleWorkLinks');
 
   const [isOpen, setIsOpen] = useState(false);
-  const initialFocusRef = useRef(null);
 
   const onSubmit = async (data) => {
     setSubmitting(true);
@@ -91,7 +90,7 @@ const WriterOnboarding = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="max-w-3xl mx-auto w-full">
           <h2 className="text-2xl font-bold mb-6 text-center">Writer Application Form</h2>
 
-          <TextArea className='mb-4 rounded-md p-2 bg-neutral-100 dark:bg-neutral-900' name="bio" control={control} label="Bio" placeholder="Tell us about yourself..." />
+          <TextArea inputClass='mb-4 rounded-md p-2 bg-neutral-100 dark:bg-neutral-900' name="bio" control={control} label="Bio" placeholder="Tell us about yourself..." />
           <Input name="topics" control={control} label="Topics You are Interested" placeholder="E.g., Tech, Travel, Finance" required />
           <Input name="sampleWorkLinks" control={control} label="Sample Work Links" placeholder="Comma-separated URLs" />
 
@@ -99,7 +98,7 @@ const WriterOnboarding = () => {
           <Input name="linkedin" control={control} label="LinkedIn" placeholder="https://linkedin.com/in/you" />
           <Input name="github" control={control} label="GitHub" placeholder="https://github.com/you" />
 
-          <TextArea className='mb-4 rounded-md p-2 bg-neutral-100 dark:bg-neutral-900' name="reasonToWrite" control={control} label="Why do you want to write?" placeholder="Your motivation..." rows={3} required />
+          <TextArea inputClass='mb-4 rounded-md p-2 bg-neutral-100 dark:bg-neutral-900' name="reasonToWrite" control={control} label="Why do you want to write?" placeholder="Your motivation..." rows={3} required />
           {(!sampleLinks || sampleLinks.length === 0) && (
             <div className="mt-6">
               <h3 className="text-lg font-semibold mb-3">Write a Sample Blog</h3>
@@ -137,44 +136,11 @@ const WriterOnboarding = () => {
       <img className="aspect-[2/3] rounded-2xl shrink-0 h-[calc(100vh-100px)] hidden sm:block sticky top-20"
         src={writer}
         alt="" />
-      <Modal
+      <TermsAndConditions
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        title="Writer Terms & Conditions"
-        size="lg"
-        animation="slide"
-        initialFocusRef={initialFocusRef}
-        ariaLabelledby="modal-title"
-        overlayClassName="custom-overlay"
-      >
-        <div className="p-6 space-y-3 text-sm leading-relaxed">
-          <p>
-            By applying as a writer on our platform, you agree to the following terms and conditions. Please read them carefully before submitting your application.
-          </p>
-
-          <ol className="list-decimal list-inside space-y-2">
-            <li>
-              <strong>Original Content:</strong> All blogs and samples you submit must be your own original work. Plagiarized or AI-generated content without editing and personal voice may lead to rejection or future ban.
-            </li>
-            <li>
-              <strong>Content Rights:</strong> Once published, your content may be edited for clarity or formatting. The platform retains the right to distribute and showcase your content unless agreed otherwise.
-            </li>
-            <li>
-              <strong>Review Period:</strong> Submitted applications may take up to 5–7 working days for review. The approval is at the sole discretion of our editorial team.
-            </li>
-            <li>
-              <strong>Writer Conduct:</strong> As a writer, you're expected to maintain a professional and respectful tone in all communication and content.
-            </li>
-            <li>
-              <strong>Termination:</strong> We reserve the right to revoke writing privileges if any terms are violated or if inappropriate behavior is reported.
-            </li>
-          </ol>
-
-          <p>
-            By checking the box during application, you confirm that you have read, understood, and agree to these terms and conditions.
-          </p>
-        </div>
-      </Modal>
+        userRole={'writer'}
+      />
     </div>
   );
 };

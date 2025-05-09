@@ -52,7 +52,9 @@ const Layout = () => {
     return (
         <>
             {loading ? <LogoLoader className='h-screen' size={100} /> : (<>
-                <div className='relative w-full min-h-screen flex flex-col bg-white dark:bg-neutral-950 text-black dark:text-white'>
+                <div className={cn('relative w-full min-h-screen flex flex-col bg-white dark:bg-neutral-950 text-black dark:text-white',
+                )}>
+                    {location.pathname === '/space' && <div className='inset-0 absolute z-0 bg-gradient-to-t dark:from-neutral-950 dark:to-neutral-400/20 from-white to-neutral-950/10 h-[60vh]' />}
                     {(isMobile && location.pathname.startsWith('/shorts')) || <Navbar expanded={expanded} setExpanded={setExpanded} />}
                     <PWAPrompts />
                     <Toaster position="top-right" richColors closeButton='true' />
@@ -60,7 +62,7 @@ const Layout = () => {
                         {isDesktop && <Sidebar expanded={expanded} setExpanded={setExpanded} setFixedSidebar={setFixedSidebar}>
                             <SidebarOptions />
                         </Sidebar>}
-                        <div className={cn('p-3 flex-grow max-w-[1900px] mx-auto transition-[width] duration-300',
+                        <div className={cn('p-3 ss:px-5 flex-grow max-w-[1900px] mx-auto transition-[width] duration-300',
                             expanded && 'w-[calc(100vw-192px)]',
                             (!fixedSidebar && !expanded) && "w-full xs:w-[calc(100vw-80px)]",
                             fixedSidebar && 'w-full',

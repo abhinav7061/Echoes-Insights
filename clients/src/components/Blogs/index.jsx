@@ -16,10 +16,10 @@ const Blogs = ({ endPoint, emptyScreen = null, shortFetch = false, heading = '',
     } = useInfiniteApi(endPoint, null, { params: { limit: perPage } });
     if (!blogs.length && !loading) return emptyScreen;
     return (
-        <div className={cn('mb-4', className)}>
+        <div className={cn('mb-4 z-10', className)}>
             {heading && <h1 className="text-xl sm:text-2xl font-bold mb-4">{heading}</h1>}
             <div className={cn('gap-3 w-full relative',
-                shortFetch ? 'flex overflow-x-scroll w-full scrollbar-none' : 'grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'
+                shortFetch ? 'flex overflow-x-scroll overflow-y-hidden w-full scrollbar-none' : 'grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'
             )}>
                 <BlogCards cards={blogs} />
                 {loading && Array.from({ length: perPage }).map((_, index) => (

@@ -1,64 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import { darkBtn } from '../../constants';
+// components/DarkMode.jsx
+import React, { useState } from 'react';
+import { darkBtn, getThemeIcon } from '../../lib/themeUtils';
+import useTheme from '../../hooks/useTheme';
+import { cn } from '../../lib/utils';
 
-function DarkMode() {
-    const element = document.documentElement;
-    const [theme, setTheme] = useState(localStorage.getItem("theme") || "system");
-    const [icon, setIcon] = useState(() => {
-        switch (theme) {
-            case "dark": return "moon";
-            case "light": return "sunny";
-            default: return "desktop-outline";
-        }
-    });
+const DarkMode = ({ position = 'left', themeOptionClass, triggerBtnClass }) => {
+    const [theme, setTheme] = useTheme();
+    const [icon, setIcon] = useState(() => getThemeIcon(theme));
 
-    useEffect(() => {
-        switch (theme) {
-            case 'dark':
-                element.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                break;
-            case 'light':
-                element.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                break;
-            default:
-                localStorage.removeItem('theme');
-                if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-                    element.classList.add('dark');
-                } else {
-                    element.classList.remove('dark');
-                }
-                break;
-        }
-    }, [theme]);
+    const handleThemeChange = (newTheme) => {
+        setTheme(newTheme);
+        setIcon(getThemeIcon(newTheme));
+    };
 
     return (
-        <div className="cursor-pointer group inline-block relative w-full px-4 py-2">
-            <div className="h-5 w-full gap-1 flex items-center justify-start">
-                <ion-icon name={icon}></ion-icon> Appearances
-            </div>
-            <div className="absolute items-center hidden z-50 group-hover:flex left-4 translate-y-[-58%] translate-x-[-100%]">
-                <div className="bg-neutral-100 dark:bg-neutral-800 backdrop-blur-sm py-3 rounded-xl flex flex-col z-10">
-                    {darkBtn.map((elm, index) => (
-                        <div
-                            onClick={() => {
-                                setTheme(elm.text);
-                                setIcon(elm.icon);
-                            }}
-                            className={`${theme === elm.text ? 'text-sky-600' : 'text-black dark:text-white hover:bg-gray-200 dark:hover:bg-neutral-700'} text-sm py-1 px-5 flex items-center gap-1 flex-row ${index !== darkBtn.length - 1 ? "mb-2" : "mb-0"}`}
-                            key={index}
+        <div className="relative group">
+            <button
+                className={cn("flex items-center gap-2 px-4 py-2 w-full hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-lg transition-colors", triggerBtnClass)}
+                aria-label="Appearance settings"
+            >
+                <ion-icon name={icon} className="text-lg"></ion-icon>
+                <span>Appearance</span>
+            </button>
+
+            <div className={cn("absolute top-[42%] left-0 mt-1 hidden group-hover:flex animate-fade-in opacity-0 group-hover:opacity-100 transition-opacity duration-200 -translate-x-full -translate-y-1/2",
+                position === 'right' && 'translate-x-full ml-4 group-hover:flex-row-reverse',
+            )}
+            >
+                <div className={cn("bg-neutral-100 dark:bg-neutral-800 rounded-lg p-2 z-10",
+                    position === 'left' ? 'shadow-[-2px_0px_3px_rgba(0,0,0,0.1)]' : 'shadow-[2px_0px_3px_rgba(0,0,0,0.1)]'
+                )}>
+                    {darkBtn.map((elm) => (
+                        <button
+                            onClick={() => handleThemeChange(elm.text)}
+                            className={cn("flex items-center gap-2 w-full px-3 py-1.5 rounded-md transition-colors",
+                                theme === elm.text ? 'bg-neutral-200 text-blue-600 dark:bg-neutral-700 dark:text-golden text-blue' : 'hover:bg-neutral-50 dark:hover:bg-neutral-600',
+                                themeOptionClass
+                            )}
+                            key={elm.text}
                         >
-                            <ion-icon name={elm.icon}></ion-icon> {elm.text}
-                        </div>
+                            <ion-icon name={elm.icon}></ion-icon>
+                            <span className="capitalize">{elm.text}</span>
+                        </button>
                     ))}
                 </div>
-                <div className="py-3 z-20 translate-x-[-1px]">
-                    <div className="w-6 h-6 border-b-[12px] border-b-transparent border-t-[12px] border-t-transparent border-l-[8px] border-l-neutral-100 dark:border-l-neutral-800"></div>
-                </div>
+                <div className={cn("w-3 h-3 mt-[50%] -ml-2 rotate-45 bg-neutral-100 dark:bg-neutral-800 shadow-[1px_1px_2px_rgba(0,0,0,0.1)] -translate-y-1/2",
+                    position === 'right' && 'translate-x-1/2',
+                )}></div>
             </div>
         </div>
     );
-}
+};
 
 export default DarkMode;

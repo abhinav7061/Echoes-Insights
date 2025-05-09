@@ -89,12 +89,12 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
         onMouseEnter={() => setHovered(index)}
         onMouseLeave={() => setHovered(null)}
         className={cn(
-            "rounded-xl relative xs:border xs:dark:border-transparent xs:bg-white xs:dark:bg-neutral-900 xs:shadow-lg dark:shadow-neutral-950 overflow-hidden h-[280px] xs:h-[300px] w-full transition-all duration-300 ease-out min-w-[200px]",
+            "rounded-xl relative xs:border xs:dark:border-transparent xs:bg-white xs:dark:bg-neutral-900 xs:shadow-lg dark:shadow-neutral-950 h-[280px] xs:h-[300px] w-full transition-all duration-300 ease-out min-w-[200px] max-w-md",
             hovered == null ? "" : hovered == index ? 'mb-1 xs:mb-0' : "xs:opacity-80 xs:scale-[0.98]"
         )}
     >
         {(hovered === index || keepBlogMenuOpen) && (<BlogMenu blogId={id} authorId={author._id} authorName={authorName} liked={liked} saved={saved} followed={followed} setLiked={setLiked} setSaved={setSaved} likesCount={likesCount} setFollowed={setFollowed} setLikesCount={setLikesCount} setKeepBlogMenuOpen={setKeepBlogMenuOpen} />)}
-        <Link to={`/blog/${id}`} className="relative inset-0 flex flex-col">
+        <Link to={`/blog/${id}`} className="relative inset-0 flex flex-col overflow-hidden rounded-xl">
             <div className="h-[165px] z-0">
                 <img src={cover.url} alt="blog cover" className={cn(
                     "object-cover w-full transition-[height] duration-500 ease-in-out rounded-xl bg-white dark:bg-[#1E1E1E]",
@@ -145,9 +145,9 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
                     <span className='flex items-center gap-1'><ion-icon name="eye-outline"></ion-icon> <p className="text-xs">{views} views</p></span>
                 </div>
             </div>
-            <div className={cn("w-full h-[1px] xs:hidden bg-neutral-200 dark:bg-neutral-600 z-30 absolute bottom-1 transition-opacity duration-300 ",
+            {/* <div className={cn("w-full h-[1px] xs:hidden bg-neutral-200 dark:bg-neutral-600 z-30 absolute bottom-1 transition-opacity duration-300 ",
                 hovered === index ? "opacity-0" : ""
-            )}></div>
+            )}></div> */}
         </Link >
     </div >
     )

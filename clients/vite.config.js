@@ -24,7 +24,7 @@ export default defineConfig({
 			},
 			manifest: {
 				name: "Echoes & Insights",
-				short_name: "Echosights",
+				short_name: "EchoSights",
 				description: "Echoes & Insights - A platform for in-depth tutorials, insightful blogs, and engaging exercises on programming, web development, and more. Learn, code, and grow with structured content.",
 				start_url: "/",
 				display: "standalone",
