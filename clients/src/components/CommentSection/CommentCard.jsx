@@ -1,5 +1,4 @@
 import React from 'react';
-import { people01 } from '../../assets';
 import Accordion from '../Accordion';
 import { formatRelative } from 'date-fns';
 
@@ -7,7 +6,7 @@ const CommentCard = ({ avatar, name, date, text, userImageClass, className, chil
     return (
         <>
             <img
-                src={avatar || people01}
+                src={avatar || "/default-profile.png"}
                 alt="User Avatar"
                 className={`rounded-full mr-3 ${userImageClass}`}
             />

@@ -10,7 +10,6 @@ exports.getAllBlogSummaries = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const offset = (page - 1) * limit;
         const searchQuery = req.query.search;
-        // console.log(req.query);
         const sort = req.query.sort;
         let query = {};
 
@@ -29,7 +28,7 @@ exports.getAllBlogSummaries = async (req, res) => {
         }
 
         const blogsSummary = await Blog.find(query)
-            .populate('author', 'name')
+            .populate('author', 'name avatar')
             .skip(offset)
             .sort({ createdAt: -1 })
             .limit(limit);
@@ -46,11 +45,11 @@ exports.getAllBlogSummaries = async (req, res) => {
 exports.getBlog = async (req, res) => {
     try {
         const { id } = req.params;
-        const postDoc = await Blog.findById(id).populate('author', ['name']);
+        const postDoc = await Blog.findById(id).populate('author', 'name avatar');
         if (!postDoc) {
             return sendErrorResponse(res, 404, `Your blog cann't be found`)
         }
-        // postDoc.views += 1;
+        postDoc.views += 1;
         await postDoc.save();
         res.json({
             success: true,
@@ -156,12 +155,12 @@ exports.getShorts = async (req, res) => {
 
         if (cursor && cursor !== 'undefined') {
             currentShort = await Blog.findById(cursor)
-                .populate('author', 'name')
+                .populate('author', 'name avatar')
                 .select('title summary createdAt cover author');
         }
         if (!currentShort) {
             currentShort = await Blog.findOne()
-                .populate('author', 'name')
+                .populate('author', 'name avatar')
                 .sort({ createdAt: -1 })
                 .select('title summary createdAt cover author')
                 .limit(1);
@@ -170,7 +169,7 @@ exports.getShorts = async (req, res) => {
         if (!currentShort) return sendErrorResponse(res, 400, "No shorts available")
 
         const shortsBefore = await Blog.find({ createdAt: { $lt: currentShort.createdAt } })
-            .populate('author', 'name')
+            .populate('author', 'name avatar')
             .sort({ createdAt: -1 })
             .limit(limit - 1)
             .select('title summary createdAt cover author');

@@ -75,8 +75,14 @@ const Settings = () => {
         {
             id: 3,
             iconName: 'document-text-outline',
-            name: 'Terms & Privacy',
+            name: 'Terms & Conditioins',
             onClick: () => setShowTerms(true),
+        },
+        {
+            id: 3,
+            iconName: 'lock-closed-outline',
+            name: 'Privacy',
+            onClick: () => navigate('/privacy'),
         },
     ];
 

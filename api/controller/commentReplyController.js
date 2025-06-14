@@ -80,7 +80,7 @@ exports.getAllCommentReplies = async (req, res) => {
     try {
         const skip = (page - 1) * limit;
         const replies = await CommentReply.find({ commentId })
-            .populate('userId', 'name')
+            .populate('userId', 'name avatar')
             .skip(skip)
             .limit(limit)
             .sort({ createdAt: -1 });

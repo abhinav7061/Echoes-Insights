@@ -3,7 +3,10 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const app = express();
-const ErrorHandling = require("./middlewares/error");
+const routes = require("./router");
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const MicrosoftStrategy = require('passport-microsoft').Strategy;
 
 dotenv.config({ path: './Config/config.env' });
 app.use(express.json());
@@ -27,49 +30,24 @@ app.use(cors({
     credentials: true
 }));
 
-//importing routes
-const user = require("./router/userRoutes");
-const blog = require("./router/blogRoutes");
-const like = require("./router/likeRoutes");
-const saveBlog = require("./router/blogSaveRoutes");
-const follow = require("./router/followerRoutes");
-const readingProgress = require("./router/readingProgressRoutes");
-const comment = require("./router/commentRoutes");
-const commentReply = require("./router/commentReplyRoutes");
-const writer = require("./router/writer.routes");
-const sampleBlog = require("./router/sampleBlog.routes");
-const history = require("./router/history.routes");
-const contact = require('./router/contactRoutes')
+app.use(passport.initialize());
 
-//using routes
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: `${process.env.SERVER_URL}/auth/google/callback`
+}, (accessToken, refreshToken, profile, done) => {
+    return done(null, profile);
+}));
+passport.use(new MicrosoftStrategy({
+    clientID: process.env.MICROSOFT_CLIENT_ID,
+    clientSecret: process.env.MICROSOFT_CLIENT_SECRET,
+    callbackURL: `${process.env.SERVER_URL}/auth/microsoft/callback`,
+    scope: ['user.read'],
+}, (accessToken, refreshToken, profile, done) => {
+    return done(null, profile);
+}));
 
-app.use("/api/v1/user", user);
-app.use("/api/v1/blog", blog);
-app.use("/api/v1/like", like);
-app.use("/api/v1/save-blog", saveBlog);
-app.use("/api/v1/follow", follow);
-app.use("/api/v1/reading-progress", readingProgress);
-app.use("/api/v1/comment", comment);
-app.use("/api/v1/comment-reply", commentReply);
-app.use("/api/v1/writer", writer)
-app.use("/api/v1/sampleBlog", sampleBlog)
-app.use("/api/v1/history", history)
-app.use("/api/v1/contact", contact)
-app.use('/api/v1/blog-cover', express.static(__dirname + '/uploads/blog_cover')); // route to  serve the static file(profile image in this project)
-
-app.get('/', (req, res) => {
-    res.send('Welcome to the Echoes-Insights API!');
-});
-
-// Handle undefined routes
-app.use((req, res, next) => {
-    const error = new Error(`Cannot find Resource on this server!`);
-    error.statusCode = 404;
-    next(error);
-});
-
-//using error middlewares
-app.use(ErrorHandling);
-
+app.use('/api/v1', routes);
 
 module.exports = app;

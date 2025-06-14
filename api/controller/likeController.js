@@ -134,7 +134,7 @@ exports.getLikedBlogs = async (req, res) => {
                 select: 'title summary createdAt cover views likesCount author',
                 populate: {
                     path: 'author',
-                    select: 'name'
+                    select: 'name avatar'
                 }
             });
 

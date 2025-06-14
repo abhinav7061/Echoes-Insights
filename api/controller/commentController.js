@@ -77,7 +77,7 @@ exports.getAllComments = async (req, res) => {
         const skip = (page - 1) * limit;
 
         const comments = await Comment.find({ blogId })
-            .populate('userId', 'name',)
+            .populate('userId', 'name avatar')
             .skip(skip)
             .limit(limit)
             .sort({ createdAt: -1 });

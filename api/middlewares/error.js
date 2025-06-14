@@ -1,6 +1,6 @@
 const { sendErrorResponse } = require("../lib/responseHelper");
 
-module.exports = (err, req, res, next) => {
+const ErrorHandling = (err, req, res, next) => {
     // Set default values for error
     err.statusCode = err.statusCode || 500;
     err.message = err.message || 'Internal server error';
@@ -38,3 +38,5 @@ module.exports = (err, req, res, next) => {
 
     sendErrorResponse(res, err.statusCode, err.message);
 };
+
+module.exports = { ErrorHandling };

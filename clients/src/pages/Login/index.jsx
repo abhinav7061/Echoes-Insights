@@ -1,157 +1,81 @@
-import { useState } from 'react';
-import styles from '../../style';
 import Button from '../../components/Button';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useUserAuthentication } from '../../context/userContext';
 import { toast } from 'sonner';
 import { login } from '../../assets';
-
-const apiUrl = import.meta.env.VITE_API_URL;
+import OAuth from '../../components/OAuth';
+import Input from '../../components/Inputs';
+import { useForm } from 'react-hook-form';
+import { Checkbox } from '../../components/Inputs/checkbox';
+import loginSchema from '../../schemas/login';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { usePost } from '../../hooks/usePost';
 
 const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { login: loginUser, jwtToken } = useUserAuthentication();
-    const [message, setMessage] = useState({
-        error: true,
-        msg: '',
+    const { login: loginUser } = useUserAuthentication();
+    const { post, loading } = usePost("/user/login");
+    const { control, handleSubmit } = useForm({
+        resolver: zodResolver(loginSchema),
+        defaultValues: {
+            email: '',
+            password: '',
+            remember_me: false,
+        },
     });
-    const [user, setUser] = useState({
-        email: '',
-        password: '',
-        remember_me: false, //if it is set to true then remember options will auto checked
-    })
-    const handleChange = (e) => {
-        let value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-        setUser({ ...user, [e.target.name]: value });
-    }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const { email, password, remember_me } = user;
-        try {
-            const res = await fetch(`${apiUrl}/user/login`, {
-                method: "POST",
-                headers: {
-                    "content-type": "application/json",
-                    "Authorization": `Bearer ${jwtToken}`
-                },
-                body: JSON.stringify({ email, password, remember_me }),
-                credentials: "include",
-            })
-            const data = await res.json();
-            if (res.ok && data.success) {
-                setMessage({
-                    error: false,
-                    msg: data.message,
-                });
-                loginUser(data.user, data.jwtToken);
-                toast.success(data.message);
-                if (location.state?.redirect) {
-                    navigate(location.state.redirect);
-                } else {
-                    navigate("/");
-                }
-                setMessage("");
-            } else {
-                setMessage({
-                    error: true,
-                    msg: data.message,
-                });
-                toast.error(data.message);
-                setTimeout(() => {
-                    setMessage("")
-                }, 1000)
-            }
-        } catch (error) {
-            console.log("err occoured while login");
+    const onSubmit = async (data) => {
+        const res = await post(data);
+        if (res.error)
+            return toast.error(res?.error || "Server Error while logging in!");
+        loginUser(res.user, res.jwtToken);
+        if (!res.user?.interests || res.user?.interests?.length === 0) {
+            toast.warning(`Welcome back ${res.user.name}! Complete your profile to get personalized content.`);
+            return navigate("/onboard/complete-profile");
         }
+        if (!res.user.termsAccepted) {
+            toast.warning(`Welcome back ${res.user.name}! Please accept the terms and conditions to continue.`);
+            return navigate("/onboard/term-condition-check");
+        }
+        toast.success(`Welcome back ${res.user.name}! Continue exploring your interests.`);
+        navigate(location.state?.redirect || "/");
     }
-
     return (
-        <div className={`flex md:flex-row flex-col-reverse border border-blue dark:border-golden rounded-2xl overflow-hidden`}>
-            <div className={`flex-1 ${styles.flexStart} flex-col xl:px-0 sm:px-16 px-6 p-16`}>
-                {/* div for registrarion form  */}
-                <div className="w-full flex flex-col items-center">
-                    {/* Telling about ourself and Registration  */}
-                    <div className='mb-5'>
-                        {/* <img className="h-[50px] w-[150px] mb-5" src={logo} alt="Your Company" /> */}
-                        <h2 className="text-black dark:text-white font-bold text-3xl md:text-4xl mb-1">Sign in to account</h2>
-                        <p className="text-[12px] md:text-sm text-neutral-600">Not a member? <a href="#" className="text-blue hover:underline dark:text-golden">Start a 14 day free trial</a></p>
-                        <p className="text-[12px] md:text-sm text-neutral-600">Donot have account then click here <NavLink to='/register' className={`text-blue hover:underline dark:text-golden`}>Signup</NavLink> </p>
-                        {!(message.msg === "") && <div className={`${message.error ? 'text-red-600' : 'text-green-600'} text-lg`}>{message.msg} </div>}
-                    </div>
-                    {/* form div start here */}
-                    <div className="w-full md:w-[80%]">
-                        {/* Registration input form  */}
-                        <form method="POST" onSubmit={handleSubmit}>
-                            {/* div for taking email */}
-                            <div className='mb-2'>
-                                <label htmlFor="email" className="text-sm font-bold dark:text-white text-black ">Email address:</label>
-                                <div className="lb">
-                                    <input id="email" name="email" type="email" autoComplete="email" placeholder="Enter your email address"
-                                        required className="rounded-lg border border-blue dark:border-golden w-full py-2 px-3 mt-1 bg-transparent outline-none dark:text-white" value={user.email} onChange={handleChange} />
-                                </div>
-                            </div>
-                            {/* div for taking Password */}
-                            <div>
-                                <label htmlFor="password" className="text-sm font-bold dark:text-white text-black">Password:</label>
-                                <div className="lb">
-                                    <input id="password" name="password" type="password" placeholder="Enter password"
-                                        autoComplete="current-password" required
-                                        className="rounded-lg border border-blue dark:border-golden w-full py-2 px-3 mt-1 bg-transparent outline-none dark:text-white" value={user.password} onChange={handleChange} />
-                                </div>
-                            </div>
-                            {/* div for remember and password forgot option */}
-                            <div className="flex w-full justify-between py-2 my-2 text-neutral-800 text-sm dark:text-neutral-300">
-                                <label htmlFor="remember_me" className="dark:hover:text-golden hover:text-blue cursor-pointer">
-                                    <input id="remember_me" name="remember_me" type="checkbox" className="mr-2" checked={user.remember_me} onChange={handleChange} />
-                                    Remember me
-                                </label>
-                                <NavLink to='/forgot-password' className="dark:hover:text-golden hover:text-blue hover:underline">Forgot password?</NavLink>
-                            </div>
-                            {/* Submit Button */}
-                            <div className='my-6' >
-                                <Button className={`w-full py-2 sm:py-3 px-4 rounded-lg font-bold`} title={'Login'} type='submit' />
-                            </div>
-                        </form>
-                        {/* for other authentication method like github linkdin etc */}
-                        <div className="mt-10">
-                            <div className="flex relative items-center justify-center">
-                                <div className="h-0 w-full border border-neutral-400 dark:border-neutral-700 absolute" aria-hidden="true">
-                                </div>
-                                <div className="absolute">
-                                    <span className="dark:bg-neutral-950 bg-neutral-50 p-3 dark:text-golden">Or continue with</span>
-                                </div>
-                            </div>
-                            <div className="flex mt-10 w-full justify-between">
-                                <Button
-                                    icon={<ion-icon name="logo-twitter"></ion-icon>}
-                                    title='Twitter'
-                                    className='py-2 px-5 rounded-lg text-sm sm:text-base font-bold'
-                                />
-                                <Button
-                                    icon={<ion-icon name="logo-github"></ion-icon>}
-                                    title='GitHub'
-                                    className='py-2 px-5 rounded-lg text-sm sm:text-base font-bold'
-                                />
-                            </div>
-                        </div>
-                    </div>
+        <div className="min-h-screen w-full flex">
+            <div className="flex-1 p-8 md:p-12 flex flex-col">
+                <div className="mb-8 text-center md:text-left">
+                    <h2 className="text-3xl font-bold text-neutral-900 dark:text-white mb-2">Sign in to account</h2>
+                    <p className="text-neutral-600 dark:text-neutral-300 text-sm">
+                        Donot have account then click here <NavLink to='/onboard' className={`text-blue hover:underline dark:text-golden`}>Signup</NavLink>
+                    </p>
                 </div>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <Input name="email" control={control} label="Email address:" type="email" required />
+                    <Input name="password" control={control} label="Password:" type="password" required />
+                    <div className="flex w-full justify-between pb-2 mb-2 text-neutral-800 text-sm dark:text-neutral-300">
+                        <Checkbox name='remember_me' label='Remember me' control={control} />
+                        <NavLink to='/forgot-password' className="dark:hover:text-golden hover:text-blue hover:underline">
+                            Forgot password?
+                        </NavLink>
+                    </div>
+                    <Button className="w-full py-2 sm:py-3 px-4 rounded-lg font-bold" title={loading ? "Logging in..." : "Login"} type="submit" disabled={loading} />
+                </form>
+                <OAuth />
             </div>
-            <div className={`flex-1 flex ${styles.flexCenter} relative hidden md:block`}>
-                <img className="w-[100%] h-[100%] relative z-[5]"
-                    src={login}
-                    alt="" />
-                {/* gradient start */}
 
-                <div className="absolute w-[80%] h-[80%] flex items-center justify-center top-40 left-8">
-                    <div className="absolute z-[0] w-[40%] h-[35%] top-0 pink__gradient" />
-                    <div className="absolute z-[1] w-[80%] h-[80%] rounded-full white__gradient bottom-40" />
-                    <div className="absolute z-[0] w-[50%] h-[50%] right-20 bottom-20 blue__gradient" />
+            <div className="hidden md:flex bg-gradient-to-br from-sky-500 to-sky-700 dark:from-yellow-700 dark:to-yellow-900 flex-col justify-end h-[calc(100vh-80px)] sticky top-16">
+                <div className="absolute inset-0 flex items-center justify-center opacity-90">
+                    <img
+                        src={login}
+                        alt="Sign up illustration"
+                        className="w-full h-full object-contain"
+                    />
                 </div>
-                {/* gradient end */}
+                <div className="relative z-10 flex flex-col text-white bg-gradient-to-t dark:from-neutral-950 dark:via-neutral-950/40 via-70% dark:to-transparent p-8">
+                    <h3 className="text-2xl font-bold mb-2">Glad you’re back!</h3>
+                    <p className="mb-6">Continue discovering new ideas tailored just for you.</p>
+                </div>
             </div>
         </div>
     )
