@@ -22,7 +22,7 @@ export default function useApi(url, options = {}, autoFetch = false, checkAuth =
     }, []);
 
     const callApi = useCallback(async (config = {}) => {
-        if (checkAuth && !isAuthenticatedUser()) {
+        if (checkAuth && !isAuthenticatedUser) {
             setError('User is not authenticated');
             setLoading(false);
             setSuccess(false);
