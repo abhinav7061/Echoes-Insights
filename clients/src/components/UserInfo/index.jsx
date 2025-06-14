@@ -1,6 +1,5 @@
 import React from 'react'
 import { useUserAuthentication } from '../../context/userContext'
-import { people01 } from '../../assets';
 import useLogout from '../../hooks/useLogout';
 import { cn } from '../../lib/utils';
 import ProfileItem from './ProfileItem';
@@ -16,11 +15,11 @@ const UserInfo = () => {
         <div className='px-2 py-5'>
             <div className="flex items-center ss:items-end gap-2">
                 <div className='flex-shrink-0 rounded-full relative'>
-                    <div className='absolute -top-1 ss:top-0 left-0 ml-12 ss:ml-16 md:ml-24'>
-                        <UserRole role='user' />
+                    <div className='absolute -top-1 ss:top-0 left-0 ml-12 ss:ml-16 md:ml-24 cursor-pointer'>
+                        <UserRole role={user?.role || 'user'} />
                     </div>
                     <img
-                        src={user?.profilePicture || people01}
+                        src={user?.avatar?.url || "/default-profile.png"}
                         alt="User Avatar"
                         className="w-16 h-16 ss:w-24 ss:h-24 md:w-32 md:h-32 rounded-full overflow-hidden"
                     />

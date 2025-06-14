@@ -143,7 +143,7 @@ export const CommentItem = ({ _id, authorId, totalReply, user, createdAt, commen
         <>
             <div className='w-full flex items-start text-sm relative'>
                 {repliesCount > 0 && <div className='h-[calc(100%-35px)] absolute bottom-0 left-3 flex-shrink-0 w-[2px] bg-neutral-300 dark:bg-neutral-500 z-0' />}
-                <CommentCard isAuthor={authorId == user._id} userImageClass='w-7 h-7 z-[5]' avatar={user?.avatar} name={user?.name} date={createdAt} text={comment} action={<CommentActions value={comment} commentId={_id} setComments={setComments} setTotalComments={setTotalComments} />}>
+                <CommentCard isAuthor={authorId == user._id} userImageClass='w-7 h-7 z-[5]' avatar={user?.avatar?.url} name={user?.name} date={createdAt} text={comment} action={<CommentActions value={comment} commentId={_id} setComments={setComments} setTotalComments={setTotalComments} />}>
                     <div className='flex gap-3 items-center mt-2'>
                         <LikeDislike id={_id} showName={true} likesCount={likesCount} checkLike={checkCommentLike} toggleLike={toggleCommentLike} likeType='comment' />
                         <span className='h-3 border-l border-neutral-400'></span>

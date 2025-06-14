@@ -48,7 +48,7 @@ const CommentReplies = ({ replies, setReplies, commentId, showComments, setRepli
                 replies.map(reply => {
                     return (
                         <div className='w-full flex items-start text-sm mb-2' key={reply._id}>
-                            <CommentCard userImageClass='h-6 w-6' avatar={reply.user?.avatar} name={reply.user?.name} date={reply.createdAt} text={reply.reply} action={<ReplyActions replyId={reply._id} value={reply.reply} setReplies={setReplies} setRepliesCount={setRepliesCount} setTotalComments={setTotalComments} />}>
+                            <CommentCard userImageClass='h-6 w-6' avatar={reply.user?.avatar?.url} name={reply.user?.name} date={reply.createdAt} text={reply.reply} action={<ReplyActions replyId={reply._id} value={reply.reply} setReplies={setReplies} setRepliesCount={setRepliesCount} setTotalComments={setTotalComments} />}>
                                 <LikeDislike id={reply._id} showName={true} likesCount={reply?.likesCount} checkLike={checkCommentReplyLike} toggleLike={toggleCommentReplyLike} likeType='reply' />
                             </CommentCard>
                         </div>

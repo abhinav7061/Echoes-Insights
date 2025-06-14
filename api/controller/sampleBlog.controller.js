@@ -9,7 +9,7 @@ exports.submitSampleBlog = async (req, res) => {
         let coverImage = {};
 
         if (req.cover) {
-            const result = await uploadToCloudinary(req.cover, 'EchoesAndInsights/SampleBlogCover');
+            const result = await uploadToCloudinary(req.file, 'EchoesAndInsights/SampleBlogCover');
             coverImage = {
                 public_id: result.public_id,
                 url: generateOptimizedUrl(result.public_id, result.version),

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { people01 } from '../../assets';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -8,7 +7,7 @@ import { useUserAuthentication } from '../../context/userContext';
 import { toast } from 'sonner';
 
 const CommentInputForm = ({ onSubmit, value = '', isReply = false, className, autoFocus = false }) => {
-    const { isAuthenticatedUser } = useUserAuthentication();
+    const { isAuthenticatedUser, user } = useUserAuthentication();
     const schema = z.object({
         value: z
             .string()
@@ -43,8 +42,8 @@ const CommentInputForm = ({ onSubmit, value = '', isReply = false, className, au
     }, [setFocus]);
 
     return (
-        <div className={`flex gap-2 rounded-md z-[10] ${className}`}>
-            <img src={people01} alt="user" className="h-8 aspect-square" />
+        <div className={`flex items-center gap-2 rounded-md z-[10] ${className}`}>
+            <img src={user?.avatar?.url || "/default-profile.png"} alt="user" className="h-8 aspect-square rounded-full flex-shrink-0" />
             <form onSubmit={handleSubmit(formSubmit)} className="flex flex-grow relative group">
                 <TextArea
                     name="value"

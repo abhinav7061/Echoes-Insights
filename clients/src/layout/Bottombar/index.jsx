@@ -1,12 +1,14 @@
 import React from 'react'
 import CreateBtn from '../../components/CreateBtn';
-import { filled_shorts_icon, people01, shorts_icon } from '../../assets';
+import { filled_shorts_icon, shorts_icon } from '../../assets';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
+import { useUserAuthentication } from '../../context/userContext';
 
 const Bottombar = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { user } = useUserAuthentication();
 
     const sidebarItems = [
         {
@@ -37,7 +39,7 @@ const Bottombar = () => {
             path: '/space',
             icon: (active) => (
                 <img
-                    src={people01}
+                    src={user?.avatar?.url || "/default-profile.png"}
                     className={cn("w-6 rounded-full cursor-pointer",
                         active ? 'border-[3px] border-neutral-800 dark:border-neutral-200' : 'border-0'
                     )}

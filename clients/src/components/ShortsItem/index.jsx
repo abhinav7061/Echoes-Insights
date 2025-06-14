@@ -33,7 +33,7 @@ const ShortItem = ({ short, loaderRef, index, totalItems, isShowComments, setIsS
             <h2 className='m-6 mb-0 ps-12 sm:ps-0 z-[1] line-clamp-2 overflow-hidden font-semibold' title={short.title}>{short.title}</h2>
             <p className="ms-6 my-4 pe-6 ps-12 sm:ps-0 text-justify font-sans overflow-auto z-[1]">{short.summary}</p>
             <div className='w-full p-3 pt-0 flex gap-3 items-center z-[1]'>
-                <img loading="lazy" src='https://cdn.pixabay.com/photo/2016/01/02/02/03/orange-1117645_960_720.jpg' className='rounded-full h-10 w-10 object-cover' />
+                <img src={short.author?.avatar?.url || "/default-profile.png"} className='rounded-full h-10 w-10 object-cover' />
                 <div className='flex flex-col h-full justify-end flex-grow'>
                     <p className='text-sm font-semibold'>{short.author.name}</p>
                     <p className='text-xs text-neutral-500 dark:text-neutral-400'>{formatDistanceStrict(new Date(short.createdAt), new Date(), { addSuffix: true })}</p>

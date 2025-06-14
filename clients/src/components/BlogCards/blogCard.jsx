@@ -3,7 +3,6 @@ import { cn } from "../../lib/utils";
 import { Link } from "react-router-dom";
 import { getReadingProgress } from '../../lib/apiCalls/readingProgressApi.js'
 import { formatDistanceStrict } from "date-fns";
-import { people01 } from "../../assets";
 import BlogMenu from "./blogMenu";
 import FollowUnfollow from "../BlogActions/followUnfollow";
 import ShareBtn from "../BlogActions/shareBtn";
@@ -115,7 +114,7 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
             )}>
                 <div className={`text-[10px] font-semibold flex text-neutral-400 dark:text-neutral-400`}>
                     <span className="flex items-center gap-2" title={authorName}>
-                        <img src={people01} alt="" className="rounded-full h-4 aspect-square" />
+                        <img src={author?.avatar?.url || "/default-profile.png"} alt="" className="rounded-full h-4 aspect-square" />
                         <span className='line-clamp-1'>
                             {authorName}
                         </span>
