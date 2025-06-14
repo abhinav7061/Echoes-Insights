@@ -5,6 +5,9 @@ const Blog = lazy(() => import('../pages/Blog'));
 const BlogPage = lazy(() => import('../pages/Blog/BlogPage'));
 const EditBlog = lazy(() => import('../pages/Blog/EditBlog'));
 const Signup = lazy(() => import('../pages/Signup'));
+const SignupStep1 = lazy(() => import("../pages/Signup/SignupStep1"));
+const SignupStep2 = lazy(() => import("../pages/Signup/SignupStep2"));
+const SignupStep3 = lazy(() => import("../pages/Signup/SignupStep3"));
 const WriterOnboarding = lazy(() => import('../pages/WriterOnboarding'));
 const Login = lazy(() => import('../pages/Login'));
 const ResetPassword = lazy(() => import('../pages/ResetPassword'));
@@ -39,6 +42,7 @@ const WriterArticlesTab = lazy(() => import('../pages/WriterChannel/WriterArticl
 const WriterAboutTab = lazy(() => import('../pages/WriterChannel/WriterAbout'));
 const WriterLibraryPage = lazy(() => import('../pages/WriterChannel/WriterLibrary'));
 const WriterAnalyticsPage = lazy(() => import('../pages/Analytics'));
+const Privacy = lazy(() => import('../pages/Privacy'));
 
 const routes = [
     {
@@ -50,7 +54,24 @@ const routes = [
             { path: 'blog/:blogId', element: <BlogPage />, access: 'public' },
             { path: 'create-blog', element: <CreateBlog />, access: ['writer', 'admin'] },
             { path: 'edit_blog/:id', element: <EditBlog />, access: ['writer', 'admin'] },
-            { path: 'register', element: <Signup />, access: (user) => !user },
+            {
+                path: "onboard",
+                element: <Signup />,
+                access: "public",
+                children: [
+                    { index: true, element: <SignupStep1 />, access: (user) => !user },
+                    {
+                        path: "complete-profile",
+                        element: <SignupStep2 />,
+                        access: (user) => user && (!user?.interests || user?.interests?.length === 0),
+                    },
+                    {
+                        path: "term-condition-check",
+                        element: <SignupStep3 />,
+                        access: (user) => user && !user?.isProfileCompleted,
+                    },
+                ],
+            },
             { path: 'writer-registration', element: <WriterOnboarding />, access: ['user'] },
             { path: 'login', element: <Login />, access: (user) => !user },
             { path: 'reset-password', element: <ResetPassword />, access: 'public' },
@@ -90,7 +111,8 @@ const routes = [
             },
             { path: 'about', element: <About />, access: 'public' },
             { path: 'support', element: <Support />, access: 'public' },
-            { path: 'schedule', element: <Schedule />, access: 'public' },
+            { path: 'privacy', element: <Privacy />, access: 'public' },
+            { path: 'schedule', element: <Schedule />, access: ['writer', 'admin'] },
             {
                 path: '/writer/:writerId',
                 element: <WriterChannelPage />,

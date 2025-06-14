@@ -19,15 +19,34 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
-        required: true
+        required: function () {
+            return this.provider !== "oauth";
+        },
     },
     phone: {
         type: Number,
-        required: true
     },
     gender: {
         type: String,
-        required: true
+    },
+    avatar: {
+        url: {
+            type: String
+        },
+        public_id: {
+            type: String
+        }
+    },
+    interests: {
+        type: Array,
+    },
+    termsAccepted: {
+        type: Boolean,
+        default: false,
+    },
+    reciveUpdates: {
+        type: Boolean,
+        default: false,
     },
 }, {
     timestamps: true
@@ -44,9 +63,16 @@ userSchema.methods.matchPassword = async function (password) {
     return await bcrypt.compare(password, this.password);
 }
 
-userSchema.methods.generateToken = function () {
-    return jwt.sign({ _id: this._id }, process.env.JWT_SECRET_KEY)
-}
+userSchema.methods.generateToken = function (rememberMe = false) {
+    return jwt.sign(
+        { _id: this._id },
+        process.env.JWT_SECRET_KEY,
+        {
+            expiresIn: rememberMe ? '30d' : '2h',
+        }
+    );
+};
+
 
 const User = model('User', userSchema);
 
