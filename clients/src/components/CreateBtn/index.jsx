@@ -33,7 +33,7 @@ const CreateBtn = ({ text, position }) => {
                         <span className="text-xl flex"><ion-icon name="albums-outline"></ion-icon></span>  <p>Create Shorts</p>
                     </DropdownMenuItem>
                 </>
-                : <DropdownMenuItem className="flex items-center gap-1" onClick={() => navigate('/writer-registration')}>
+                : <DropdownMenuItem className="flex items-center gap-1" onClick={() => navigate('/writer-onboarding')}>
                     <span className="text-xl flex"> <ion-icon name="create-outline"></ion-icon></span> <p>Become a Blogger</p>
                 </DropdownMenuItem>}
         </Dropdown>

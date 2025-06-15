@@ -8,18 +8,16 @@ exports.submitSampleBlog = async (req, res) => {
         const { title, summary, content } = req.body;
         let coverImage = {};
 
-        if (req.cover) {
+        const existing = await SampleBlog.findOne({ user: userId });
+        if (existing)
+            return sendErrorResponse(res, 400, 'Sample blog already submitted.');
+
+        if (req.file) {
             const result = await uploadToCloudinary(req.file, 'EchoesAndInsights/SampleBlogCover');
             coverImage = {
                 public_id: result.public_id,
                 url: generateOptimizedUrl(result.public_id, result.version),
             };
-        }
-
-        // Optional: Avoid multiple sample blogs from same user
-        const existing = await SampleBlog.findOne({ user: userId });
-        if (existing) {
-            return sendErrorResponse(res, 400, 'Sample blog already submitted.');
         }
 
         await SampleBlog.create({
@@ -30,10 +28,7 @@ exports.submitSampleBlog = async (req, res) => {
             cover: coverImage,
         });
 
-        res.status(201).json({
-            success: true,
-            message: 'Sample blog submitted successfully',
-        });
+        sendSuccessResponse(res, 200, 'Sample blog submitted successfully');
     } catch (error) {
         console.error(error);
         sendErrorResponse(res, 500, 'Failed to submit sample blog');

@@ -68,11 +68,11 @@ const routes = [
                     {
                         path: "term-condition-check",
                         element: <SignupStep3 />,
-                        access: (user) => user && !user?.isProfileCompleted,
+                        access: (user) => user && !user?.termsAccepted,
                     },
                 ],
             },
-            { path: 'writer-registration', element: <WriterOnboarding />, access: ['user'] },
+            { path: 'writer-onboarding', element: <WriterOnboarding />, access: ['user'] },
             { path: 'login', element: <Login />, access: (user) => !user },
             { path: 'reset-password', element: <ResetPassword />, access: 'public' },
             { path: 'shorts', element: <Shorts />, access: 'public' },

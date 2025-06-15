@@ -7,18 +7,31 @@ const error = require('../middlewares/error');
 exports.submitApplication = async (req, res) => {
     try {
         const userId = req.user._id;
-        const { bio, topics, sampleWorkLinks, socialLinks, reasonToWrite, acceptTerms } = req.body;
+        const { channelName, channelHandle, bio, sampleWorkLinks, socialLinks, reasonToWrite, acceptTerms } = req.body;
 
         const exists = await Writer.findOne({ userId });
         if (exists || req.user?.role == 'admin') return sendErrorResponse(res, 400, 'You have already submitted your application.');
-        if (!topics) return sendErrorResponse(res, 400, "Topics is required");
+        if (!channelName) return sendErrorResponse(res, 400, 'Channel name is required.');
+        if (!channelHandle) return sendErrorResponse(res, 400, 'Channel handle is required.');
         if (!reasonToWrite) return sendErrorResponse(res, 400, "Tell about the reason to write");
         if (!acceptTerms) return sendErrorResponse(res, 400, "Please accept the term and condition");
+        if (channelName.length < 3 || channelName.length > 50)
+            return sendErrorResponse(res, 400, 'Channel name must be between 3 and 50 characters.');
+        if (!channelHandle)
+            return sendErrorResponse(res, 400, 'Handle is required.');
+        if (channelHandle.length < 3 || channelHandle.length > 30)
+            return sendErrorResponse(res, 400, 'Handle must be between 3 and 30 characters.');
+        if (!/^[a-zA-Z0-9_]+$/.test(channelHandle))
+            return sendErrorResponse(res, 400, 'Handle can only include letters, numbers, and underscores.');
 
         const application = new Writer({
             userId,
+            channelName,
+            channelHandle: `@${channelHandle.toLowerCase()}`,
+            channelImg: {
+                url: req.user?.avatar?.url
+            },
             bio,
-            topics,
             sampleWorkLinks,
             socialLinks,
             reasonToWrite,
@@ -26,10 +39,6 @@ exports.submitApplication = async (req, res) => {
         });
 
         await application.save();
-        console.log({
-            application,
-            body: req.body
-        })
 
         sendSuccessResponse(res, 201, 'Application submitted successfully.')
     } catch (err) {
@@ -100,3 +109,13 @@ exports.getMyApplication = async (req, res) => {
         sendErrorResponse(res, 500, 'Error fetching application.');
     }
 };
+
+exports.checkHandleAvailability = async (req, res) => {
+    try {
+        const { handle } = req.query;
+        const existing = await Writer.findOne({ channelHandle: handle.toLowerCase() });
+        sendSuccessResponse(res, 200, 'Handle availability checked', { available: !existing });
+    } catch (error) {
+        sendErrorResponse(res, 500, 'Error checking handle availability', { error: error.message })
+    }
+}

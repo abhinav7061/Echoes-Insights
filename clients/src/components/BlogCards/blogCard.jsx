@@ -16,7 +16,7 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
     const inputDate = new Date(card.createdAt);
     const formattedDate = formatDistanceStrict(inputDate, new Date(), { addSuffix: false });
     const author = card.author;
-    const authorName = card.author.name.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
+    const authorName = card.author?.channelName.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ") || 'test';
     const summary = card.summary;
     const id = card._id
     const cover = card.cover
@@ -114,7 +114,7 @@ const BlogCard = React.memo(({ card, index, hovered, setHovered }) => {
             )}>
                 <div className={`text-[10px] font-semibold flex text-neutral-400 dark:text-neutral-400`}>
                     <span className="flex items-center gap-2" title={authorName}>
-                        <img src={author?.avatar?.url || "/default-profile.png"} alt="" className="rounded-full h-4 aspect-square" />
+                        <img src={author?.channelImg?.url || "/default-profile.png"} alt="" className="rounded-full h-4 aspect-square" />
                         <span className='line-clamp-1'>
                             {authorName}
                         </span>

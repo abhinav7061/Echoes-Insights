@@ -30,8 +30,8 @@ const BlogPage = () => {
         const formattedDate = postInfo?.createdAt
             ? format(new Date(postInfo.createdAt), 'MMM dd, yyyy')
             : '';
-        const authorName = postInfo?.author?.name
-            ? postInfo.author.name
+        const channelName = postInfo?.author?.channelName
+            ? postInfo.author?.channelName
                 .split(" ")
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
                 .join(" ")
@@ -39,13 +39,18 @@ const BlogPage = () => {
         return {
             title,
             formattedDate,
-            authorName,
+            channelName,
+            authorId: postInfo?.author?.userId?._id || '',
+            channelImg: postInfo.author?.channelImg?.url || "/default-profile.png",
+            channelHandle: postInfo.author?.channelHandle,
             content: postInfo.content || '',
             author: postInfo.author || {},
             cover: postInfo.cover || null,
             summary: postInfo.summary || '',
             totalLikes: postInfo?.likesCount || 0,
             totalComments: postInfo?.commentsCount || 0,
+            views: postInfo?.views || 0,
+            readingTime: postInfo?.readingTime || 0,
         };
     }, [postInfo]);
 
@@ -73,7 +78,7 @@ const BlogPage = () => {
     if (loading) return <BlogPageSkeletonloading />;
     if (errorMessage) return <ErrorMessage heading="Unable to fetch blog" message={errorMessage} action={getBlog} />;
 
-    const { title, formattedDate, author, authorName, content, cover, summary, totalLikes, totalComments } = derivedValues;
+    const { title, formattedDate, author, authorId, channelName, channelImg, channelHandle, content, cover, summary, totalLikes, totalComments, views, readingTime } = derivedValues;
     return (
         <>
             <Helmet>
@@ -90,11 +95,11 @@ const BlogPage = () => {
             </Helmet>
             <div className={`my-8 flex w-full ${needToShowTOC ? 'justify-between' : 'justify-center flex-row-reverse'} md:gap-4`}>
                 <Toc content={content} showTOC={showTOC} setShowTOC={setShowTOC} needToShowTOC={needToShowTOC} setNeedToShowTOC={setNeedToShowTOC} />
-                <BlogDetails blogId={blogId} summary={summary} authorName={authorName} formattedDate={formattedDate} title={title} needToShowTOC={needToShowTOC} content={content} cover={cover} />
+                <BlogDetails blogId={blogId} summary={summary} authorId={authorId} channelName={channelName} channelImg={channelImg} channelHandle={channelHandle} formattedDate={formattedDate} title={title} needToShowTOC={needToShowTOC} content={content} cover={cover} views={views} />
                 <BlogFloatAction
                     blogId={blogId}
                     authorId={author._id}
-                    authorName={authorName}
+                    authorName={channelName}
                     totalLikes={totalLikes}
                     shareBtnsClassName={`${needToShowTOC ? 'md:-left-0 md:translate-x-[-100%] translate-x-0' : 'md:left-10'} bottom-4 -left-5 xs:bottom-5 md:-bottom-2`}
                     toc={needToShowTOC && <TemplateBtn icon='list' onClick={() => setShowTOC(true)} className={`md:hidden border-l border-neutral-300 dark:border-neutral-500 md:p-3 ps-4 pe-0 ${showTOC ? 'pointer-events-none' : ''}`} />}

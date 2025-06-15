@@ -5,8 +5,6 @@ import { color } from '../../style'
 import WarningPrompt from '../../components/CustomPopup/WarningPrompt';
 import { deleteBlog } from '../../lib/apiCalls/blogApi';
 
-const apiUrl = import.meta.env.VITE_API_URL;
-
 const DeleteBlog = ({ blogId }) => {
     const navigate = useNavigate();
     const [showPrompt, setShowPrompt] = useState(false);
@@ -33,7 +31,7 @@ const DeleteBlog = ({ blogId }) => {
     return (
         <>
             <button
-                className={`${color.textBlackWhite} hover:text-red-500 h-6 flex items-center gap-2 text-xs md:text-sm`}
+                className="text-red-600 flex items-center gap-2 text-sm px-2 py-1 hover:bg-red-700/20 rounded-md"
                 type='button'
                 onClick={() => setShowPrompt(true)}
             >

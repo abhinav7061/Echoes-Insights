@@ -1,8 +1,11 @@
 import { z } from "zod";
 
 const onboardingSchema = z.object({
-    bio: z.string().min(10, "Bio must be at least 10 characters"),
-    topics: z.string().nonempty("At least one topic is required"),
+    channelName: z.string().min(3, "Channel name is too short").max(50, "Too long"),
+    channelHandle: z.string()
+        .min(3, "Handle too short")
+        .max(30, "Too long")
+        .regex(/^[a-zA-Z0-9_]+$/, "Handle can only include letters, numbers, and underscores"),
     sampleWorkLinks: z.string().optional(),
     twitter: z.string().url("Invalid URL").optional().or(z.literal("")),
     linkedin: z.string().url("Invalid URL").optional().or(z.literal("")),
@@ -42,8 +45,9 @@ const onboardingSchema = z.object({
     );
 
 export const onboardingDefaultValues = {
+    channelName: '',
+    channelHandle: '',
     bio: '',
-    topics: '',
     twitter: '',
     linkedin: '',
     github: '',

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Input from '../../components/Inputs';
@@ -14,6 +14,7 @@ import { Checkbox } from '../../components/Inputs/checkbox';
 import { FileUpload } from '../../components/Inputs/fileUpload';
 import { useNavigate } from 'react-router-dom';
 import TermsAndConditions from '../../components/TermsAndConditions';
+import debounce from '../../lib/debounce';
 
 const WriterOnboarding = () => {
   const methods = useForm({
@@ -24,56 +25,69 @@ const WriterOnboarding = () => {
   const navigate = useNavigate();
 
   const { post: postApplication } = usePost('/writer/apply');
-  const { post: postSampleBlog } = usePost('/sampleBlog/blogs?type=sample');
+  const { post: postSampleBlog } = usePost('/sampleBlog/submit');
 
   const [submitting, setSubmitting] = useState(false);
   const sampleLinks = watch('sampleWorkLinks');
 
   const [isOpen, setIsOpen] = useState(false);
+  const [handleStatus, setHandleStatus] = useState(null);
+
+  const checkHandleAvailability = async (handle) => {
+    if (!handle) return;
+    const res = await fetch(`http://localhost:8000/api/v1/writer/check-handle?handle=${handle}`);
+    const result = await res.json();
+    setHandleStatus(result.available ? 'available' : 'taken');
+  };
+
+  const debouncedCheckHandle = useMemo(
+    () => debounce(checkHandleAvailability, 500),
+    []
+  );
+
+  const handleHandleChange = (e) => {
+    const handle = e.target.value;
+    setValue("channelHandle", handle, { shouldValidate: true });
+    debouncedCheckHandle(handle);
+  };
 
   const onSubmit = async (data) => {
     setSubmitting(true);
-    try {
-      const topics = data?.topics.split(',').map(t => t.trim()).filter(Boolean);
-      const sampleWorkLinks = data.sampleWorkLinks
-        ? data.sampleWorkLinks.split(',').map(link => link.trim()).filter(Boolean)
-        : [];
+    const sampleWorkLinks = data.sampleWorkLinks
+      ? data.sampleWorkLinks.split(',').map(link => link.trim()).filter(Boolean)
+      : [];
 
-      const formPayload = {
-        bio: data.bio,
-        topics,
-        sampleWorkLinks,
-        socialLinks: {
-          twitter: data.twitter || null,
-          linkedin: data.linkedin || null,
-          github: data.github || null
-        },
-        reasonToWrite: data.reasonToWrite,
-        acceptTerms: data.acceptTerms,
-      };
+    const formPayload = {
+      channelName: data.channelName,
+      channelHandle: data.channelHandle,
+      bio: data.bio,
+      sampleWorkLinks,
+      socialLinks: {
+        twitter: data.twitter || null,
+        linkedin: data.linkedin || null,
+        github: data.github || null
+      },
+      reasonToWrite: data.reasonToWrite,
+      acceptTerms: data.acceptTerms,
+    };
 
-      const applicationRes = await postApplication(formPayload);
-      if (applicationRes?.error) throw new Error(applicationRes.error);
+    const applicationRes = await postApplication(formPayload);
+    if (applicationRes?.error) return toast.error(applicationRes.error || 'Failed to submit application');
 
-      if (sampleWorkLinks.length === 0 && sampleBlogContent) {
-        const blogForm = new FormData();
-        blogForm.append("title", data.title);
-        blogForm.append("summary", data.summary);
-        blogForm.append("content", data.content);
-        blogForm.append("cover", data.cover);
+    if (sampleWorkLinks.length === 0 && sampleBlogContent) {
+      const blogForm = new FormData();
+      blogForm.append("title", data.title);
+      blogForm.append("summary", data.summary);
+      blogForm.append("content", data.content);
+      blogForm.append("cover", data.cover);
 
-        const blogRes = await postSampleBlog(blogForm);
-        if (blogRes?.error) throw new Error(blogRes.error);
-      }
-
-      toast.success('Application submitted successfully!');
-      navigate('/');
-      methods.reset();
-    } catch (err) {
-      toast.error(err.message || 'Something went wrong!');
-    } finally {
-      setSubmitting(false);
+      const blogRes = await postSampleBlog(blogForm);
+      if (blogRes?.error) return toast.error(blogRes.error || 'Failed to submit sample blog');
     }
+    toast.success('Application submitted successfully!');
+    navigate('/');
+    methods.reset();
+    setSubmitting(false);
   };
 
   const handleTermClick = (e) => {
@@ -90,8 +104,21 @@ const WriterOnboarding = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="max-w-3xl mx-auto w-full">
           <h2 className="text-2xl font-bold mb-6 text-center">Writer Application Form</h2>
 
+          <Input name="channelName" control={control} label="Channel Name" placeholder="e.g., EchoSights's Corner" />
+          <Input name="channelHandle" className={handleStatus && watch("channelHandle") && 'mb-0'} control={control} label="Channel Handle" placeholder="e.g., echosightscorner" onChange={handleHandleChange} />
+          {watch("channelHandle") && (
+            <p className="text-xs mb-4">
+              {handleStatus === 'available' ? (
+                <span className="text-green-600">Handle is available ✔</span>
+              ) : handleStatus === 'taken' ? (
+                <span className="text-red-600">Handle is already taken ✖</span>
+              ) : (
+                <span>Checking...</span>
+              )}
+            </p>
+          )}
+
           <TextArea inputClass='mb-4 rounded-md p-2 bg-neutral-100 dark:bg-neutral-900' name="bio" control={control} label="Bio" placeholder="Tell us about yourself..." />
-          <Input name="topics" control={control} label="Topics You are Interested" placeholder="E.g., Tech, Travel, Finance" required />
           <Input name="sampleWorkLinks" control={control} label="Sample Work Links" placeholder="Comma-separated URLs" />
 
           <Input name="twitter" control={control} label="Twitter" placeholder="https://twitter.com/you" />
