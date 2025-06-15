@@ -258,10 +258,12 @@ body {
 	background-color: #8f8d8d;
 }
 
-.dark .scrollbar-thin:hove::-webkit-scrollbar-track:hover::-webkit-scrollbar-thumb {
-	background-color: #a8a8a8f5 !important;
-}r::-webkit-scrollbar-thumb {
+.dark .scrollbar-thin:hover::-webkit-scrollbar-thumb {
 	background-color: #dddddd93;
+}
+
+::-webkit-scrollbar-track:hover::-webkit-scrollbar-thumb {
+	background-color: #a8a8a8f5 !important;
 }
 
 .scrollbar-thin:hover::-webkit-scrollbar-thumb {
@@ -293,4 +295,69 @@ body {
 	html:active {
 		scrollbar-color: var(--color) transparent;
 	}
+}
+
+/* Editor.css */
+.ql-container.ql-snow {
+	border: 1px solid #f3f3f3 !important;
+	border-radius: 8px;
+	background-color: #f3f3f3;
+	margin-top: 20px;
+}
+
+.ql-toolbar {
+	border-radius: 8px;
+	border: 1px solid #f3f3f3 !important;
+	position: sticky;
+	color: white;
+	top: 64px;
+	background-color: #f3f3f3;
+	z-index: 10;
+}
+
+.ql-editor {
+	font-family: 'Hind', sans-serif;
+	border-radius: 8px;
+	min-height: 300px;
+	font-size: 16px;
+	line-height: 1.6;
+}
+
+/* Dark mode support */
+.dark .ql-toolbar {
+	border-color: #111111 !important;
+	background-color: #111111;
+}
+
+.dark .ql-container {
+	border-color: transparent !important;
+}
+
+.dark .ql-container.ql-snow {
+	@apply bg-neutral-900;
+}
+
+.dark .ql-editor {
+	@apply bg-neutral-900;
+}
+
+.dark .ql-editor.ql-blank::before {
+	@apply text-neutral-500 italic;
+}
+
+blockquote {
+	border-left: 4px solid #ccc;
+	border-radius: 4px;
+	padding-left: 16px;
+	margin: 16px 0;
+	font-style: italic;
+	color: #555;
+	background-color: #f0f0f098;
+	padding: 10px;
+}
+
+.dark blockquote {
+	border-color: #444;
+	background-color: #22222227;
+	color: #ddd;
 }

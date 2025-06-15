@@ -22,7 +22,7 @@ const BlogDetails = ({ blogId, summary, authorId, channelName, channelImg, chann
         <>
             <motion.div className="progress-bar" style={{ scaleX: scrollYProgress }} />
             {isAuthenticatedUser && <BlogReadingProgress ref={contentRef} blogId={blogId} scrollYProgress={scrollYProgress} />}
-            <div ref={contentRef} className={cn("w-full sm:px-0", needToShowTOC ? 'md:w-3/5' : 'md:w-3/4 sm:px-16', "xs:p-5 ss:px-10")}>
+            <div ref={contentRef} className={cn("w-full xs:p-5 ss:px-10", needToShowTOC ? 'md:w-3/5 md:px-3' : 'md:w-3/4 sm:px-16')}>
                 <div className="mb-6">
                     <h1 className="text-3xl md:text-4xl font-bold mb-3">{title}</h1>
                     <div className="flex justify-between items-center bg-neutral-50 dark:bg-neutral-900 rounded-lg p-4">
