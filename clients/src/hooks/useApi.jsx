@@ -78,6 +78,7 @@ export default function useApi(url, options = {}, autoFetch = false, checkAuth =
                 throw new Error(responseData.message || 'Server error!');
             }
             const { success, message, ...data } = responseData;
+            setLoading(false);
             setData(data);
             setSuccess(true);
             return responseData;
@@ -88,14 +89,14 @@ export default function useApi(url, options = {}, autoFetch = false, checkAuth =
             if (err.name !== 'AbortError') {
                 setError(errorMessage);
             }
+            setLoading(false);
             setSuccess(false);
             return { error: errorMessage };
             // throw err; // Still throw error for cases where you want to handle it manually
         } finally {
-            setLoading(false);
             abortControllerRef.current = null;
         }
-    }, [reset, options, url,]);
+    }, [reset, url, checkAuth, isAuthenticatedUser]);
 
     const abortRequest = useCallback(() => {
         if (abortControllerRef.current) {
@@ -106,15 +107,10 @@ export default function useApi(url, options = {}, autoFetch = false, checkAuth =
 
     useEffect(() => {
         if (autoFetch) {
-            if (checkAuth && !isAuthenticatedUser()) {
-                setError('User is not authenticated');
-                setLoading(false);
-                setSuccess(false);
-                return;
-            }
+            console.log(`Auto-fetching API: ${url}`);
             callApi();
         }
-    }, [autoFetch, callApi, checkAuth, isAuthenticatedUser])
+    }, [autoFetch, callApi])
 
     return {
         loading,

@@ -81,7 +81,7 @@ exports.createBlog = async (req, res) => {
         public_id = result.public_id
         url = generateOptimizedUrl(result.public_id, result.version);
         const { title, summary, content } = req.body;
-        await Blog.create({
+        const newBlog = await Blog.create({
             title,
             summary,
             content,
@@ -92,10 +92,7 @@ exports.createBlog = async (req, res) => {
             author: authorId,
         });
 
-        res.json({
-            success: true,
-            message: 'Blog created successfully'
-        });
+        sendSuccessResponse(res, 200, 'Blog created successfully', { data: { newBlog } })
     } catch (error) {
         sendErrorResponse(res, 401, error)
         console.log(error)
@@ -112,9 +109,7 @@ exports.editBlog = async (req, res) => {
         if (!postDoc) {
             return sendErrorResponse(res, 404, 'Post not found');
         }
-        if (postDoc.author.toString() !== authorId.toString()) {
-            return sendErrorResponse(res, 400, 'You are not the author');
-        }
+
         let newUrl = null;
         if (cover) {
             const result = await uploadToCloudinary(cover, 'EchoesAndInsights/BlogCover', postDoc?.cover?.public_id);

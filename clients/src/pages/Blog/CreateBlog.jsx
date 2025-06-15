@@ -1,76 +1,38 @@
-import 'react-quill/dist/quill.snow.css';
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'sonner';
 import BlogEditor from './BlogEditor';
 import addIdsToHeadingsInContents from '../../lib/addIdsToHeadingsInContents';
 import preprocessContent from '../../lib/preprocessContent';
-
-const apiUrl = import.meta.env.VITE_API_URL;
+import useApi from '../../hooks/useApi';
 
 export default function CreateBlog() {
     const navigate = useNavigate();
-    const [title, setTitle] = useState("");
-    const [summary, setSummary] = useState("");
-    const [content, setContent] = useState("");
-    const [files, setFiles] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const { callApi: create, loading } = useApi('/blog/createBlog', {}, false, true);
+    const createNewPost = async (data) => {
+        const formData = new FormData();
+        formData.set('title', data.title);
+        formData.set('summary', data.summary);
+        formData.set('content', preprocessContent(addIdsToHeadingsInContents(data.content)));
+        formData.set('cover', data.cover);
+        console.log(data)
 
-    async function createNewPost(ev) {
-        ev.preventDefault();
-        if (title == '' || summary == '' || content == '' || !files) {
-            toast.error('Please fill in all the fields');
-            return;
+        const responseData = await create({
+            data: formData,
+            method: 'POST',
+        });
+        if (responseData?.error) {
+            return toast.error(responseData.error || "Error while creating blog!");
         }
-        setLoading(true);
-        try {
-            const data = new FormData();
-            data.set('title', title);
-            data.set('summary', summary);
-            data.set('content', preprocessContent(addIdsToHeadingsInContents(content)));
-            data.set('cover', files[0]);
-            ev.preventDefault();
-            const response = await fetch(`${apiUrl}/blog/createBlog`, {
-                method: 'POST',
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`
-                },
-                body: data,
-                credentials: 'include'
-            });
-            const responseData = await response.json();
-            console.log(responseData);
-            if (response.ok && responseData.success) {
-                toast.success("Blog created!");
-                // setTitle("");
-                // setSummary('');
-                // setContent('')
-                // setFiles(null);
-                // navigate('/blog');
-            } else {
-                throw responseData.message;
-            }
-        } catch (error) {
-            toast.error("Error while creating blog!");
-            console.log("Error while creating blog:- ", error);
-        } finally {
-            // setTimeout(() => {
-            setLoading(false);
-            // }, 2000);
-        }
+
+        toast.success("Blog Created!");
+        console.log(responseData.data);
+        // navigate(`/blog/${responseData.data._id}`);
     }
 
     return (
         <>
             <BlogEditor
                 onSubmit={createNewPost}
-                title={title}
-                setTitle={setTitle}
-                summary={summary}
-                setSummary={setSummary}
-                content={content}
-                setContent={setContent}
-                setFiles={setFiles}
                 loading={loading}
             />
         </>

@@ -1,98 +1,52 @@
-import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from 'sonner';
 import BlogEditor from "./BlogEditor";
 import addIdsToHeadingsInContents from "../../lib/addIdsToHeadingsInContents";
 import preprocessContent from "../../lib/preprocessContent";
 import ErrorMessage from "../../components/ErrorMessage";
-
-const apiUrl = import.meta.env.VITE_API_URL;
+import useApi from "../../hooks/useApi";
+import LogoLoader from "../../components/Loader/logo_loader";
 
 export default function EditBlog() {
     const navigate = useNavigate();
     const { id } = useParams();
-    const [title, setTitle] = useState('');
-    const [summary, setSummary] = useState('');
-    const [content, setContent] = useState('');
-    const [files, setFiles] = useState('');
-    const [loading, setLoading] = useState(true);
-    const [errorMessage, setErrorMessage] = useState(null)
+    const { callApi: update, loading: updating } = useApi(`/blog/editBlog/${id}`, {}, false, true);
+    const { data, loading: getting } = useApi(`/blog/getBlog/${id}`, {}, true, true);
 
-    const getBlog = async (id) => {
-        setLoading(true);
-        setErrorMessage(null);
-        try {
-            const res = await fetch(`${apiUrl}/blog/getBlog/${id}`);
-            const data = await res.json();
-            if (res.ok && data.success) {
-                setTitle(data.data.title);
-                setContent(data.data.content);
-                setSummary(data.data.summary);
-            } else {
-                throw new Error(data?.message || "error fetching the blog");
-            }
-        } catch (error) {
-            console.log(error.message);
-            setErrorMessage(error.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        getBlog(id);
-    }, [id]);
-
-    if (loading) {
-        return <div className="opacity-50 w-full py-32 flex justify-center"><img src='/favicon.svg' alt="Loading..." className="w-1/6 h-1/6 animate-spin" /></div>;
+    if (getting) {
+        return <LogoLoader />;
     }
-    if (errorMessage) {
-        return <ErrorMessage heading='Unable to fetch blog' message={errorMessage} action={getBlog} />
+    if (data?.error) {
+        return <ErrorMessage heading='Unable to fetch blog' message={data?.error} action={getBlog} />
     }
 
-    async function updateBlog(ev) {
-        ev.preventDefault();
-        const data = new FormData();
-        data.set('title', title);
-        data.set('summary', summary);
-        data.set('content', preprocessContent(addIdsToHeadingsInContents(content)));
-        data.set('id', id);
-        if (files?.[0]) {
-            data.set('file', files?.[0]);
+    async function updateBlog(data) {
+        const formData = new FormData();
+        formData.set('title', data.title);
+        formData.set('summary', data.summary);
+        formData.set('content', preprocessContent(addIdsToHeadingsInContents(data.content)));
+        formData.set('id', id);
+        if (data.cover) {
+            data.set('file', data.cover);
         }
-        try {
-            const response = await fetch(`${apiUrl}/blog/editBlog/${id}`, {
-                method: 'PUT',
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`
-                },
-                body: data,
-                credentials: 'include',
-            });
-            const responseData = await response.json();
-            console.log({ responseData });
-            if (response.ok && responseData.success) {
-                toast.success("Blog Updated!");
-                navigate(`/blog/${id}`);
-            }
-            else {
-                throw new Error(responseData.message);
-            }
-        } catch (error) {
-            toast.error(error.message);
-        }
+        const responseData = await update({
+            data: formData,
+            method: 'PUT',
+        });
+        if (responseData?.error)
+            return toast.error(responseData.error || "Error while updating blog!");
+
+        toast.success("Blog Updated!");
+        navigate(`/blog/${id}`);
     }
 
     return (
         <BlogEditor
             onSubmit={updateBlog}
-            title={title}
-            setTitle={setTitle}
-            summary={summary}
-            setSummary={setSummary}
-            content={content}
-            setContent={setContent}
-            setFiles={setFiles}
+            title={data?.data?.title}
+            summary={data?.data?.summary}
+            content={data?.data?.content}
+            loading={updating}
             isUpdate={true}
         />
     );
