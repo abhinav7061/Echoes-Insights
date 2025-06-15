@@ -28,8 +28,31 @@ const blogSchema = new Schema({
         },
     },
     author: {
-        type: Schema.Types.ObjectId, ref: 'User',
-        required: true
+        type: Schema.Types.ObjectId,
+        ref: 'Writer',
+        required: true,
+    },
+    tags: [{
+        type: String,
+    }],
+    isPublished: {
+        type: Boolean,
+    },
+    isFeatured: {
+        type: Boolean,
+    },
+    isDraft: {
+        type: Boolean,
+    },
+    isArchived: {
+        type: Boolean,
+    },
+    isDeleted: {
+        type: Boolean,
+    },
+    isPublic: {
+        type: Boolean,
+        default: true
     },
     views: {
         type: Number,
@@ -75,6 +98,10 @@ blogSchema.pre('deleteMany', async function (next) {
         next(err);
     }
 });
+
+blogSchema.methods.isOwnedBy = function (userId) {
+    return this.author?.userId?.toString() === userId.toString();
+};
 
 const Blog = model('Blog', blogSchema);
 module.exports = Blog;

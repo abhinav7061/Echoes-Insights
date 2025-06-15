@@ -21,7 +21,7 @@ exports.getHistory = async (req, res) => {
                 select: 'title summary createdAt cover views likesCount',
                 populate: {
                     path: 'author',
-                    select: 'name avatar'
+                    select: 'channelName channelImg'
                 }
             });
 

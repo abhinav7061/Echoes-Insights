@@ -121,8 +121,9 @@ exports.authCallback = async (req, res) => {
 
 exports.isUserLoggedIn = async (req, res) => {
     try {
+        const { name, email, avatar, role, interests, termsAccepted } = req.user || {};
         return sendSuccessResponse(res, 200, 'User is Authenticated', {
-            user: { id: req.user._id, name: req.user.name, email: req.user.email, avatar: req.user?.avatar, role: req.user?.role },
+            user: { id: req.user?._id, name, email, avatar, role, interests, termsAccepted },
             isUserAuthenticated: true,
         });
     } catch (error) {

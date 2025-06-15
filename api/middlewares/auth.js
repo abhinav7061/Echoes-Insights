@@ -31,20 +31,22 @@ exports.isAuthenticatedUser = async (req, res, next) => {
 
 exports.isBlogAuthor = async (req, res, next) => {
     try {
-        const { blogId } = req.params;
-        const authorId = req.user._id;
-        const postDoc = await Blog.findById(blogId);
-        if (!postDoc) {
+        const blog = await Blog.findById(req.params.blogId).populate('author');
+
+        if (!blog) {
             return sendErrorResponse(res, 404, 'Blog not found');
         }
-        if (postDoc.author.toString() !== authorId.toString()) {
-            return sendErrorResponse(res, 400, 'You are not author of this blog');
+
+        if (!blog.isOwnedBy(req.user._id)) {
+            return sendErrorResponse(res, 403, 'You are not the author of this blog');
         }
+
         next();
     } catch (error) {
-        sendErrorResponse(res, 500, error.message);
+        return sendErrorResponse(res, 500, error.message);
     }
-}
+};
+
 
 exports.isAdmin = async (req, res, next) => {
     if (req.user.role !== 'admin') return sendErrorResponse(res, 501, "You are not admin");
@@ -80,15 +82,22 @@ exports.permit = (...allowedRoles) => {
 };
 
 exports.isOwnerOrAdmin = async (req, res, next) => {
-    const blog = await Blog.findById(req.params.blogId);
-    if (!blog) return sendErrorResponse(res, 404, "Blog not found");
+    try {
+        const blog = await Blog.findById(req.params.blogId).populate('author');
 
-    if (
-        blog.author.toString() === req.user.id ||
-        req.user.role == "admin"
-    ) {
-        return next();
+        if (!blog) {
+            return sendErrorResponse(res, 404, 'Blog not found');
+        }
+
+        const isAuthor = blog.isOwnedBy(req.user._id);
+        const isAdmin = req.user.role === 'admin';
+
+        if (isAuthor || isAdmin) {
+            return next();
+        }
+
+        return sendErrorResponse(res, 403, 'You are not allowed to modify this blog.');
+    } catch (error) {
+        return sendErrorResponse(res, 500, error.message);
     }
-
-    return sendErrorResponse(res, 403, "You are not allowed to modify this blog.");
 };

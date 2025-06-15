@@ -28,15 +28,12 @@ exports.getAllBlogSummaries = async (req, res) => {
         }
 
         const blogsSummary = await Blog.find(query)
-            .populate('author', 'name avatar')
+            .populate('author', 'channelName channelImg')
             .skip(offset)
             .sort({ createdAt: -1 })
             .limit(limit);
 
-        return res.json({
-            success: true,
-            blogsSummary,
-        });
+        return sendSuccessResponse(res, 200, 'summeried retrived', { blogsSummary });
     } catch (error) {
         return sendErrorResponse(res, 400, error.message);
     }
@@ -45,7 +42,15 @@ exports.getAllBlogSummaries = async (req, res) => {
 exports.getBlog = async (req, res) => {
     try {
         const { id } = req.params;
-        const postDoc = await Blog.findById(id).populate('author', 'name avatar');
+        const postDoc = await Blog.findById(id).populate(
+            {
+                path: 'author',
+                select: 'channelName channelHandle channelImg',
+                populate: {
+                    path: 'userId',
+                    select: 'id'
+                }
+            });
         if (!postDoc) {
             return sendErrorResponse(res, 404, `Your blog cann't be found`)
         }
@@ -155,12 +160,12 @@ exports.getShorts = async (req, res) => {
 
         if (cursor && cursor !== 'undefined') {
             currentShort = await Blog.findById(cursor)
-                .populate('author', 'name avatar')
+                .populate('author', 'channelName channelImg')
                 .select('title summary createdAt cover author');
         }
         if (!currentShort) {
             currentShort = await Blog.findOne()
-                .populate('author', 'name avatar')
+                .populate('author', 'channelName channelImg')
                 .sort({ createdAt: -1 })
                 .select('title summary createdAt cover author')
                 .limit(1);
@@ -169,7 +174,7 @@ exports.getShorts = async (req, res) => {
         if (!currentShort) return sendErrorResponse(res, 400, "No shorts available")
 
         const shortsBefore = await Blog.find({ createdAt: { $lt: currentShort.createdAt } })
-            .populate('author', 'name avatar')
+            .populate('author', 'channelName channelImg')
             .sort({ createdAt: -1 })
             .limit(limit - 1)
             .select('title summary createdAt cover author');

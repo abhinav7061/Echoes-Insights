@@ -1,16 +1,13 @@
 import React from 'react'
-import { color } from '../../style';
 import { Link } from 'react-router-dom';
 
 const EditBlogBtn = ({ blogId }) => {
 
     return (
-        <div className={`${color.textBlackWhite} text-xs md:text-sm`}>
-            <Link className="flex items-center gap-2" to={`/edit_blog/${blogId}`}>
-                <ion-icon name="create-outline"></ion-icon>
-                Edit this Blog
-            </Link>
-        </div>
+        <Link className="flex items-center gap-2 text-sm px-2 py-1 hover:bg-neutral-700/10 hover:dark:bg-neutral-700/60 rounded-md" to={`/edit_blog/${blogId}`}>
+            <ion-icon name="create-outline"></ion-icon>
+            Edit this Blog
+        </Link>
     )
 }
 
